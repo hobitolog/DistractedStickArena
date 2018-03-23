@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>StickArena</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="main.css" />-->
+    <!--<script src="main.js"></script>-->
+
+<style>
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+  background-color:#dc3545;
+}
+</style>
+
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid pb-0">
+        <div class="container">
+            <h1 class="display-4">StickArena</h1>
+            <p class="lead">fajna giereczka</p>
+        </div>
+        <nav class="navbar navbar-expand navbar-light">
+            <div class="container">
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav mx-0 mx-sm-3">
+                        <a class="btn btn-danger mr-1 mr-sm-2" href="#">TODO</a>
+                        <a class="btn btn-danger mr-1 mr-sm-2" href="https://github.com/Kosert/StickArena" target="_blank">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Zarejestruj się</h5>
+                        <form>
+                            <div class="form-group">
+                                <label for="registerEmail">Adres e-mail</label>
+                                <input type="email" class="form-control" id="registerEmail" placeholder="Podaj e-mail">
+                            </div>
+                            <div class="form-group">
+                                    <label for="registerLogin">Login</label>
+                                    <input type="text" class="form-control" id="registerLogin" placeholder="Podaj login">
+                                </div>
+                            <div class="form-group">
+                                <label for="registerPassword">Hasło</label>
+                                <input type="password" class="form-control" id="registerPassword" placeholder="Hasło">
+                            </div>
+                            <div class="form-group">
+                                    <label for="repeatPassword">Powtórz hasło</label>
+                                    <input type="password" class="form-control" id="repeatPassword" placeholder="Powtórz hasło">
+                                </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="registerTerms">
+                                <label class="custom-control-label" for="registerTerms">Zaprzedaję duszę diabłu</label>
+                            </div>
+                            <button type="submit" class="mt-3 btn btn-danger">Zarejestruj</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                            <h5 class="card-title">Zaloguj się</h5>
+                            <form>
+                                <div class="form-group">
+                                        <label for="registerLogin">Login</label>
+                                        <input type="text" class="form-control" id="registerLogin" placeholder="Podaj login">
+                                    </div>
+                                <div class="form-group">
+                                    <label for="registerPassword">Hasło</label>
+                                    <input type="password" class="form-control" id="registerPassword" placeholder="Hasło">
+                                </div>
+                                <button type="submit" class="mt-2 btn btn-danger">Zaloguj</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
