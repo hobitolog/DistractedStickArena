@@ -3,5 +3,6 @@
 ## Instrukcja dla ~~debili~~ ~~mniej sprytnych osób~~ pana Jaśkiewicza
 1. Zainstalować `nodejs` i `npm` jak jeszcze się nie ma
 2. `git clone https://github.com/Kosert/StickArena.git`
-3. W folderze projektu `npm install` żeby zainstalować dependencies
-4. Start `node server.js`
+3. W folderze projektu `npm install` żeby zainstalować dependencies  
+4. Odpalić MongoDB, ja korzystam z tego: [MongoDBPortable](https://github.com/lightchpa/MongoDBPortable/releases/tag/v0.4.0.1)  
+5. Start `node server.js`
