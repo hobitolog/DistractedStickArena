@@ -1,3 +1,4 @@
 module.exports = {
-    'dbUrl' : 'mongodb://localhost/'
-  }
+    dbUrl: 'mongodb://localhost/StickArena',
+    sessionSecret: 'tududu'
+}

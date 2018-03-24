@@ -11,11 +11,18 @@
     <!--<link rel="stylesheet" type="text/css" media="screen" href="main.css" />-->
     <!--<script src="main.js"></script>-->
 
-<style>
-.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
-  background-color:#dc3545;
-}
-</style>
+    <style>
+        .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+            background-color: #dc3545;
+        }
+        .custom-control-input:focus~.custom-control-label::before {
+            box-shadow: 0 0 0 1px #ffffff, 0 0 0 0.2rem #dc354540;
+        }
+        .form-control:focus{
+            border-color: #efa8af;
+            box-shadow: 0 0 0 0.2rem #dc354540;
+        }
+    </style>
 
 </head>
 
@@ -29,8 +36,8 @@
             <div class="container">
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav mx-0 mx-sm-3">
-                        <a class="btn btn-danger mr-1 mr-sm-2" href="#">TODO</a>
-                        <a class="btn btn-danger mr-1 mr-sm-2" href="https://github.com/Kosert/StickArena" target="_blank">GitHub</a>
+                        <a class="btn btn-danger mr-1 mr-sm-2" href="#">Lorem Ipsum</a>
+                        <a class="btn btn-outline-danger mr-1 mr-sm-2" href="https://github.com/Kosert/StickArena" target="_blank">GitHub</a>
                     </div>
                 </div>
             </div>
@@ -44,23 +51,23 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Zarejestruj się</h5>
-                        <form>
+                        <form action="/register" method="POST">
                             <div class="form-group">
                                 <label for="registerEmail">Adres e-mail</label>
-                                <input type="email" class="form-control" id="registerEmail" placeholder="Podaj e-mail">
+                                <input type="email" class="form-control" name="email" placeholder="Podaj e-mail" autocomplete="email">
                             </div>
                             <div class="form-group">
-                                    <label for="registerLogin">Login</label>
-                                    <input type="text" class="form-control" id="registerLogin" placeholder="Podaj login">
-                                </div>
-                            <div class="form-group">
-                                <label for="registerPassword">Hasło</label>
-                                <input type="password" class="form-control" id="registerPassword" placeholder="Hasło">
+                                <label for="registerLogin">Login</label>
+                                <input type="text" class="form-control" name="login" placeholder="Podaj login" autocomplete="username">
                             </div>
                             <div class="form-group">
-                                    <label for="repeatPassword">Powtórz hasło</label>
-                                    <input type="password" class="form-control" id="repeatPassword" placeholder="Powtórz hasło">
-                                </div>
+                                <label>Hasło</label>
+                                <input type="password" class="form-control" name="password" placeholder="Podaj hasło" autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="repeatPassword">Powtórz hasło</label>
+                                <input type="password" class="form-control" name="repeatPassword" placeholder="Powtórz hasło" autocomplete="new-password">
+                            </div>
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="registerTerms">
                                 <label class="custom-control-label" for="registerTerms">Zaprzedaję duszę diabłu</label>
@@ -73,17 +80,17 @@
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
-                            <h5 class="card-title">Zaloguj się</h5>
-                            <form>
-                                <div class="form-group">
-                                        <label for="registerLogin">Login</label>
-                                        <input type="text" class="form-control" id="registerLogin" placeholder="Podaj login">
-                                    </div>
-                                <div class="form-group">
-                                    <label for="registerPassword">Hasło</label>
-                                    <input type="password" class="form-control" id="registerPassword" placeholder="Hasło">
-                                </div>
-                                <button type="submit" class="mt-2 btn btn-danger">Zaloguj</button>
+                        <h5 class="card-title">Zaloguj się</h5>
+                        <form action="/login" method="POST">
+                            <div class="form-group">
+                                <label for="login">Login</label>
+                                <input type="text" class="form-control" name="login" placeholder="Podaj login" autocomplete="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Hasło</label>
+                                <input type="password" class="form-control" name="password" placeholder="Podaj hasło" autocomplete="current-password">
+                            </div>
+                            <button type="submit" class="mt-2 btn btn-danger">Zaloguj</button>
                     </div>
                 </div>
             </div>
