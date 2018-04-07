@@ -10,6 +10,8 @@
         crossorigin="anonymous">
     <!--<link rel="stylesheet" type="text/css" media="screen" href="main.css" />-->
     <!--<script src="main.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.2.3/fabric.min.js"></script>
+    <script src="js/canvas.js"></script>
 
     <style>
         .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
@@ -39,7 +41,9 @@
 
 
     <div class="container">
-        Main widok
+        <div class="mx-auto" style="width:720px; height:486px">
+                <canvas id="c" width="720" height="486">Nie działa? Ojej, wracaj do mamusi!</canvas>
+        </div>
     </div>
 </body>
 
