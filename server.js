@@ -39,15 +39,41 @@ app.get('/login', (req, res) => {
         res.sendFile(path.join(__dirname, '/html', 'login.html'))
 })
 
-app.post('/login', passport.authenticate('local-login', {
-    successRedirect: '/',
-    failureRedirect: '/login'
-}));
+app.post('/login', (req, res, next) => {
+    passport.authenticate('local-login', function(err, user, info){
+        if(err) return next(err)
 
-app.post('/register', passport.authenticate('local-register', {
-    successRedirect: '/',
-    failureRedirect: '/login'
-}));
+        if(!user) {
+            return res.json({
+                "error": req.loginMessage
+            })
+        }
+        req.logIn(user, function(err){
+            if(err) return next(err)
+            return res.json({
+                "error": null
+            })
+        })
+    })(req, res, next)
+})
+
+app.post('/register', (req, res, next) => {
+    passport.authenticate('local-register', function(err, user, info){
+        if(err) return next(err)
+
+        if(!user) {
+            return res.json({
+                "error": req.registerMessage
+            })
+        }
+        req.logIn(user, function(err){
+            if(err) return next(err)
+            return res.json({
+                "error": null
+            })
+        })
+    })(req, res, next)
+})
 
 app.get('/logout', (req, res) => {
     req.logout()

@@ -14,12 +14,12 @@ module.exports = {
         passport.deserializeUser(function (id, done) {
             User.findById(id, function (err, user) {
                 done(err, user)
-            });
+            })
         })
 
         passport.use('local-register', new LocalStrategy({
-            usernameField: "login",
-            passwordField: "password",
+            usernameField: "registerLogin",
+            passwordField: "registerPassword",
             passReqToCallback: true
         }, (req, username, password, done) => {
 
@@ -27,20 +27,21 @@ module.exports = {
 
                 User.findOne({
                     $or: [
-                        { email: req.body.email },
-                        { login: req.body.login }
+                        { email: req.body.registerEmail },
+                        { login: req.body.registerLogin }
                     ]
                 }).then(user => {
 
                     if (user) {
-                        var msg = (user == req.body.email) ? "E-mail jest już używany." : "Login jest już używany."
-                        return done(null, false, { message: msg })
+                        var msg = (user.email == req.body.registerEmail) ? "E-mail jest już używany." : "Login jest już używany."
+                        req.registerMessage = msg
+                        return done(null, false)
                     }
                     else {
                         var newUser = new User()
-                        newUser.login = username
-                        newUser.email = req.body.email
-                        newUser.setPassword(password)
+                        newUser.login = req.body.registerLogin
+                        newUser.email = req.body.registerEmail
+                        newUser.setPassword(req.body.registerPassword)
 
                         newUser.save(function (err) {
                             if (err) {
@@ -50,7 +51,7 @@ module.exports = {
 
                             log.info('New user registered: ' + newUser.login)
                             return done(null, newUser);
-                        });
+                        })
                     }
                 })
             }
@@ -59,14 +60,16 @@ module.exports = {
 
         passport.use('local-login', new LocalStrategy({
             usernameField: "login",
-            passwordField: "password"
-        }, function (username, password, done) {
+            passwordField: "password",
+            passReqToCallback: true
+        }, function (req, username, password, done) {
             User.findOne({ login: username }, function (err, user) {
-                if (err) { return done(err); }
+                if (err) { return done(err) }
                 if (!user || !user.isValidPassword(password)) {
-                    return done(null, false, { message: 'Nieprawidłowy login lub hasło.' })
+                    req.loginMessage = 'Nieprawidłowy login lub hasło.'
+                    return done(null, false)
                 }
-                return done(null, user);
+                return done(null, user)
             })
         }))
     },
