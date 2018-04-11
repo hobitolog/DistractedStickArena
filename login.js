@@ -25,23 +25,40 @@ module.exports = {
 
             var createUser = () => {
 
+                var email = req.body.registerEmail
+
+                if(!username || !password || !email) {
+                    req.registerMessage = "Dane są niekompletne"
+                    return done(null, false)
+                }
+
+                if(!email.includes("@")) {
+                    req.registerMessage = "Adres e-mail jest nieprawidłowy"
+                    return done(null, false)
+                }
+
+                if(username.length < 2 || username.length > 30) {
+                    req.registerMessage = "Login musi zawierać od 2 a 30 znaków"
+                    return done(null, false)
+                }
+                
                 User.findOne({
                     $or: [
-                        { email: req.body.registerEmail },
-                        { login: req.body.registerLogin }
+                        { "email": email },
+                        { "login": username }
                     ]
                 }).then(user => {
 
                     if (user) {
-                        var msg = (user.email == req.body.registerEmail) ? "E-mail jest już używany." : "Login jest już używany."
+                        var msg = (user.email == email) ? "E-mail jest już używany." : "Login jest już używany."
                         req.registerMessage = msg
                         return done(null, false)
                     }
                     else {
                         var newUser = new User()
-                        newUser.login = req.body.registerLogin
-                        newUser.email = req.body.registerEmail
-                        newUser.setPassword(req.body.registerPassword)
+                        newUser.login = username
+                        newUser.email = email
+                        newUser.setPassword(password)
                         newUser.initActivation()
 
                         newUser.save(function (err) {
@@ -51,7 +68,7 @@ module.exports = {
                             }
 
                             log.info('New user registered: ' + newUser.login)
-                            return done(null, newUser);
+                            return done(null, newUser)
                         })
                     }
                 })

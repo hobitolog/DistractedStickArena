@@ -60,10 +60,16 @@ function callCheckLogin() {
 
 function checkLogin() {
     var registerLogin = document.getElementById('registerLogin')
-    if (registerLogin.value)
+    if (registerLogin.value && registerLogin.value.length > 1)
+    {
         loginOk = true
+        document.getElementById('loginError').hidden = true
+    }
     else
+    {
         loginOk = false
+        document.getElementById('loginError').hidden = false
+    }
     refreshRegisterButton()
 }
 
