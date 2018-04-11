@@ -37,6 +37,11 @@ module.exports = {
                         req.registerMessage = msg
                         return done(null, false)
                     }
+                    else if(req.body.registerLogin.length <3 | req.body.registerLogin.length >32) {
+                        msg = "Login nie może być krótszy, niż 3 i dłuższy niż 32 znaki."
+                        req.registerMessage = msg
+                        return done(null, false)
+                    }
                     else {
                         var newUser = new User()
                         newUser.login = req.body.registerLogin
