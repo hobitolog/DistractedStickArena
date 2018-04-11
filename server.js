@@ -28,7 +28,40 @@ app.use(morgan('dev'))
 var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 
-app.get('/', login.isLoggedIn, (req, res) => {
+app.get('/activation', login.isLoggedIn, (req, res) => {
+    if (req.user.activation.activated)
+        res.redirect('/')
+    else
+        res.sendFile(path.join(__dirname, '/html', 'activation.html'))
+})
+
+app.get('/activate', (req, res) => {
+
+    var reqToken = req.query.token
+    if (!reqToken) {
+        res.sendFile(path.join(__dirname, '/html', 'activateFail.html'))
+        return
+    }
+
+    var User = require('./models/user')
+    User.findOne({ "activation.token": reqToken }, function (err, user) {
+
+        if (!user || user.activation.activated) {
+            res.sendFile(path.join(__dirname, '/html', 'activateFail.html'))
+            return
+        }
+
+        user.activation.activated = true
+        user.save(function (err) {
+            if (err)
+                log.error(err)
+            else
+                res.sendFile(path.join(__dirname, '/html', 'activateSuccess.html'))
+        })
+    })
+})
+
+app.get('/', login.isLoggedIn, login.isActivated, (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'main.html'))
 })
 
@@ -40,16 +73,16 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/login', (req, res, next) => {
-    passport.authenticate('local-login', function(err, user, info){
-        if(err) return next(err)
+    passport.authenticate('local-login', function (err, user, info) {
+        if (err) return next(err)
 
-        if(!user) {
+        if (!user) {
             return res.json({
                 "error": req.loginMessage
             })
         }
-        req.logIn(user, function(err){
-            if(err) return next(err)
+        req.logIn(user, function (err) {
+            if (err) return next(err)
             return res.json({
                 "error": null
             })
@@ -58,16 +91,16 @@ app.post('/login', (req, res, next) => {
 })
 
 app.post('/register', (req, res, next) => {
-    passport.authenticate('local-register', function(err, user, info){
-        if(err) return next(err)
+    passport.authenticate('local-register', function (err, user, info) {
+        if (err) return next(err)
 
-        if(!user) {
+        if (!user) {
             return res.json({
                 "error": req.registerMessage
             })
         }
-        req.logIn(user, function(err){
-            if(err) return next(err)
+        req.logIn(user, function (err) {
+            if (err) return next(err)
             return res.json({
                 "error": null
             })

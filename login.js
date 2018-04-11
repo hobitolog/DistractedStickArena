@@ -1,7 +1,7 @@
 var LocalStrategy = require('passport-local').Strategy
 var bcrypt = require('bcrypt')
 
-var User = require('./models/user');
+var User = require('./models/user')
 var log = require('./log')
 
 module.exports = {
@@ -42,6 +42,7 @@ module.exports = {
                         newUser.login = req.body.registerLogin
                         newUser.email = req.body.registerEmail
                         newUser.setPassword(req.body.registerPassword)
+                        newUser.initActivation()
 
                         newUser.save(function (err) {
                             if (err) {
@@ -81,4 +82,12 @@ module.exports = {
 
         res.redirect('/login')
     },
+
+    isActivated: (req, res, next) => {
+
+        if(req.user.activation.activated)
+            return next()
+
+        res.redirect('/activation')
+    }
 }
