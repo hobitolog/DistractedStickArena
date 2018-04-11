@@ -13,8 +13,37 @@ window.onload = function () {
         }
     });
     canvas.on('mouse:out', function (e) {
-        e.target.scale(1.75)
-        canvas.renderAll();
+        if (e.target.scalable == true) {
+            e.target.scale(1.75);
+            canvas.renderAll();
+        }
+    });
+    canvas.on('mouse:down', function (e) {
+        if (e.target.scalable == true) {
+            switch (e.target.name) {
+                case 'arena':
+                    e.target.scale(3);
+                    //open arena
+                    break;
+                case 'tavern':
+                    e.target.scale(3);
+                    //open tavern
+                    break;
+                case 'blacksmith':
+                    e.target.scale(3);
+                    //open blacksmith
+                    break;
+                case 'statue':
+                    e.target.scale(3);
+                    //open statue
+                    break;
+                case 'stickman':
+                    e.target.scale(3);
+                    //open stickman
+                    break;
+            }
+            canvas.renderAll();
+        }
     });
 
 
@@ -25,6 +54,7 @@ window.onload = function () {
         obj.set({ left: 360, top: 243 })
         obj.selectable = false;
         obj.scalable = false;
+        obj.name = 'bg;'
         canvas.add(obj);
     })
 
@@ -34,6 +64,7 @@ window.onload = function () {
         obj.set({ left: 344, top: 100 });
         obj.selectable = false;
         obj.scalable = true;
+        obj.name = 'arena';
         canvas.add(obj);
     })
 
@@ -43,6 +74,7 @@ window.onload = function () {
         obj.set({ left: 192, top: 224 });
         obj.selectable = false;
         obj.scalable = true;
+        obj.name = 'tavern';
         canvas.add(obj);
     })
 
@@ -52,6 +84,7 @@ window.onload = function () {
         obj.set({ left: 128, top: 374 });
         obj.selectable = false;
         obj.scalable = true;
+        obj.name = 'blacksmith';
         canvas.add(obj);
     })
 
@@ -61,6 +94,7 @@ window.onload = function () {
         obj.set({ left: 532, top: 276 });
         obj.selectable = false;
         obj.scalable = true;
+        obj.name = 'statue';
         canvas.add(obj);
     })
 
@@ -70,6 +104,7 @@ window.onload = function () {
         obj.set({ left: 350, top: 400 });
         obj.selectable = false;
         obj.scalable = true;
+        obj.name = 'stickman';
         canvas.add(obj);
     })
 
