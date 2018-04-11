@@ -97,7 +97,7 @@ module.exports = {
         if (req.isAuthenticated())
             return next()
 
-        res.redirect('/login')
+        res.redirect('/stickarena/login')
     },
 
     isActivated: (req, res, next) => {
@@ -105,6 +105,6 @@ module.exports = {
         if(req.user.activation.activated)
             return next()
 
-        res.redirect('/activation')
+        res.redirect('/stickarena/activation')
     }
 }

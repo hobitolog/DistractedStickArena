@@ -28,14 +28,14 @@ app.use(morgan('dev'))
 var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 
-app.get('/activation', login.isLoggedIn, (req, res) => {
+app.get('//activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)
-        res.redirect('/')
+        res.redirect('/stickarena/')
     else
         res.sendFile(path.join(__dirname, '/html', 'activation.html'))
 })
 
-app.get('/activate', (req, res) => {
+app.get('//activate', (req, res) => {
 
     var reqToken = req.query.token
     if (!reqToken) {
@@ -61,18 +61,18 @@ app.get('/activate', (req, res) => {
     })
 })
 
-app.get('/', login.isLoggedIn, login.isActivated, (req, res) => {
+app.get('//', login.isLoggedIn, login.isActivated, (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'main.html'))
 })
 
-app.get('/login', (req, res) => {
+app.get('//login', (req, res) => {
     if (req.isAuthenticated())
-        res.redirect('/')
+        res.redirect('/stickarena/')
     else
         res.sendFile(path.join(__dirname, '/html', 'login.html'))
 })
 
-app.post('/login', (req, res, next) => {
+app.post('//login', (req, res, next) => {
     passport.authenticate('local-login', function (err, user, info) {
         if (err) return next(err)
 
@@ -90,7 +90,7 @@ app.post('/login', (req, res, next) => {
     })(req, res, next)
 })
 
-app.post('/register', (req, res, next) => {
+app.post('//register', (req, res, next) => {
     passport.authenticate('local-register', function (err, user, info) {
         if (err) return next(err)
 
@@ -108,9 +108,9 @@ app.post('/register', (req, res, next) => {
     })(req, res, next)
 })
 
-app.get('/logout', (req, res) => {
+app.get('//logout', (req, res) => {
     req.logout()
-    res.redirect('/login');
+    res.redirect('/stickarena/login');
 })
 
 server.listen(80, () => {
