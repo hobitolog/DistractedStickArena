@@ -61,6 +61,7 @@ module.exports = {
                     }
                     else {
                         var newUser = new User()
+                        newUser.email = email
                         newUser.initActivation(function(success) {
                             if(!success)
                             {
@@ -70,7 +71,6 @@ module.exports = {
                             else
                             {
                                 newUser.login = username
-                                newUser.email = email
                                 newUser.setPassword(password)
         
                                 newUser.save(function (err) {
