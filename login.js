@@ -41,6 +41,11 @@ module.exports = {
                     req.registerMessage = "Login musi zawierać od 2 a 30 znaków"
                     return done(null, false)
                 }
+
+                if(password.length < 8) {
+                    req.registerMessage = "Hasło musi zawierać conajmniej 8 znaków"
+                    return done(null, false)
+                }
                 
                 User.findOne({
                     $or: [
@@ -50,25 +55,34 @@ module.exports = {
                 }).then(user => {
 
                     if (user) {
-                        var msg = (user.email == email) ? "E-mail jest już używany." : "Login jest już używany."
+                        var msg = (user.email == email) ? "Adres e-mail jest już używany." : "Login jest już używany."
                         req.registerMessage = msg
                         return done(null, false)
                     }
                     else {
                         var newUser = new User()
-                        newUser.login = username
-                        newUser.email = email
-                        newUser.setPassword(password)
-                        newUser.initActivation()
-
-                        newUser.save(function (err) {
-                            if (err) {
-                                log.error("Error creating user: " + err)
-                                return done(err)
+                        newUser.initActivation(function(success) {
+                            if(!success)
+                            {
+                                req.registerMessage = "Adres e-mail jest nieprawidłowy."
+                                return done(null, false)
                             }
-
-                            log.info('New user registered: ' + newUser.login)
-                            return done(null, newUser)
+                            else
+                            {
+                                newUser.login = username
+                                newUser.email = email
+                                newUser.setPassword(password)
+        
+                                newUser.save(function (err) {
+                                    if (err) {
+                                        log.error("Error creating user: " + err)
+                                        return done(err)
+                                    }
+        
+                                    log.info('New user registered: ' + newUser.login)
+                                    return done(null, newUser)
+                                })
+                            }
                         })
                     }
                 })
