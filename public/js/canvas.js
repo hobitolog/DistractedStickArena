@@ -1,10 +1,28 @@
 window.onload = function () {
 
-    // create a wrapper around native canvas element (with id="c")
+    fabric.Canvas.prototype.getItemByName = function (name) {
+        var object = null,
+            objects = this.getObjects();
+
+        for (var i = 0, len = this.size(); i < len; i++) {
+            if (objects[i].name && objects[i].name === name) {
+                object = objects[i];
+                break;
+            }
+        }
+
+        return object;
+    };
+
+
+
     var canvas = new fabric.Canvas('c', {
         hoverCursor: 'pointer',
-        selection: false
+        selection: false,
+        perPixelTargetFind: true,
+        targetFindTolerance: 5,
     });
+
 
     canvas.on('mouse:over', function (e) {
         if (e.target.scalable == true) {
@@ -19,31 +37,36 @@ window.onload = function () {
         }
     });
     canvas.on('mouse:down', function (e) {
-        if (e.target.scalable == true) {
-            switch (e.target.name) {
-                case 'arena':
-                    e.target.scale(3);
-                    //open arena
-                    break;
-                case 'tavern':
-                    e.target.scale(3);
-                    //open tavern
-                    break;
-                case 'blacksmith':
-                    e.target.scale(3);
-                    //open blacksmith
-                    break;
-                case 'statue':
-                    e.target.scale(3);
-                    //open statue
-                    break;
-                case 'stickman':
-                    e.target.scale(3);
-                    //open stickman
-                    break;
-            }
-            canvas.renderAll();
+        switch (e.target.name) {
+            case 'arena':
+                canvas.bringToFront(canvas.getItemByName('inArena'));
+                //open arena
+                break;
+            case 'tavern':
+                canvas.bringToFront(canvas.getItemByName('inTavern'));
+                //open tavern
+                break;
+            case 'blacksmith':
+                canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
+                //open blacksmith
+                break;
+            case 'statue':
+                canvas.bringToFront(canvas.getItemByName('inStatue'));  
+                //open statue
+                break;
+            case 'stickman':
+                canvas.bringToFront(canvas.getItemByName('inStickman'));  
+                //open stickman
+                break;
+            default:
+                canvas.sendToBack(canvas.getItemByName('inArena'));
+                canvas.sendToBack(canvas.getItemByName('inTavern'));
+                canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
+                canvas.sendToBack(canvas.getItemByName('inStatue'));
+                canvas.sendToBack(canvas.getItemByName('inStickman'));
         }
+        canvas.renderAll();
+
     });
 
 
@@ -54,7 +77,7 @@ window.onload = function () {
         obj.set({ left: 360, top: 243 })
         obj.selectable = false;
         obj.scalable = false;
-        obj.name = 'bg;'
+        obj.name = 'bg';
         canvas.add(obj);
     })
 
@@ -90,7 +113,7 @@ window.onload = function () {
 
     fabric.loadSVGFromURL('../svg/Statue.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(2);
+        obj.scale(1.75);
         obj.set({ left: 532, top: 276 });
         obj.selectable = false;
         obj.scalable = true;
@@ -100,12 +123,70 @@ window.onload = function () {
 
     fabric.loadSVGFromURL('../svg/Stickman.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(2);
+        obj.scale(1.75);
         obj.set({ left: 350, top: 400 });
         obj.selectable = false;
         obj.scalable = true;
         obj.name = 'stickman';
         canvas.add(obj);
     })
+
+    fabric.loadSVGFromURL('../svg/inArena.svg', function (objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        obj.scale(1);
+        obj.set({ left: 360, top: 243 });
+        obj.selectable = false;
+        obj.scalable = false;
+        obj.name = 'inArena';
+        canvas.add(obj);
+        canvas.sendToBack(obj);
+    })
+
+    fabric.loadSVGFromURL('../svg/inTavern.svg', function (objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        obj.scale(1);
+        obj.set({ left: 360, top: 243 });
+        obj.selectable = false;
+        obj.scalable = false;
+        obj.name = 'inTavern';
+        canvas.add(obj);
+        canvas.sendToBack(obj);
+    })
+
+    fabric.loadSVGFromURL('../svg/inBlacksmith.svg', function (objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        obj.scale(1);
+        obj.set({ left: 360, top: 243 });
+        obj.selectable = false;
+        obj.scalable = false;
+        obj.name = 'inBlacksmith';
+        canvas.add(obj);
+        canvas.sendToBack(obj);
+    })
+
+    fabric.loadSVGFromURL('../svg/inStatue.svg', function (objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        obj.scale(1);
+        obj.set({ left: 360, top: 243 });
+        obj.selectable = false;
+        obj.scalable = false;
+        obj.name = 'inStatue';
+        canvas.add(obj);
+        canvas.sendToBack(obj);
+    })
+
+    fabric.loadSVGFromURL('../svg/inStickman.svg', function (objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        obj.scale(1);
+        obj.set({ left: 360, top: 243 });
+        obj.selectable = false;
+        obj.scalable = false;
+        obj.name = 'inStickman';
+        canvas.add(obj);
+        canvas.sendToBack(obj);
+    })
+
+
+
 
 }
