@@ -164,7 +164,7 @@ function handleRegisterResponse(res) {
         }, 500)
     }
     else {
-        window.location.href = '../'
+        window.location.href = './'
     }
 }
 
@@ -204,6 +204,6 @@ function handleLoginResponse(res)
         }, 500)
     }
     else {
-        window.location.href = '../'
+        window.location.href = './'
     }
 }
