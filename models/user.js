@@ -61,6 +61,7 @@ user.methods.initActivation = function () {
     if(config.disableMail)
     {
         a.activated = true
+        return
     }
 
     a.activated = false
