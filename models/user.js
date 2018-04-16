@@ -55,7 +55,7 @@ user.methods.setPassword = function (password) {
     this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(8))
 }
 
-user.methods.initActivation = function () {
+user.methods.initActivation = function (callback) {
 
     var a = this.activation
     if(config.disableMail)
@@ -97,9 +97,14 @@ user.methods.initActivation = function () {
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            return log.error(error)
+            log.error(error)
+            callback(false)
         }
-        log.info('Message sent: %s', info.messageId)
+        else
+        {
+            log.info('Message sent to: ' + this.email)
+            callback(true)
+        }
     })
 }
 

@@ -27,21 +27,26 @@ module.exports = {
 
                 var email = req.body.registerEmail
 
-                if(!username || !password || !email) {
+                if (!username || !password || !email) {
                     req.registerMessage = "Dane są niekompletne"
                     return done(null, false)
                 }
 
-                if(!email.includes("@")) {
+                if (!email.includes("@")) {
                     req.registerMessage = "Adres e-mail jest nieprawidłowy"
                     return done(null, false)
                 }
 
-                if(username.length < 2 || username.length > 30) {
+                if (username.length < 2 || username.length > 30) {
                     req.registerMessage = "Login musi zawierać od 2 a 30 znaków"
                     return done(null, false)
                 }
-                
+
+                if (password.length < 8) {
+                    req.registerMessage = "Hasło musi zawierać conajmniej 8 znaków"
+                    return done(null, false)
+                }
+
                 User.findOne({
                     $or: [
                         { "email": email },
@@ -50,25 +55,32 @@ module.exports = {
                 }).then(user => {
 
                     if (user) {
-                        var msg = (user.email == email) ? "E-mail jest już używany." : "Login jest już używany."
+                        var msg = (user.email == email) ? "Adres e-mail jest już używany." : "Login jest już używany."
                         req.registerMessage = msg
                         return done(null, false)
                     }
                     else {
                         var newUser = new User()
-                        newUser.login = username
                         newUser.email = email
-                        newUser.setPassword(password)
-                        newUser.initActivation()
-
-                        newUser.save(function (err) {
-                            if (err) {
-                                log.error("Error creating user: " + err)
-                                return done(err)
+                        newUser.initActivation(function (success) {
+                            if (!success) {
+                                req.registerMessage = "Adres e-mail jest nieprawidłowy."
+                                return done(null, false)
                             }
+                            else {
+                                newUser.login = username
+                                newUser.setPassword(password)
 
-                            log.info('New user registered: ' + newUser.login)
-                            return done(null, newUser)
+                                newUser.save(function (err) {
+                                    if (err) {
+                                        log.error("Error creating user: " + err)
+                                        return done(err)
+                                    }
+
+                                    log.info('New user registered: ' + newUser.login)
+                                    return done(null, newUser)
+                                })
+                            }
                         })
                     }
                 })
@@ -102,7 +114,7 @@ module.exports = {
 
     isActivated: (req, res, next) => {
 
-        if(req.user.activation.activated)
+        if (req.user.activation.activated)
             return next()
 
         res.redirect('/activation')
