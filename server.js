@@ -1,6 +1,7 @@
 var log = require("./log")
 var config = require("./config")
 var login = require("./login")
+var api = require("./api")
 
 var path = require('path')
 
@@ -27,6 +28,8 @@ app.use(morgan('dev'))
 
 var server = require('http').createServer(app)
 var io = require('socket.io')(server)
+
+api(app)
 
 app.get('/activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)
