@@ -57,25 +57,46 @@ window.onload = function () {
                 canvas.bringToFront(canvas.getItemByName('inArena'));
                 canvas.bringToFront(canvas.getItemByName('findOpButton'));
                 canvas.setObjOpacity('findOpButton', 1);
+                canvas.bringToFront(canvas.getItemByName('exit'));
                 //open arena
                 break;
             case 'tavern':
                 canvas.bringToFront(canvas.getItemByName('inTavern'));
+                canvas.bringToFront(canvas.getItemByName('exit'));
+
                 //open tavern
                 break;
             case 'blacksmith':
                 canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
+                canvas.bringToFront(canvas.getItemByName('exit'));
+
                 //open blacksmith
                 break;
             case 'statue':
                 canvas.bringToFront(canvas.getItemByName('inStatue'));
+                canvas.bringToFront(canvas.getItemByName('exit'));
+
                 //open statue
                 break;
             case 'stickman':
                 canvas.bringToFront(canvas.getItemByName('inStickman'));
                 canvas.bringToFront(canvas.getItemByName('statsText'));
                 canvas.setObjOpacity('statsText', 1);
+                canvas.bringToFront(canvas.getItemByName('exit'));
+
                 //open stickman
+                break;
+            case 'exit':
+                canvas.sendToBack(canvas.getItemByName('inArena'));
+                canvas.sendToBack(canvas.getItemByName('inTavern'));
+                canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
+                canvas.sendToBack(canvas.getItemByName('inStatue'));
+                canvas.sendToBack(canvas.getItemByName('inStickman'));
+                canvas.sendToBack(canvas.getItemByName('findOpButton'));
+                canvas.sendToBack(canvas.getItemByName('exit'));
+                canvas.setObjOpacity('findOpButton', 0);
+                canvas.sendToBack(canvas.getItemByName('statsText'));
+                canvas.setObjOpacity('statsText', 0);
                 break;
             case 'findOpButton':
                 window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
@@ -87,6 +108,7 @@ window.onload = function () {
                 canvas.sendToBack(canvas.getItemByName('inStatue'));
                 canvas.sendToBack(canvas.getItemByName('inStickman'));
                 canvas.sendToBack(canvas.getItemByName('findOpButton'));
+                canvas.sendToBack(canvas.getItemByName('exit'));
                 canvas.setObjOpacity('findOpButton', 0);
                 canvas.sendToBack(canvas.getItemByName('statsText'));
                 canvas.setObjOpacity('statsText', 0);
@@ -215,6 +237,16 @@ window.onload = function () {
         obj.selectable = false;
         obj.scalable = false;
         obj.name = 'inStickman';
+        canvas.add(obj);
+        canvas.sendToBack(obj);
+    })
+    fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        obj.scale(0.2);
+        obj.set({ left: canvas.width/2 +220, top: canvas.height/2 -120 });
+        obj.selectable = false;
+        obj.scalable = false;
+        obj.name = 'exit';
         canvas.add(obj);
         canvas.sendToBack(obj);
     })
