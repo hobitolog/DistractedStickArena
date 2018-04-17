@@ -1,5 +1,5 @@
 window.onload = function () {
-
+    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     fabric.Canvas.prototype.getItemByName = function (name) {
         var object = null,
             objects = this.getObjects();
@@ -13,6 +13,15 @@ window.onload = function () {
 
         return object;
     };
+    fabric.Canvas.prototype.setObjOpacity = function (name, value) {
+        var objects = this.getObjects();
+        for (var i = 0, len = this.size(); i < len; i++) {
+            if (objects[i].name && objects[i].name === name) {
+                objects[i].opacity = value;
+                break;
+            }
+        }
+    };
 
 
 
@@ -25,9 +34,13 @@ window.onload = function () {
 
 
     canvas.on('mouse:over', function (e) {
-        if (e.target.scalable == true) {
-            e.target.scale(2);
-            canvas.renderAll();
+        if (e.target != null) {
+            console.log(e.target.name + " left: " + e.target.left + " top: " + e.target.top);
+            if (e.target.scalable == true) {
+                e.target.scale(2);
+                canvas.renderAll();
+
+            }
         }
     });
     canvas.on('mouse:out', function (e) {
@@ -40,6 +53,8 @@ window.onload = function () {
         switch (e.target.name) {
             case 'arena':
                 canvas.bringToFront(canvas.getItemByName('inArena'));
+                canvas.bringToFront(canvas.getItemByName('findOpButton'));
+                canvas.setObjOpacity('findOpButton', 1);
                 //open arena
                 break;
             case 'tavern':
@@ -51,26 +66,31 @@ window.onload = function () {
                 //open blacksmith
                 break;
             case 'statue':
-                canvas.bringToFront(canvas.getItemByName('inStatue'));  
+                canvas.bringToFront(canvas.getItemByName('inStatue'));
                 //open statue
                 break;
             case 'stickman':
-                canvas.bringToFront(canvas.getItemByName('inStickman'));  
+                canvas.bringToFront(canvas.getItemByName('inStickman'));
                 //open stickman
                 break;
-            default:
+            case 'findOpButton':
+                window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
+                break;
+            case 'bg':
                 canvas.sendToBack(canvas.getItemByName('inArena'));
                 canvas.sendToBack(canvas.getItemByName('inTavern'));
                 canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
                 canvas.sendToBack(canvas.getItemByName('inStatue'));
                 canvas.sendToBack(canvas.getItemByName('inStickman'));
+                canvas.sendToBack(canvas.getItemByName('findOpButton'));
+                canvas.setObjOpacity('findOpButton', 0);
+
         }
         canvas.renderAll();
 
     });
 
 
-    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
     fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
@@ -134,13 +154,20 @@ window.onload = function () {
     fabric.loadSVGFromURL('../svg/inArena.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
         obj.scale(1);
-        obj.set({ left: 360, top: 243 });
+        obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
         obj.selectable = false;
         obj.scalable = false;
         obj.name = 'inArena';
         canvas.add(obj);
         canvas.sendToBack(obj);
     })
+
+
+
+
+
+
+
 
     fabric.loadSVGFromURL('../svg/inTavern.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
@@ -185,6 +212,30 @@ window.onload = function () {
         canvas.add(obj);
         canvas.sendToBack(obj);
     })
+
+    var findOpButton = new fabric.Group([new fabric.Rect({
+        width: 200,
+        height: 80,
+        fill: '#ccc',
+        name: 'inArenaButtonBG',
+        selectable: false
+    }),
+    new fabric.Text('Dlaczego Pan Kosakowski \nrobakiem jest?', {
+        // left: 200,
+        // top: 100,
+        fill: '#000',
+        name: 'inArenaButtonText',
+        fontSize: 18
+    })], {
+            name: 'findOpButton',
+            left: canvas.width / 2,
+            top: 320,
+            opacity: 0,
+            selectable: false
+
+        });
+    canvas.add(findOpButton);
+    canvas.sendToBack(findOpButton);
 
 
 
