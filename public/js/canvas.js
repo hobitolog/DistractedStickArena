@@ -1,5 +1,7 @@
 window.onload = function () {
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+    fabric.Object.prototype.objectCaching = true;
+
     fabric.Canvas.prototype.getItemByName = function (name) {
         var object = null,
             objects = this.getObjects();
