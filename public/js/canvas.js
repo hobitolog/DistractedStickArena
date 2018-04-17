@@ -24,7 +24,7 @@ window.onload = function () {
             }
         }
     };
-    var Gstats= {
+    var Gstats = {
         stats: {
             free: 0,
             str: 0,
@@ -34,7 +34,7 @@ window.onload = function () {
             sta: 0
         },
     };
-    function reqStat(){
+    function reqStat() {
         var xmlhttp = new XMLHttpRequest()
         xmlhttp.open("GET", "/getCharacter", true)
         xmlhttp.setRequestHeader("Content-Type", "application/json")
@@ -42,14 +42,14 @@ window.onload = function () {
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var odpowiedz = xmlhttp.response;
-                console.log(odpowiedz.stats.free);
-                Gstats = odpowiedz;                      
+                Gstats = odpowiedz;
             }
         }
-        xmlhttp.send()      
+        xmlhttp.send()
 
     }
-    reqStat();
+
+
 
     var canvas = new fabric.Canvas('c', {
         hoverCursor: 'context-menu',
@@ -57,7 +57,13 @@ window.onload = function () {
         perPixelTargetFind: true,
         targetFindTolerance: 5,
     });
-
+    ///init
+    reqStat();
+    loadBG('inArena');
+    loadBG('inTavern');
+    loadBG('inBlacksmith');
+    loadBG('inStatue');
+    loadBG('inStickman');
 
     canvas.on('mouse:over', function (e) {
         if (e.target != null) {
@@ -70,7 +76,7 @@ window.onload = function () {
         }
     });
     canvas.on('mouse:out', function (e) {
-        if (e.target.scalable == true) {
+        if (e.target != null && e.target.scalable == true) {
             e.target.scale(1.75);
             canvas.renderAll();
         }
@@ -78,33 +84,38 @@ window.onload = function () {
     canvas.on('mouse:down', function (e) {
         switch (e.target.name) {
             case 'arena':
+                loadInArena();
+                canvas.getItemByName('inArena').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inArena'));
                 canvas.bringToFront(canvas.getItemByName('findOpButton'));
-                canvas.setObjOpacity('findOpButton', 1);
                 canvas.bringToFront(canvas.getItemByName('exit'));
                 //open arena
                 break;
             case 'tavern':
+                canvas.getItemByName('inTavern').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inTavern'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
-                
+
                 //open tavern
                 break;
             case 'blacksmith':
+                canvas.getItemByName('inBlacksmith').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
 
                 //open blacksmith
                 break;
             case 'statue':
+                canvas.getItemByName('inStatue').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inStatue'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
 
                 //open statue
                 break;
             case 'stickman':
+                canvas.getItemByName('inStickman').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inStickman'));
-                loadStats();               
+                loadStats();
                 canvas.bringToFront(canvas.getItemByName('statsText'));
                 canvas.bringToFront(canvas.getItemByName('statsPoints'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
@@ -119,7 +130,7 @@ window.onload = function () {
                 canvas.sendToBack(canvas.getItemByName('inStickman'));
                 canvas.sendToBack(canvas.getItemByName('findOpButton'));
                 canvas.sendToBack(canvas.getItemByName('exit'));
-                canvas.setObjOpacity('findOpButton', 0);
+                canvas.remove(canvas.getItemByName('findOpButton'));
                 canvas.remove(canvas.getItemByName('statsPoints'));
                 canvas.remove(canvas.getItemByName('statsText'));
 
@@ -135,7 +146,7 @@ window.onload = function () {
                 canvas.sendToBack(canvas.getItemByName('inStickman'));
                 canvas.sendToBack(canvas.getItemByName('findOpButton'));
                 canvas.sendToBack(canvas.getItemByName('exit'));
-                canvas.setObjOpacity('findOpButton', 0);
+                canvas.remove(canvas.getItemByName('findOpButton'));
                 canvas.remove(canvas.getItemByName('statsPoints'));
                 canvas.remove(canvas.getItemByName('statsText'));
 
@@ -206,71 +217,15 @@ window.onload = function () {
         canvas.add(obj);
     })
 
-    fabric.loadSVGFromURL('../svg/inArena.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1);
-        obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'inArena';
-        canvas.add(obj);
-        canvas.sendToBack(obj);
-    })
 
 
 
 
 
-
-
-
-    fabric.loadSVGFromURL('../svg/inTavern.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1);
-        obj.set({ left: 360, top: 243 });
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'inTavern';
-        canvas.add(obj);
-        canvas.sendToBack(obj);
-    })
-
-    fabric.loadSVGFromURL('../svg/inBlacksmith.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1);
-        obj.set({ left: 360, top: 243 });
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'inBlacksmith';
-        canvas.add(obj);
-        canvas.sendToBack(obj);
-    })
-
-    fabric.loadSVGFromURL('../svg/inStatue.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1);
-        obj.set({ left: 360, top: 243 });
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'inStatue';
-        canvas.add(obj);
-        canvas.sendToBack(obj);
-    })
-
-    fabric.loadSVGFromURL('../svg/inStickman.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1);
-        obj.set({ left: 360, top: 243 });
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'inStickman';
-        canvas.add(obj);
-        canvas.sendToBack(obj);
-    })
     fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
         obj.scale(0.2);
-        obj.set({ left: canvas.width/2 +220, top: canvas.height/2 -120 });
+        obj.set({ left: canvas.width / 2 + 220, top: canvas.height / 2 - 120 });
         obj.selectable = false;
         obj.scalable = false;
         obj.name = 'exit';
@@ -278,165 +233,186 @@ window.onload = function () {
         canvas.sendToBack(obj);
     })
 
-    var findOpButton = new fabric.Group([new fabric.Rect({
-        width: 200,
-        height: 80,
-        fill: '#ccc',
-        name: 'inArenaButtonBG',
-        selectable: false
-    }),
-    new fabric.Text('Znajdź przeciwnika', {
-        // left: 200,
-        // top: 100,
-        fill: '#000',
-        name: 'inArenaButtonText',
-        fontSize: 18
-    })], {
-            name: 'findOpButton',
-            left: canvas.width / 2,
-            top: 320,
-            opacity: 0,
-            selectable: false
 
-        });
-    canvas.add(findOpButton);
-    canvas.sendToBack(findOpButton);
-
-function loadStats()
-{
-    if(!canvas.getItemByName('statsText'))
-    {
-    reqStat();
-    var statsText = new fabric.Group([
-    new fabric.Text('Siła:', {
-        // left: 200,
-        top: 0,
-        fill: '#fff',
-        fontSize: 20,
-        fontFamily: 'Comic Sans',
-        textAlign: 'right',
-        originX: 'right'
-    }),
-    new fabric.Text('Celność:', {
-        // left: 200,
-         top: 30,
-        fill: '#fff',
-        fontSize: 20,
-        fontFamily: 'Comic Sans',
-        textAlign: 'right',
-        originX: 'right'
-    }),
-    new fabric.Text('Zręczność:', {
-        // left: 200,
-        top: 60,
-        fill: '#fff',
-        fontSize: 20,
-        fontFamily: 'Comic Sans',
-        textAlign: 'right',
-        originX: 'right'
-    }),
-    new fabric.Text('Wytrzymałość:', {
-        // left: 200,
-        top: 90,
-        fill: '#fff',
-        fontSize: 20,
-        fontFamily: 'Comic Sans',
-        textAlign: 'right',
-        originX: 'right'
-    }),
-    new fabric.Text('Witalność:', {
-        // left: 200,
-        top: 120,
-        fill: '#fff',
-        fontSize: 20,
-        fontFamily: 'Comic Sans',
-        textAlign: 'right',
-        originX: 'right'
-    }),
-    new fabric.Text('Punkty rozwoju:', {
-        // left: 200,
-        top: 160,
-        fill: '#fff',
-        fontSize: 24,
-        fontFamily: 'Comic Sans',
-        textAlign: 'right',
-        originX: 'right'
-    })], {
-            name: 'statsText',
-            left: canvas.width / 2 - 160,
-            top: 220,
-            opacity: 1,
-            selectable: false
-
-        });
-    canvas.add(statsText);
-    canvas.sendToBack(statsText);
-
-    var statsPoints = new fabric.Group([
-        new fabric.Text(String(Gstats.stats.str), {
-            // left: 200,
-            top: 0,
-            fill: '#fff',
-            fontSize: 20,
-            fontFamily: 'Comic Sans',
-            textAlign: 'right',
-            originX: 'right'
-        }),
-        new fabric.Text(String(Gstats.stats.att), {
-            // left: 200,
-             top: 30,
-            fill: '#fff',
-            fontSize: 20,
-            fontFamily: 'Comic Sans',
-            textAlign: 'right',
-            originX: 'right'
-        }),
-        new fabric.Text(String(Gstats.stats.agi), {
-            // left: 200,
-            top: 60,
-            fill: '#fff',
-            fontSize: 20,
-            fontFamily: 'Comic Sans',
-            textAlign: 'right',
-            originX: 'right'
-        }),
-        new fabric.Text(String(Gstats.stats.sta), {
-            // left: 200,
-            top: 90,
-            fill: '#fff',
-            fontSize: 20,
-            fontFamily: 'Comic Sans',
-            textAlign: 'right',
-            originX: 'right'
-        }),
-        new fabric.Text(String(Gstats.stats.vit), {
-            // left: 200,
-            top: 120,
-            fill: '#fff',
-            fontSize: 20,
-            fontFamily: 'Comic Sans',
-            textAlign: 'right',
-            originX: 'right'
-        }),
-        new fabric.Text(String(Gstats.stats.free), {
-            // left: 200,
-            top: 160,
-            fill: '#fff',
-            fontSize: 24,
-            fontFamily: 'Comic Sans',
-            textAlign: 'right',
-            originX: 'right'
-        })], {
-                name: 'statsPoints',
-                left: canvas.width / 2 - 70,
-                top: 220,
-                opacity: 1,
-                selectable: false
-    
+    function loadBG(BGname) {
+        if (!canvas.getItemByName(BGname)) {
+            fabric.loadSVGFromURL('../svg/' + BGname + '.svg', function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(1);
+                obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = BGname;
+                obj.opacity = 0;
+                canvas.add(obj);
+                canvas.sendToBack(obj);
             });
-        canvas.add(statsPoints);
-        canvas.sendToBack(statsPoints);
         }
+
+    };
+    function loadInArena() {
+        if (!canvas.getItemByName('findOpButton')) {
+            var findOpButton = new fabric.Group([new fabric.Rect({
+                width: 200,
+                height: 80,
+                fill: '#ccc',
+                name: 'inArenaButtonBG',
+                selectable: false
+            }),
+            new fabric.Text('Znajdź przeciwnika', {
+                // left: 200,
+                // top: 100,
+                fill: '#000',
+                name: 'inArenaButtonText',
+                fontSize: 18
+            })], {
+                    name: 'findOpButton',
+                    left: canvas.width / 2,
+                    top: 320,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(findOpButton);
+            canvas.sendToBack(findOpButton);
         }
+
+    };
+
+
+    function loadStats() {
+        if (!canvas.getItemByName('statsText')) {
+            reqStat();
+            var statsText = new fabric.Group([
+                new fabric.Text('Siła:', {
+                    // left: 200,
+                    top: 0,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Celność:', {
+                    // left: 200,
+                    top: 30,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zręczność:', {
+                    // left: 200,
+                    top: 60,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Wytrzymałość:', {
+                    // left: 200,
+                    top: 90,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Witalność:', {
+                    // left: 200,
+                    top: 120,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Punkty rozwoju:', {
+                    // left: 200,
+                    top: 160,
+                    fill: '#fff',
+                    fontSize: 24,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                })], {
+                    name: 'statsText',
+                    left: canvas.width / 2 - 160,
+                    top: 220,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(statsText);
+            canvas.sendToBack(statsText);
+
+            var statsPoints = new fabric.Group([
+                new fabric.Text(String(Gstats.stats.str), {
+                    // left: 200,
+                    top: 0,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.att), {
+                    // left: 200,
+                    top: 30,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.agi), {
+                    // left: 200,
+                    top: 60,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.sta), {
+                    // left: 200,
+                    top: 90,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.vit), {
+                    // left: 200,
+                    top: 120,
+                    fill: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.free), {
+                    // left: 200,
+                    top: 160,
+                    fill: '#fff',
+                    fontSize: 24,
+                    fontFamily: 'Comic Sans',
+                    textAlign: 'right',
+                    originX: 'right'
+                })], {
+                    name: 'statsPoints',
+                    left: canvas.width / 2 - 70,
+                    top: 220,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(statsPoints);
+            canvas.sendToBack(statsPoints);
+        }
+    }
 
 }
