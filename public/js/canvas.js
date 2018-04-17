@@ -24,11 +24,35 @@ window.onload = function () {
             }
         }
     };
+    var Gstats= {
+        stats: {
+            free: 0,
+            str: 0,
+            att: 0,
+            agi: 0,
+            vit: 0,
+            sta: 0
+        },
+    };
+    function reqStat(){
+        var xmlhttp = new XMLHttpRequest()
+        xmlhttp.open("GET", "/getCharacter", true)
+        xmlhttp.setRequestHeader("Content-Type", "application/json")
+        xmlhttp.responseType = "json"
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var odpowiedz = xmlhttp.response;
+                console.log(odpowiedz.stats.free);
+                Gstats = odpowiedz;                      
+            }
+        }
+        xmlhttp.send()      
 
-
+    }
+    reqStat();
 
     var canvas = new fabric.Canvas('c', {
-        hoverCursor: 'pointer',
+        hoverCursor: 'context-menu',
         selection: false,
         perPixelTargetFind: true,
         targetFindTolerance: 5,
@@ -63,7 +87,7 @@ window.onload = function () {
             case 'tavern':
                 canvas.bringToFront(canvas.getItemByName('inTavern'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
-
+                
                 //open tavern
                 break;
             case 'blacksmith':
@@ -80,8 +104,9 @@ window.onload = function () {
                 break;
             case 'stickman':
                 canvas.bringToFront(canvas.getItemByName('inStickman'));
+                loadStats();               
                 canvas.bringToFront(canvas.getItemByName('statsText'));
-                canvas.setObjOpacity('statsText', 1);
+                canvas.bringToFront(canvas.getItemByName('statsPoints'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
 
                 //open stickman
@@ -95,8 +120,9 @@ window.onload = function () {
                 canvas.sendToBack(canvas.getItemByName('findOpButton'));
                 canvas.sendToBack(canvas.getItemByName('exit'));
                 canvas.setObjOpacity('findOpButton', 0);
-                canvas.sendToBack(canvas.getItemByName('statsText'));
-                canvas.setObjOpacity('statsText', 0);
+                canvas.remove(canvas.getItemByName('statsPoints'));
+                canvas.remove(canvas.getItemByName('statsText'));
+
                 break;
             case 'findOpButton':
                 window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
@@ -110,8 +136,9 @@ window.onload = function () {
                 canvas.sendToBack(canvas.getItemByName('findOpButton'));
                 canvas.sendToBack(canvas.getItemByName('exit'));
                 canvas.setObjOpacity('findOpButton', 0);
-                canvas.sendToBack(canvas.getItemByName('statsText'));
-                canvas.setObjOpacity('statsText', 0);
+                canvas.remove(canvas.getItemByName('statsPoints'));
+                canvas.remove(canvas.getItemByName('statsText'));
+
 
         }
         canvas.renderAll();
@@ -275,9 +302,13 @@ window.onload = function () {
     canvas.add(findOpButton);
     canvas.sendToBack(findOpButton);
 
-
+function loadStats()
+{
+    if(!canvas.getItemByName('statsText'))
+    {
+    reqStat();
     var statsText = new fabric.Group([
-    new fabric.Text('Siła', {
+    new fabric.Text('Siła:', {
         // left: 200,
         top: 0,
         fill: '#fff',
@@ -286,7 +317,7 @@ window.onload = function () {
         textAlign: 'right',
         originX: 'right'
     }),
-    new fabric.Text('Celność', {
+    new fabric.Text('Celność:', {
         // left: 200,
          top: 30,
         fill: '#fff',
@@ -295,7 +326,7 @@ window.onload = function () {
         textAlign: 'right',
         originX: 'right'
     }),
-    new fabric.Text('Zręczność', {
+    new fabric.Text('Zręczność:', {
         // left: 200,
         top: 60,
         fill: '#fff',
@@ -304,7 +335,7 @@ window.onload = function () {
         textAlign: 'right',
         originX: 'right'
     }),
-    new fabric.Text('Wytrzymałość', {
+    new fabric.Text('Wytrzymałość:', {
         // left: 200,
         top: 90,
         fill: '#fff',
@@ -313,7 +344,7 @@ window.onload = function () {
         textAlign: 'right',
         originX: 'right'
     }),
-    new fabric.Text('Witalność', {
+    new fabric.Text('Witalność:', {
         // left: 200,
         top: 120,
         fill: '#fff',
@@ -321,17 +352,91 @@ window.onload = function () {
         fontFamily: 'Comic Sans',
         textAlign: 'right',
         originX: 'right'
+    }),
+    new fabric.Text('Punkty rozwoju:', {
+        // left: 200,
+        top: 160,
+        fill: '#fff',
+        fontSize: 24,
+        fontFamily: 'Comic Sans',
+        textAlign: 'right',
+        originX: 'right'
     })], {
             name: 'statsText',
-            left: canvas.width / 2 - 150,
-            top: 200,
-            opacity: 0,
+            left: canvas.width / 2 - 160,
+            top: 220,
+            opacity: 1,
             selectable: false
 
         });
     canvas.add(statsText);
     canvas.sendToBack(statsText);
 
-
+    var statsPoints = new fabric.Group([
+        new fabric.Text(String(Gstats.stats.str), {
+            // left: 200,
+            top: 0,
+            fill: '#fff',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'right',
+            originX: 'right'
+        }),
+        new fabric.Text(String(Gstats.stats.att), {
+            // left: 200,
+             top: 30,
+            fill: '#fff',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'right',
+            originX: 'right'
+        }),
+        new fabric.Text(String(Gstats.stats.agi), {
+            // left: 200,
+            top: 60,
+            fill: '#fff',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'right',
+            originX: 'right'
+        }),
+        new fabric.Text(String(Gstats.stats.sta), {
+            // left: 200,
+            top: 90,
+            fill: '#fff',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'right',
+            originX: 'right'
+        }),
+        new fabric.Text(String(Gstats.stats.vit), {
+            // left: 200,
+            top: 120,
+            fill: '#fff',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'right',
+            originX: 'right'
+        }),
+        new fabric.Text(String(Gstats.stats.free), {
+            // left: 200,
+            top: 160,
+            fill: '#fff',
+            fontSize: 24,
+            fontFamily: 'Comic Sans',
+            textAlign: 'right',
+            originX: 'right'
+        })], {
+                name: 'statsPoints',
+                left: canvas.width / 2 - 70,
+                top: 220,
+                opacity: 1,
+                selectable: false
+    
+            });
+        canvas.add(statsPoints);
+        canvas.sendToBack(statsPoints);
+        }
+        }
 
 }
