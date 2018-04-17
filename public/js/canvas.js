@@ -116,40 +116,50 @@ window.onload = function () {
                 canvas.getItemByName('inStickman').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inStickman'));
                 loadStats();
-                canvas.bringToFront(canvas.getItemByName('statsText'));
-                canvas.bringToFront(canvas.getItemByName('statsPoints'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
-
+                // canvas.bringToFront(canvas.getItemByName('statsText'));
+                // canvas.bringToFront(canvas.getItemByName('statsPoints'));
+                // canvas.bringToFront(canvas.getItemByName('addStr'));
+                // canvas.bringToFront(canvas.getItemByName('addAtt'));
+                // canvas.bringToFront(canvas.getItemByName('addAgi'));
+                // canvas.bringToFront(canvas.getItemByName('addSta'));
+                // canvas.bringToFront(canvas.getItemByName('addVit'));
+                // canvas.bringToFront(canvas.getItemByName('exit'));
                 //open stickman
                 break;
-            case 'exit':
-                canvas.sendToBack(canvas.getItemByName('inArena'));
-                canvas.sendToBack(canvas.getItemByName('inTavern'));
-                canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
-                canvas.sendToBack(canvas.getItemByName('inStatue'));
-                canvas.sendToBack(canvas.getItemByName('inStickman'));
-                canvas.sendToBack(canvas.getItemByName('findOpButton'));
-                canvas.sendToBack(canvas.getItemByName('exit'));
-                canvas.remove(canvas.getItemByName('findOpButton'));
-                canvas.remove(canvas.getItemByName('statsPoints'));
-                canvas.remove(canvas.getItemByName('statsText'));
+            case 'addStr':
+                removeStats();
+                loadStats();
 
-                break;
+                break;//TODO POST json
+            case 'addAtt':
+                removeStats();
+                loadStats();
+
+                break;//TODO POST json
+            case 'addAgi':
+                removeStats();
+                loadStats();
+
+                break;//TODO POST json
+            case 'addSta':
+                removeStats();
+                loadStats();
+
+                break;//TODO POST json
+            case 'addVit':
+                removeStats();
+                loadStats();
+
+                break;//TODO POST json
             case 'findOpButton':
                 window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
                 break;
+            case 'exit':
+                closeButton();
+                break;
             case 'bg':
-                canvas.sendToBack(canvas.getItemByName('inArena'));
-                canvas.sendToBack(canvas.getItemByName('inTavern'));
-                canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
-                canvas.sendToBack(canvas.getItemByName('inStatue'));
-                canvas.sendToBack(canvas.getItemByName('inStickman'));
-                canvas.sendToBack(canvas.getItemByName('findOpButton'));
-                canvas.sendToBack(canvas.getItemByName('exit'));
-                canvas.remove(canvas.getItemByName('findOpButton'));
-                canvas.remove(canvas.getItemByName('statsPoints'));
-                canvas.remove(canvas.getItemByName('statsText'));
-
+                closeButton();
+                break;
 
         }
         canvas.renderAll();
@@ -346,8 +356,6 @@ window.onload = function () {
 
                 });
             canvas.add(statsText);
-            canvas.sendToBack(statsText);
-
             var statsPoints = new fabric.Group([
                 new fabric.Text(String(Gstats.stats.str), {
                     // left: 200,
@@ -411,8 +419,89 @@ window.onload = function () {
 
                 });
             canvas.add(statsPoints);
-            canvas.sendToBack(statsPoints);
+            if (Gstats.stats.free != 0) {
+                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                    var obj = fabric.util.groupSVGElements(objects, options);
+                    obj.scale(0.35);
+                    obj.set({ left: canvas.width / 2 - 50, top: 138 });
+                    obj.selectable = false;
+                    obj.scalable = false;
+                    obj.name = 'addStr';
+                    canvas.add(obj);
+                });
+                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                    var obj = fabric.util.groupSVGElements(objects, options);
+                    obj.scale(0.35);
+                    obj.set({ left: canvas.width / 2 - 50, top: 168 });
+                    obj.selectable = false;
+                    obj.scalable = false;
+                    obj.name = 'addAtt';
+                    canvas.add(obj);
+                });
+                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                    var obj = fabric.util.groupSVGElements(objects, options);
+                    obj.scale(0.35);
+                    obj.set({ left: canvas.width / 2 - 50, top: 198 });
+                    obj.selectable = false;
+                    obj.scalable = false;
+                    obj.name = 'addAgi';
+                    canvas.add(obj);
+                });
+                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                    var obj = fabric.util.groupSVGElements(objects, options);
+                    obj.scale(0.35);
+                    obj.set({ left: canvas.width / 2 - 50, top: 228 });
+                    obj.selectable = false;
+                    obj.scalable = false;
+                    obj.name = 'addSta';
+                    canvas.add(obj);
+                });
+                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                    var obj = fabric.util.groupSVGElements(objects, options);
+                    obj.scale(0.35);
+                    obj.set({ left: canvas.width / 2 - 50, top: 258 });
+                    obj.selectable = false;
+                    obj.scalable = false;
+                    obj.name = 'addVit';
+                    canvas.add(obj);
+                });
+                
+
+            }
+
         }
+        canvas.bringToFront(canvas.getItemByName('statsText'));
+        canvas.bringToFront(canvas.getItemByName('statsPoints'));
+        canvas.bringToFront(canvas.getItemByName('addStr'));
+        canvas.bringToFront(canvas.getItemByName('addAtt'));
+        canvas.bringToFront(canvas.getItemByName('addAgi'));
+        canvas.bringToFront(canvas.getItemByName('addSta'));
+        canvas.bringToFront(canvas.getItemByName('addVit'));
+        canvas.bringToFront(canvas.getItemByName('exit'));
+
     }
+    function closeButton() {
+        canvas.sendToBack(canvas.getItemByName('inArena'));
+        canvas.sendToBack(canvas.getItemByName('inTavern'));
+        canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
+        canvas.sendToBack(canvas.getItemByName('inStatue'));
+        canvas.sendToBack(canvas.getItemByName('inStickman'));
+        canvas.sendToBack(canvas.getItemByName('findOpButton'));
+        canvas.sendToBack(canvas.getItemByName('exit'));
+        canvas.remove(canvas.getItemByName('findOpButton'));
+        removeStats();
+
+    }
+    function removeStats() {
+        canvas.remove(canvas.getItemByName('statsPoints'));
+        canvas.remove(canvas.getItemByName('statsText'));
+        canvas.remove(canvas.getItemByName('addStr'));
+        canvas.remove(canvas.getItemByName('addAtt'));
+        canvas.remove(canvas.getItemByName('addAgi'));
+        canvas.remove(canvas.getItemByName('addSta'));
+        canvas.remove(canvas.getItemByName('addVit'));
+
+    }
+
 
 }
