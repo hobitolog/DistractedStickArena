@@ -73,6 +73,8 @@ window.onload = function () {
                 break;
             case 'stickman':
                 canvas.bringToFront(canvas.getItemByName('inStickman'));
+                canvas.bringToFront(canvas.getItemByName('statsText'));
+                canvas.setObjOpacity('statsText', 1);
                 //open stickman
                 break;
             case 'findOpButton':
@@ -86,6 +88,8 @@ window.onload = function () {
                 canvas.sendToBack(canvas.getItemByName('inStickman'));
                 canvas.sendToBack(canvas.getItemByName('findOpButton'));
                 canvas.setObjOpacity('findOpButton', 0);
+                canvas.sendToBack(canvas.getItemByName('statsText'));
+                canvas.setObjOpacity('statsText', 0);
 
         }
         canvas.renderAll();
@@ -222,7 +226,7 @@ window.onload = function () {
         name: 'inArenaButtonBG',
         selectable: false
     }),
-    new fabric.Text('Dlaczego Pan Kosakowski \nrobakiem jest?', {
+    new fabric.Text('Znajdź przeciwnika', {
         // left: 200,
         // top: 100,
         fill: '#000',
@@ -239,6 +243,62 @@ window.onload = function () {
     canvas.add(findOpButton);
     canvas.sendToBack(findOpButton);
 
+
+    var statsText = new fabric.Group([
+    new fabric.Text('Siła', {
+        // left: 200,
+        top: 0,
+        fill: '#fff',
+        fontSize: 20,
+        fontFamily: 'Comic Sans',
+        textAlign: 'right',
+        originX: 'right'
+    }),
+    new fabric.Text('Celność', {
+        // left: 200,
+         top: 30,
+        fill: '#fff',
+        fontSize: 20,
+        fontFamily: 'Comic Sans',
+        textAlign: 'right',
+        originX: 'right'
+    }),
+    new fabric.Text('Zręczność', {
+        // left: 200,
+        top: 60,
+        fill: '#fff',
+        fontSize: 20,
+        fontFamily: 'Comic Sans',
+        textAlign: 'right',
+        originX: 'right'
+    }),
+    new fabric.Text('Wytrzymałość', {
+        // left: 200,
+        top: 90,
+        fill: '#fff',
+        fontSize: 20,
+        fontFamily: 'Comic Sans',
+        textAlign: 'right',
+        originX: 'right'
+    }),
+    new fabric.Text('Witalność', {
+        // left: 200,
+        top: 120,
+        fill: '#fff',
+        fontSize: 20,
+        fontFamily: 'Comic Sans',
+        textAlign: 'right',
+        originX: 'right'
+    })], {
+            name: 'statsText',
+            left: canvas.width / 2 - 150,
+            top: 200,
+            opacity: 0,
+            selectable: false
+
+        });
+    canvas.add(statsText);
+    canvas.sendToBack(statsText);
 
 
 
