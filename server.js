@@ -2,6 +2,7 @@ var log = require("./log")
 var config = require("./config")
 var login = require("./login")
 var api = require("./api")
+//TODO var fight = require("./fight")
 
 var path = require('path')
 
@@ -16,6 +17,7 @@ var cookieParser = require('cookie-parser')
 var morgan = require('morgan')
 var app = express()
 
+//TODO new sessionStorage, install and configure "passport.socketio"
 app.use(expressSession({ secret: config.sessionSecret }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -30,6 +32,7 @@ var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 
 api(app)
+//TODO fight(app, io)
 
 app.get('/activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)
