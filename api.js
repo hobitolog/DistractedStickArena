@@ -27,6 +27,7 @@ module.exports = function (app) {
             }
             else {
                 req.user.character.stats[stat] += amount
+                req.user.character.stats.free -= amount
                 req.user.save(function (err) {
                     if(err) 
                         log.error(err)
