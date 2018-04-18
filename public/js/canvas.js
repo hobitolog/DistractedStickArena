@@ -25,6 +25,7 @@ window.onload = function () {
         }
     };
     var Gstats = {
+        httpSucc: false,
         stats: {
             free: 0,
             str: 0,
@@ -34,19 +35,73 @@ window.onload = function () {
             sta: 0
         },
     };
+
+
+
+    // function reqStat(callback) {        
+    //         var xmlhttp = new XMLHttpRequest();
+    //         xmlhttp.open("GET", "/getCharacter", true);
+    //         xmlhttp.setRequestHeader("Content-Type", "application/json");
+    //         xmlhttp.responseType = "json";
+    //         xmlhttp.onreadystatechange = function () {
+    //             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    //                 Gstats = xmlhttp.response;
+    //                 Gstats.httpSucc = true;                   
+    //             }
+    //         };
+    //         xmlhttp.send();
+    //         callback();
+    // }
+
     function reqStat() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "/getCharacter", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    Gstats = xmlhttp.response;
+                    Gstats.httpSucc = true;
+                    resolve();
+                }
+            };
+            xmlhttp.send();
+        });
+    }
+
+    function updateStat(param, amount) {
+        return new Promise(function (resolve, reject) {
+        var stats = {
+            "stat": param,
+            "amount": amount
+        }
+        var json = JSON.stringify(stats)
         var xmlhttp = new XMLHttpRequest()
-        xmlhttp.open("GET", "/getCharacter", true)
+        xmlhttp.open("POST", "/spendPoints", true)
         xmlhttp.setRequestHeader("Content-Type", "application/json")
         xmlhttp.responseType = "json"
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                var odpowiedz = xmlhttp.response;
-                Gstats = odpowiedz;
+                if (xmlhttp.response.error) {
+                        alert(xmlhttp.response.error);//blad formatu parametrow                   
+                }
+                else
+                {
+                    console.log('wywolanie');
+
+                    resolve();
+                }
             }
         }
-        xmlhttp.send()
-
+        xmlhttp.send(json)
+    });
+    }
+    function refreshStat()
+    {
+        console.log("wywolanie 2");
+        removeStats();
+        reqStat().then(loadStats);
     }
 
 
@@ -58,7 +113,7 @@ window.onload = function () {
         targetFindTolerance: 5,
     });
     ///init
-    reqStat();
+    //reqStat();
     loadBG('inArena');
     loadBG('inTavern');
     loadBG('inBlacksmith');
@@ -109,48 +164,33 @@ window.onload = function () {
                 canvas.getItemByName('inStatue').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inStatue'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
+                console.log(Gstats);
 
                 //open statue
                 break;
             case 'stickman':
                 canvas.getItemByName('inStickman').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inStickman'));
-                loadStats();
-                // canvas.bringToFront(canvas.getItemByName('statsText'));
-                // canvas.bringToFront(canvas.getItemByName('statsPoints'));
-                // canvas.bringToFront(canvas.getItemByName('addStr'));
-                // canvas.bringToFront(canvas.getItemByName('addAtt'));
-                // canvas.bringToFront(canvas.getItemByName('addAgi'));
-                // canvas.bringToFront(canvas.getItemByName('addSta'));
-                // canvas.bringToFront(canvas.getItemByName('addVit'));
-                // canvas.bringToFront(canvas.getItemByName('exit'));
+                reqStat().then(loadStats);
+                // reqStat(loadStats);
+                console.log(Gstats);
                 //open stickman
                 break;
             case 'addStr':
-                removeStats();
-                loadStats();
-
-                break;//TODO POST json
+                updateStat("str", 1).then(refreshStat);
+                break;
             case 'addAtt':
-                removeStats();
-                loadStats();
-
-                break;//TODO POST json
+                updateStat("att", 1).then(refreshStat);
+                break;
             case 'addAgi':
-                removeStats();
-                loadStats();
-
-                break;//TODO POST json
+                updateStat("agi", 1).then(refreshStat);
+                break;
             case 'addSta':
-                removeStats();
-                loadStats();
-
-                break;//TODO POST json
+                updateStat("sta", 1).then(refreshStat);
+                break;
             case 'addVit':
-                removeStats();
-                loadStats();
-
-                break;//TODO POST json
+                updateStat("vit", 1).then(refreshStat);
+                break;
             case 'findOpButton':
                 window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
                 break;
@@ -291,8 +331,7 @@ window.onload = function () {
 
 
     function loadStats() {
-        if (!canvas.getItemByName('statsText')) {
-            reqStat();
+        if (!canvas.getItemByName('statsText') && Gstats.httpSucc == true) {
             var statsText = new fabric.Group([
                 new fabric.Text('Siła:', {
                     // left: 200,
@@ -356,6 +395,8 @@ window.onload = function () {
 
                 });
             canvas.add(statsText);
+
+
             var statsPoints = new fabric.Group([
                 new fabric.Text(String(Gstats.stats.str), {
                     // left: 200,
@@ -412,7 +453,7 @@ window.onload = function () {
                     originX: 'right'
                 })], {
                     name: 'statsPoints',
-                    left: canvas.width / 2 - 70,
+                    left: canvas.width / 2 - 60,
                     top: 220,
                     opacity: 1,
                     selectable: false
@@ -423,7 +464,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 50, top: 138 });
+                    obj.set({ left: canvas.width / 2 - 38, top: 138 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addStr';
@@ -432,7 +473,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 50, top: 168 });
+                    obj.set({ left: canvas.width / 2 - 38, top: 168 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addAtt';
@@ -441,7 +482,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 50, top: 198 });
+                    obj.set({ left: canvas.width / 2 - 38, top: 198 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addAgi';
@@ -450,7 +491,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 50, top: 228 });
+                    obj.set({ left: canvas.width / 2 - 38, top: 228 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addSta';
@@ -459,16 +500,19 @@ window.onload = function () {
                 fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 50, top: 258 });
+                    obj.set({ left: canvas.width / 2 - 38, top: 258 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addVit';
                     canvas.add(obj);
                 });
-                
+
 
             }
-
+            Gstats.httpSucc = false;
+        }
+        else {
+            //    setInterval(reqStat().then(loadStats()), 2000);
         }
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
