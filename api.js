@@ -4,7 +4,25 @@ var log = require('./log')
 module.exports = function (app) {
 
     app.get('/getCharacter', login.isLoggedIn, login.isActivated, (req, res) => {
-        res.json(res.req.user.character)
+        var json = {
+            "level": req.user.character.level,
+            "exp": req.user.character.exp,
+            "gold": req.user.character.gold,
+            "ranking": req.user.character.rankingPoints
+        }
+        res.json(json)
+    })
+
+    app.get('/getStats', login.isLoggedIn, login.isActivated, (req, res) => {
+        res.json(res.req.user.character.stats)
+    })
+
+    app.get('/getEquipment', login.isLoggedIn, login.isActivated, (req, res) => {
+        res.json(res.req.user.character.equipment)
+    })
+
+    app.get('/getBackpack', login.isLoggedIn, login.isActivated, (req, res) => {
+        res.json({ "backpack" : res.req.user.character.backpack })
     })
 
     app.post('/spendPoints', login.isLoggedIn, login.isActivated, (req, res) => {
