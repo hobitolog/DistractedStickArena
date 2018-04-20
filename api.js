@@ -1,5 +1,6 @@
 var login = require('./login')
 var log = require('./log')
+var fight = require('./fight')
 
 module.exports = function (app) {
 
@@ -25,7 +26,7 @@ module.exports = function (app) {
         res.json({ "backpack" : res.req.user.character.backpack })
     })
 
-    app.post('/spendPoints', login.isLoggedIn, login.isActivated, (req, res) => {
+    app.post('/spendPoints', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
 
         var stat = req.body.stat
         var amount = req.body.amount

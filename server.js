@@ -32,7 +32,7 @@ var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 
 api(app)
-//TODO fight(app, io)
+//TODO fight.init(app, io)
 
 app.get('/activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)
