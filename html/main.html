@@ -32,7 +32,7 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav mx-0 mx-sm-3">
                         <a class="btn btn-danger mr-1 mr-sm-2" href="/logout">Wyloguj</a>
-                        <a class="btn btn-outline-danger mr-1 mr-sm-2" href="https://github.com/Kosert/StickArena" target="_blank">GitHub</a>                        
+                        <a class="btn btn-outline-danger mr-1 mr-sm-2" href="https://github.com/Kosert/StickArena" target="_blank">GitHub</a>
                     </div>
                 </div>
             </div>
@@ -42,8 +42,18 @@
 
     <div class="container">
         <div class="mx-auto" style="width:720px; height:486px">
-                <canvas id="c" width="720" height="486">Nie działa? Ojej, wracaj do mamusi!</canvas>
+            <canvas id="c" width="720" height="486">Nie działa? Ojej, wracaj do mamusi!</canvas>
+            <select id="helmet" style="position: relative; visibility: hidden;width: 150px;">
+                <option value="">Brak hełmu</option>
+            </select>
+            <select id="armor" style="position: relative; visibility: hidden;width: 150px;">
+                <option value="">Brak pancerza</option>
+            </select>
+            <select id="weapon" style="position: relative; visibility: hidden;width: 150px">
+                <option value="">Brak broni</option>
+            </select>
         </div>
+
     </div>
 </body>
 

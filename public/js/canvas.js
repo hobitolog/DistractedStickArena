@@ -1,8 +1,10 @@
 window.onload = function () {
-//TODO font change
+    //TODO font change
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     fabric.Object.prototype.objectCaching = true;
+    fabric.Object.prototype.transparentCorners = false;
+
 
     fabric.Canvas.prototype.getItemByName = function (name) {
         var object = null,
@@ -26,6 +28,17 @@ window.onload = function () {
             }
         }
     };
+
+
+    fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
+        return {
+            left: object.left + this._offset.left,
+            top: object.top + this._offset.top
+        };
+    }
+
+
+
     var Gstats = {
         httpSucc: false,
         stats: {
@@ -37,6 +50,23 @@ window.onload = function () {
             sta: 0
         },
     };
+
+    var Geq = {
+        httpSucc: false,
+        equipment: {
+            helmet: {
+                itemId: 0
+            },
+            armor: {
+                itemId: 0
+            },
+            weapon: {
+                itemId: 0
+            }
+        }
+
+    };
+
 
     function reqStat() {
         return new Promise(function (resolve, reject) {
@@ -57,35 +87,79 @@ window.onload = function () {
 
     function updateStat(param, amount) {
         return new Promise(function (resolve, reject) {
-        var stats = {
-            "stat": param,
-            "amount": amount
-        }
-        var json = JSON.stringify(stats)
-        var xmlhttp = new XMLHttpRequest()
-        xmlhttp.open("POST", "/spendPoints", true)
-        xmlhttp.setRequestHeader("Content-Type", "application/json")
-        xmlhttp.responseType = "json"
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                if (xmlhttp.response.error) {
-                        alert(xmlhttp.response.error);                   
-                }
-                else
-                {
-                    resolve();
+            var stats = {
+                "stat": param,
+                "amount": amount
+            }
+            var json = JSON.stringify(stats)
+            var xmlhttp = new XMLHttpRequest()
+            xmlhttp.open("POST", "/spendPoints", true)
+            xmlhttp.setRequestHeader("Content-Type", "application/json")
+            xmlhttp.responseType = "json"
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    if (xmlhttp.response.error) {
+                        alert(xmlhttp.response.error);
+                    }
+                    else {
+                        resolve();
+                    }
                 }
             }
-        }
-        xmlhttp.send(json)
-    });
+            xmlhttp.send(json)
+        });
     }
-    function refreshStat()
-    {
-        console.log("wywolanie 2");
+    function refreshStat() {
         removeStats();
         reqStat().then(loadStats);
     }
+
+
+    function reqEq() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "/getEquipment", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    Geq.equipment = xmlhttp.response;
+                    Geq.httpSucc = true;
+                    resolve();
+                }
+            };
+            xmlhttp.send();
+        });
+    }
+    // function updateEq(param, amount) {
+    //     return new Promise(function (resolve, reject) {
+    //         var equipent = {
+    //          ??   "equipent": param,??
+    //         ??    "amount": amount??
+    //         }
+    //         var json = JSON.stringify(stats)
+    //         var xmlhttp = new XMLHttpRequest()
+    //         xmlhttp.open("POST", ??"/spendEquipment"??, true)
+    //         xmlhttp.setRequestHeader("Content-Type", "application/json")
+    //         xmlhttp.responseType = "json"
+    //         xmlhttp.onreadystatechange = function () {
+    //             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    //                 if (xmlhttp.response.error) {
+    //                     alert(xmlhttp.response.error);
+    //                 }
+    //                 else {
+    //                     resolve();
+    //                 }
+    //             }
+    //         }
+    //         xmlhttp.send(json)
+    //     });
+    // }
+    // function refreshEq() {
+    //     ??removeStats();??
+    //     reqEq().then(??loadStats??);
+    // }
+
 
 
 
@@ -95,8 +169,11 @@ window.onload = function () {
         perPixelTargetFind: true,
         targetFindTolerance: 5,
     });
+
     ///init
-    //reqStat();
+    var helmetDrop = document.getElementById('helmet');
+    var armorDrop = document.getElementById('armor');
+    var weaponDrop = document.getElementById('weapon');
     loadBG('inArena');
     loadBG('inTavern');
     loadBG('inBlacksmith');
@@ -122,6 +199,7 @@ window.onload = function () {
     canvas.on('mouse:down', function (e) {
         switch (e.target.name) {
             case 'arena':
+                hideEqControls()
                 loadInArena();
                 canvas.getItemByName('inArena').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inArena'));
@@ -130,6 +208,7 @@ window.onload = function () {
                 //open arena
                 break;
             case 'tavern':
+                hideEqControls()
                 canvas.getItemByName('inTavern').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inTavern'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
@@ -137,13 +216,15 @@ window.onload = function () {
                 //open tavern
                 break;
             case 'blacksmith':
+                hideEqControls()
                 canvas.getItemByName('inBlacksmith').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
-
+                dropHelmetPosition(canvas.getItemByName('inBlacksmith'));
                 //open blacksmith
                 break;
             case 'statue':
+                hideEqControls()
                 canvas.getItemByName('inStatue').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inStatue'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
@@ -155,7 +236,10 @@ window.onload = function () {
                 canvas.getItemByName('inStickman').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inStickman'));
                 reqStat().then(loadStats);
-                // reqStat(loadStats);
+                loadEq();
+                //TODO
+                //reqEq().then
+                //reqBp().then
                 console.log(Gstats);
                 //open stickman
                 break;
@@ -188,8 +272,6 @@ window.onload = function () {
         canvas.renderAll();
 
     });
-
-
 
     fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
@@ -249,9 +331,6 @@ window.onload = function () {
         obj.name = 'stickman';
         canvas.add(obj);
     })
-
-
-
 
 
 
@@ -495,7 +574,8 @@ window.onload = function () {
             Gstats.httpSucc = false;
         }
         else {
-            //    setInterval(reqStat().then(loadStats()), 2000);
+            //TODO
+
         }
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
@@ -508,6 +588,7 @@ window.onload = function () {
 
     }
     function closeButton() {
+        hideEqControls();
         canvas.sendToBack(canvas.getItemByName('inArena'));
         canvas.sendToBack(canvas.getItemByName('inTavern'));
         canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
@@ -529,6 +610,41 @@ window.onload = function () {
         canvas.remove(canvas.getItemByName('addVit'));
 
     }
+
+    function loadEq() {
+        var absCoords = canvas.getAbsoluteCoords(canvas.getItemByName("inArena"));
+
+        helmetDrop.style.left = ((absCoords.left / 2) + 185) + 'px';//200
+        helmetDrop.style.top = ((absCoords.top / 2) - 600) + 'px';
+        helmetDrop.style.visibility = 'visible';
+
+        armorDrop.style.left = ((absCoords.left / 2) + 30) + 'px';//50
+        armorDrop.style.top = ((absCoords.top / 2) - 500) + 'px';
+        armorDrop.style.visibility = 'visible';
+
+        weaponDrop.style.left = ((absCoords.left / 2) - 125) + 'px';
+        weaponDrop.style.top = ((absCoords.top / 2) - 400) + 'px';
+        weaponDrop.style.visibility = 'visible';
+    }
+
+    function hideEqControls() {
+        helmetDrop.style.visibility = 'hidden';
+        armorDrop.style.visibility = 'hidden';
+        weaponDrop.style.visibility = 'hidden';
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
