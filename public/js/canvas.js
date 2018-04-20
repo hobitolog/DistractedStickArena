@@ -220,7 +220,6 @@ window.onload = function () {
                 canvas.getItemByName('inBlacksmith').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
-                dropHelmetPosition(canvas.getItemByName('inBlacksmith'));
                 //open blacksmith
                 break;
             case 'statue':
@@ -310,8 +309,7 @@ window.onload = function () {
         obj.scalable = true;
         obj.name = 'blacksmith';
         canvas.add(obj);
-    })
-
+    });
     fabric.loadSVGFromURL('../svg/Statue.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
         obj.scale(1.75);
@@ -320,8 +318,7 @@ window.onload = function () {
         obj.scalable = true;
         obj.name = 'statue';
         canvas.add(obj);
-    })
-
+    });
     fabric.loadSVGFromURL('../svg/Stickman.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
         obj.scale(1.75);
@@ -330,10 +327,7 @@ window.onload = function () {
         obj.scalable = true;
         obj.name = 'stickman';
         canvas.add(obj);
-    })
-
-
-
+    });
     fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
         obj.scale(0.2);
@@ -343,7 +337,8 @@ window.onload = function () {
         obj.name = 'exit';
         canvas.add(obj);
         canvas.sendToBack(obj);
-    })
+    });
+
 
 
     function loadBG(BGname) {
@@ -390,6 +385,23 @@ window.onload = function () {
         }
 
     };
+    function loadGold() { //TODO GET, text
+    fabric.loadSVGFromURL('../svg/coin.svg', function (objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        obj.scale(0.08);
+        obj.set({ left: canvas.width - 200, top: canvas.height -50 })
+        obj.selectable = false;
+        obj.scalable = false;
+        obj.name = 'coin';
+        canvas.add(obj);
+    });
+    }
+    function loadExp(){
+        //TODO
+    }
+    function loadLvl(){
+        //TODO
+    }
 
 
     function loadStats() {
@@ -575,7 +587,6 @@ window.onload = function () {
         }
         else {
             //TODO
-
         }
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
@@ -598,6 +609,7 @@ window.onload = function () {
         canvas.sendToBack(canvas.getItemByName('exit'));
         canvas.remove(canvas.getItemByName('findOpButton'));
         removeStats();
+        removeEq();
 
     }
     function removeStats() {
@@ -608,10 +620,49 @@ window.onload = function () {
         canvas.remove(canvas.getItemByName('addAgi'));
         canvas.remove(canvas.getItemByName('addSta'));
         canvas.remove(canvas.getItemByName('addVit'));
-
+    }
+    function removeEq() {
+        canvas.remove(canvas.getItemByName('EQhelmet'));
+        canvas.remove(canvas.getItemByName('EQarmmor'));
+        canvas.remove(canvas.getItemByName('EQweapon'));
     }
 
     function loadEq() {
+        //TODO change path for each selected item
+        if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
+            fabric.loadSVGFromURL('../svg/Helmet.svg', function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(0.2);
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 100 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQhelmet';
+                canvas.add(obj);
+            });
+            fabric.loadSVGFromURL('../svg/armor.svg', function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(0.2);
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQarmmor';
+                canvas.add(obj);
+            });
+            fabric.loadSVGFromURL('../svg/weapon.svg', function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(0.3);
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 100 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQweapon';
+                canvas.add(obj);
+            });    
+        }
+        canvas.bringToFront(canvas.getItemByName('EQhelmet'));
+        canvas.bringToFront(canvas.getItemByName('EQarmmor'));
+        canvas.bringToFront(canvas.getItemByName('EQweapon'));
+
+
         var absCoords = canvas.getAbsoluteCoords(canvas.getItemByName("inArena"));
 
         helmetDrop.style.left = ((absCoords.left / 2) + 185) + 'px';//200
