@@ -1,4 +1,6 @@
 window.onload = function () {
+//TODO font change
+
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     fabric.Object.prototype.objectCaching = true;
 
@@ -36,32 +38,15 @@ window.onload = function () {
         },
     };
 
-
-
-    // function reqStat(callback) {        
-    //         var xmlhttp = new XMLHttpRequest();
-    //         xmlhttp.open("GET", "/getCharacter", true);
-    //         xmlhttp.setRequestHeader("Content-Type", "application/json");
-    //         xmlhttp.responseType = "json";
-    //         xmlhttp.onreadystatechange = function () {
-    //             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    //                 Gstats = xmlhttp.response;
-    //                 Gstats.httpSucc = true;                   
-    //             }
-    //         };
-    //         xmlhttp.send();
-    //         callback();
-    // }
-
     function reqStat() {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "/getCharacter", true);
+            xmlhttp.open("GET", "/getStats", true);
             xmlhttp.setRequestHeader("Content-Type", "application/json");
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    Gstats = xmlhttp.response;
+                    Gstats.stats = xmlhttp.response;
                     Gstats.httpSucc = true;
                     resolve();
                 }
@@ -84,12 +69,10 @@ window.onload = function () {
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 if (xmlhttp.response.error) {
-                        alert(xmlhttp.response.error);//blad formatu parametrow                   
+                        alert(xmlhttp.response.error);                   
                 }
                 else
                 {
-                    console.log('wywolanie');
-
                     resolve();
                 }
             }
