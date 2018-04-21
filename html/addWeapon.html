@@ -45,13 +45,8 @@
                                 <input id="name" type="text" class="form-control" name="name" placeholder="Podaj nazwę">
                             </div>
                             <div class="form-group">
-                                <label for="baseId">baseId</label>
-                                <input id="baseId" type="text" class="form-control" name="baseId" placeholder="Podaj baseId w formie xx00 np. 1200">
-                                <div id="baseIdError" class="invalid-feedback" hidden>Podaj id w formie xx00</div>
-                            </div>
-                            <div class="form-group">
                                 <label for="type">Typ</label>
-                                <select id="type" type="text" class="form-control" name="type">
+                                <select id="type" class="form-control" name="type">
                                     <option value="helmet">helmet</option>
                                     <option value="armor">armor</option>
                                     <option value="weapon">weapon</option>
@@ -59,44 +54,62 @@
                             </div>
                             <div class="form-group">
                                 <label for="damageMin">damageMin</label>
-                                <input id="damageMin" type="text" class="form-control" name="damageMin" placeholder="Podaj damageMin">
+                                <select id="damageMin" type="text" class="form-control" name="damageMin">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="damageMax">damageMax</label>
-                                <input id="damageMax" type="text" class="form-control" name="damageMax" placeholder="Podaj damageMax">
+                                <select id="damageMax" type="text" class="form-control" name="damageMax">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="level">level</label>
-                                <input id="level" type="text" class="form-control" name="level" placeholder="Podaj level">
-                            </div>
-                            <div class="form-group">
-                                <label for="upgradePrice">upgradePrice</label>
-                                <input id="upgradePrice" type="text" class="form-control" name="upgradePrice" placeholder="Podaj upgradePrice">
-                            </div>
-                            <div class="form-group">
-                                <label for="value">wartość</label>
-                                <input id="value" type="text" class="form-control" name="value" placeholder="Podaj value">
-                            </div>
-
-                            <div id="alertAdd" class="alert alert-danger" role="alert" hidden></div>
-                            <button id="addButton" type="button" class=" btn btn-danger">Dodaj</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Dodaj wariant</h5>
-                        <form id="variantForm" action="/addVariant" method="POST">
-                            <div class="form-group">
-                                <label for="baseId">baseId</label>
-                                <input id="baseId" type="text" class="form-control" name="baseId" placeholder="Podaj baseId">
-                                <div id="baseIdError" class="invalid-feedback" hidden>Podaj id w formie xx00</div>
-                            </div>
-                            <div class="form-group">
-                                    <label for="variant">variant</label>
-                                    <select id="variant" type="text" class="form-control" name="variant">
+                                <select id="level" type="text" class="form-control" name="level">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -106,30 +119,21 @@
                                         <option value="7">7</option>
                                         <option value="8">8</option>
                                         <option value="9">9</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                        <label for="damageMin">damageMin</label>
-                                        <input id="damageMin" type="text" class="form-control" name="damageMin" placeholder="Podaj damageMin">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="damageMax">damageMax</label>
-                                        <input id="damageMax" type="text" class="form-control" name="damageMax" placeholder="Podaj damageMax">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="level">level</label>
-                                        <input id="level" type="text" class="form-control" name="level" placeholder="Podaj level">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="upgradePrice">upgradePrice</label>
-                                        <input id="upgradePrice" type="text" class="form-control" name="upgradePrice" placeholder="Podaj upgradePrice">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="value">wartość</label>
-                                        <input id="value" type="text" class="form-control" name="value" placeholder="Podaj value">
-                                    </div>
-                            <div id="alertUpdate" class="alert alert-danger" role="alert" hidden></div>
-                            <button id="updateButton" type="submit" class="mt-1 btn btn-danger">Aktualizuj</button>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                    </select>                            </div>
+                            <div class="form-group">
+                                <label for="value">cena</label>
+                                <input id="value" type="text" class="form-control" name="value" placeholder="Podaj cene">
+                            </div>
+
+                            <div id="alertAdd" class="alert alert-danger" role="alert" hidden></div>
+                            <button id="addButton" type="button" class=" btn btn-danger">Dodaj</button>
+                        </form>
                     </div>
                 </div>
             </div>
