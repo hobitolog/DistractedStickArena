@@ -715,10 +715,6 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('EQarmmor'));
         canvas.bringToFront(canvas.getItemByName('EQweapon'));
 
-
-        var absCoords = canvas.getAbsoluteCoords(canvas.getItemByName("inArena"));
-
-
         helmetDrop.style.left = ((canvas.width / 2) + 85) + 'px';//200
         helmetDrop.style.top = ((canvas.height / 2) - 580) + 'px';
         helmetDrop.style.visibility = 'visible';
