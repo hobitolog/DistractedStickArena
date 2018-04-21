@@ -53,11 +53,11 @@ module.exports = {
 
         var username = req.user.login
         var index = players.findIndex((element => { element.player.login == username }))
-        if (index == -1)
+        if (index != -1)
             return res.json({ "error": "Niedozwolone podczas szukania gry" })
 
         index = duels.findIndex((element) => { element.player1.login == username || element.player2.login == username })
-        if (index == -1)
+        if (index != -1)
             return res.json({ "error": "Niedozwolone podczas gry w toku" })
 
         return next()
