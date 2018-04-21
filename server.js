@@ -75,6 +75,9 @@ app.get('/activate', (req, res) => {
 app.get('/', login.isLoggedIn, login.isActivated, (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'main.html'))
 })
+app.get('/addWeapon', (req, res) => {
+    res.sendFile(path.join(__dirname, '/html', 'addWeapon.html'))
+})
 
 app.get('/login', (req, res) => {
     if (req.isAuthenticated())

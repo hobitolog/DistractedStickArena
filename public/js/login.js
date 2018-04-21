@@ -37,8 +37,6 @@ window.onload = function () {
     checkLogin()
     checkPasswords()
     checkTerms()
-
-    console.log("Init completed")
 }
 
 function callCheckEmail() {
