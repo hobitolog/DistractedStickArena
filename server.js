@@ -10,15 +10,20 @@ var mongoose = require('mongoose')
 mongoose.connect(config.dbUrl)
 
 var express = require('express')
+var app = express()
+
 var passport = require('passport')
 var expressSession = require('express-session')
 var bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser')
 var morgan = require('morgan')
-var app = express()
+var MongoStore = require('connect-mongo')(expressSession)
+var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection })
 
-//TODO new sessionStorage, install and configure "passport.socketio"
-app.use(expressSession({ secret: config.sessionSecret }))
+app.use(expressSession({
+    store: mongoStore,
+    secret: config.sessionSecret
+}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cookieParser())
