@@ -67,7 +67,7 @@ window.onload = function () {
 
     };
 
-    var Gchar ={
+    var Gchar = {
         httpSucc: false,
         level: 1,
         exp: 0,
@@ -168,25 +168,25 @@ window.onload = function () {
     //     reqEq().then(??loadStats??);
     // }
 
-function reqCharacter(){
-    return new Promise(function (resolve, reject) {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", "/getCharacter", true);
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.responseType = "json";
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                Gchar.level = xmlhttp.response.level;
-                Gchar.exp = xmlhttp.response.exp;
-                Gchar.gold = xmlhttp.response.gold;
-                Gchar.ranking = xmlhttp.response.ranking;
-                Gchar.httpSucc = true;
-                resolve();
-            }
-        };
-        xmlhttp.send();
-    });
-}
+    function reqCharacter() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "/getCharacter", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    Gchar.level = xmlhttp.response.level;
+                    Gchar.exp = xmlhttp.response.exp;
+                    Gchar.gold = xmlhttp.response.gold;
+                    Gchar.ranking = xmlhttp.response.ranking;
+                    Gchar.httpSucc = true;
+                    resolve();
+                }
+            };
+            xmlhttp.send();
+        });
+    } //TODO refresh gold
 
 
 
@@ -303,87 +303,87 @@ function reqCharacter(){
         canvas.renderAll();
 
     });
-function loadElements(){
-    fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.set({ left: 360, top: 243 })
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'bg';
-        canvas.add(obj);
-    })
+    function loadElements() {
+        fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.set({ left: 360, top: 243 })
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'bg';
+            canvas.add(obj);
+        })
 
-    fabric.loadSVGFromURL('../svg/Circus.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 344, top: 100 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'arena';
-        canvas.add(obj);
-    })
+        fabric.loadSVGFromURL('../svg/Circus.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(1.75);
+            obj.set({ left: 344, top: 100 });
+            obj.selectable = false;
+            obj.scalable = true;
+            obj.name = 'arena';
+            canvas.add(obj);
+        })
 
-    fabric.loadSVGFromURL('../svg/Inn.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 192, top: 224 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'tavern';
-        canvas.add(obj);
-    })
+        fabric.loadSVGFromURL('../svg/Inn.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(1.75);
+            obj.set({ left: 192, top: 224 });
+            obj.selectable = false;
+            obj.scalable = true;
+            obj.name = 'tavern';
+            canvas.add(obj);
+        })
 
-    fabric.loadSVGFromURL('../svg/Blacksmith.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 128, top: 374 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'blacksmith';
-        canvas.add(obj);
-    });
-    fabric.loadSVGFromURL('../svg/Statue.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 532, top: 276 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'statue';
-        canvas.add(obj);
-    });
-    fabric.loadSVGFromURL('../svg/Stickman.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 350, top: 400 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'stickman';
-        canvas.add(obj);
-    });
-    fabric.loadSVGFromURL('../svg/coin.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(0.08);
-        obj.set({ left: canvas.width - 150, top: canvas.height -30 })
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'coin';
-        obj.on('after:render',canvas.bringToFront(canvas.getItemByName('coinText')));
-        canvas.add(obj);
-        
-    });
-    fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(0.2);
-        obj.set({ left: canvas.width / 2 + 220, top: canvas.height / 2 - 120 });
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'exit';
-        canvas.add(obj);
-        canvas.sendToBack(obj);
-    });
+        fabric.loadSVGFromURL('../svg/Blacksmith.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(1.75);
+            obj.set({ left: 128, top: 374 });
+            obj.selectable = false;
+            obj.scalable = true;
+            obj.name = 'blacksmith';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/Statue.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(1.75);
+            obj.set({ left: 532, top: 276 });
+            obj.selectable = false;
+            obj.scalable = true;
+            obj.name = 'statue';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/Stickman.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(1.75);
+            obj.set({ left: 350, top: 400 });
+            obj.selectable = false;
+            obj.scalable = true;
+            obj.name = 'stickman';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/coin.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.08);
+            obj.set({ left: canvas.width - 150, top: canvas.height - 30 })
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'coin';
+            obj.on('after:render', canvas.bringToFront(canvas.getItemByName('coinText')));
+            canvas.add(obj);
+
+        });
+        fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.2);
+            obj.set({ left: canvas.width / 2 + 220, top: canvas.height / 2 - 120 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'exit';
+            canvas.add(obj);
+            canvas.sendToBack(obj);
+        });
 
 
-}
+    }
 
     function loadBG(BGname) {
         if (!canvas.getItemByName(BGname)) {
@@ -429,12 +429,11 @@ function loadElements(){
         }
 
     };
-    function loadGold() { //TODO GET, text
-        if(!canvas.getItemByName('coinText')&& Gchar.httpSucc==true )
-        {
+    function loadGold() {
+        if (!canvas.getItemByName('coinText') && Gchar.httpSucc == true) {
             var coinText = new fabric.Text(String(Gchar.gold), {
                 left: canvas.width - 90,
-                top: canvas.height -30,
+                top: canvas.height - 30,
                 selectable: false,
                 scalable: false,
                 name: 'coinText',
@@ -447,11 +446,12 @@ function loadElements(){
             canvas.add(coinText);
             canvas.bringToFront(coinText);
         }
+        Gchar.httpSucc = false;
     };
-    function loadExp(){
+    function loadExp() {
         //TODO
     };
-    function loadLvl(){
+    function loadLvl() {
         //TODO
     };
 
@@ -686,7 +686,7 @@ function loadElements(){
             fabric.loadSVGFromURL('../svg/Helmet.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 100 })
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 90 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQhelmet';
@@ -695,7 +695,7 @@ function loadElements(){
             fabric.loadSVGFromURL('../svg/armor.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 })
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 +10})
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQarmmor';
@@ -709,7 +709,7 @@ function loadElements(){
                 obj.scalable = false;
                 obj.name = 'EQweapon';
                 canvas.add(obj);
-            });    
+            });
         }
         canvas.bringToFront(canvas.getItemByName('EQhelmet'));
         canvas.bringToFront(canvas.getItemByName('EQarmmor'));
@@ -718,16 +718,17 @@ function loadElements(){
 
         var absCoords = canvas.getAbsoluteCoords(canvas.getItemByName("inArena"));
 
-        helmetDrop.style.left = ((absCoords.left / 2) + 185) + 'px';//200
-        helmetDrop.style.top = ((absCoords.top / 2) - 600) + 'px';
+
+        helmetDrop.style.left = ((canvas.width / 2) + 85) + 'px';//200
+        helmetDrop.style.top = ((canvas.height / 2) - 580) + 'px';
         helmetDrop.style.visibility = 'visible';
 
-        armorDrop.style.left = ((absCoords.left / 2) + 30) + 'px';//50
-        armorDrop.style.top = ((absCoords.top / 2) - 500) + 'px';
+        armorDrop.style.left = ((canvas.width / 2) + -70) + 'px';//50
+        armorDrop.style.top = ((canvas.height / 2) - 490) + 'px';
         armorDrop.style.visibility = 'visible';
 
-        weaponDrop.style.left = ((absCoords.left / 2) - 125) + 'px';
-        weaponDrop.style.top = ((absCoords.top / 2) - 400) + 'px';
+        weaponDrop.style.left = ((canvas.width / 2) - 225) + 'px';
+        weaponDrop.style.top = ((canvas.height / 2) - 390) + 'px';
         weaponDrop.style.visibility = 'visible';
     }
 
