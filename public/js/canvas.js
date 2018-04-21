@@ -67,6 +67,14 @@ window.onload = function () {
 
     };
 
+    var Gchar ={
+        httpSucc: false,
+        level: 1,
+        exp: 0,
+        gold: 0,
+        ranking: 0
+    };
+
 
     function reqStat() {
         return new Promise(function (resolve, reject) {
@@ -160,6 +168,26 @@ window.onload = function () {
     //     reqEq().then(??loadStats??);
     // }
 
+function reqCharacter(){
+    return new Promise(function (resolve, reject) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", "/getCharacter", true);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.responseType = "json";
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                Gchar.level = xmlhttp.response.level;
+                Gchar.exp = xmlhttp.response.exp;
+                Gchar.gold = xmlhttp.response.gold;
+                Gchar.ranking = xmlhttp.response.ranking;
+                Gchar.httpSucc = true;
+                resolve();
+            }
+        };
+        xmlhttp.send();
+    });
+}
+
 
 
 
@@ -179,6 +207,9 @@ window.onload = function () {
     loadBG('inBlacksmith');
     loadBG('inStatue');
     loadBG('inStickman');
+    reqCharacter().then(loadGold);
+    loadElements();
+
 
     canvas.on('mouse:over', function (e) {
         if (e.target != null) {
@@ -227,6 +258,7 @@ window.onload = function () {
                 canvas.getItemByName('inStatue').opacity = 1;
                 canvas.bringToFront(canvas.getItemByName('inStatue'));
                 canvas.bringToFront(canvas.getItemByName('exit'));
+                canvas.bringToFront(canvas.getItemByName('coinText'));
                 console.log(Gstats);
 
                 //open statue
@@ -271,7 +303,7 @@ window.onload = function () {
         canvas.renderAll();
 
     });
-
+function loadElements(){
     fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
         obj.set({ left: 360, top: 243 })
@@ -328,6 +360,17 @@ window.onload = function () {
         obj.name = 'stickman';
         canvas.add(obj);
     });
+    fabric.loadSVGFromURL('../svg/coin.svg', function (objects, options) {
+        var obj = fabric.util.groupSVGElements(objects, options);
+        obj.scale(0.08);
+        obj.set({ left: canvas.width - 150, top: canvas.height -30 })
+        obj.selectable = false;
+        obj.scalable = false;
+        obj.name = 'coin';
+        obj.on('after:render',canvas.bringToFront(canvas.getItemByName('coinText')));
+        canvas.add(obj);
+        
+    });
     fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
         var obj = fabric.util.groupSVGElements(objects, options);
         obj.scale(0.2);
@@ -340,6 +383,7 @@ window.onload = function () {
     });
 
 
+}
 
     function loadBG(BGname) {
         if (!canvas.getItemByName(BGname)) {
@@ -386,22 +430,30 @@ window.onload = function () {
 
     };
     function loadGold() { //TODO GET, text
-    fabric.loadSVGFromURL('../svg/coin.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(0.08);
-        obj.set({ left: canvas.width - 200, top: canvas.height -50 })
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'coin';
-        canvas.add(obj);
-    });
-    }
+        if(!canvas.getItemByName('coinText')&& Gchar.httpSucc==true )
+        {
+            var coinText = new fabric.Text(String(Gchar.gold), {
+                left: canvas.width - 90,
+                top: canvas.height -30,
+                selectable: false,
+                scalable: false,
+                name: 'coinText',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: 'Comic Sans',
+                textAlign: 'right',
+                originX: 'right',
+            });
+            canvas.add(coinText);
+            canvas.bringToFront(coinText);
+        }
+    };
     function loadExp(){
         //TODO
-    }
+    };
     function loadLvl(){
         //TODO
-    }
+    };
 
 
     function loadStats() {
@@ -628,6 +680,7 @@ window.onload = function () {
     }
 
     function loadEq() {
+        //TODO if httpSucc
         //TODO change path for each selected item
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
             fabric.loadSVGFromURL('../svg/Helmet.svg', function (objects, options) {
