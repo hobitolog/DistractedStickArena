@@ -17,10 +17,14 @@ function updateActive() {
     })
 }
 
+function notifyDuel(player, opponent) {
+    player.socket.emit('gameFound', opponent)
+}
+
 //TODO przetestować po zrobieniu socketów
 function matchMake() {
 
-    var toNotify = []
+    var newDuels = []
     var copied = getSearchers.splice()
     while (copied.length > 1) {
 
@@ -31,8 +35,9 @@ function matchMake() {
             matched = copied[i]
         }
 
-        toNotify.push(player)
-        duels.push({
+        var duelId = player.player.login + "VS" + matched.player.login
+        newDuels.push({
+            id: duelId,
             player1: player,
             player2: matched,
         })
@@ -41,7 +46,7 @@ function matchMake() {
     }
 
     players = copied.splice()
-    handleNewDuels(toNotify)
+    handleNewDuels(newDuels)
     updateActive()
     scheduledMatchMaking = null
     matchMakingTrigger(5000)
@@ -54,12 +59,15 @@ function matchMakingTrigger(delay) {
     scheduledMatchMaking = setTimeout(matchMake, delay)
 }
 
-function handleNewDuels(toNotify) {
-    toNotify.forEach(p1 => {
-        var duelIndex = duels.indexOf(d => d.player1.login == p1.player.login)
-        //TODO generate room for players:
-        //duels[duelIndex].player1
-        //duels[duelIndex].player2
+function handleNewDuels(newDuels) {
+
+    newDuels.forEach(element => {
+
+        element.player1.socket.join(element.id)
+        element.player2.socket.join(element.id)
+
+        element.player1.socket.emit('gameFound', element.player2.player)
+        element.player2.socket.emit('gameFound', element.player1.player)
     })
 }
 
