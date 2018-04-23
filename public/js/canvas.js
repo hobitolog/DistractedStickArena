@@ -1,43 +1,42 @@
-window.onload = function () {
-    //TODO font change
-
-    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-    fabric.Object.prototype.objectCaching = true;
-    fabric.Object.prototype.transparentCorners = false;
+var canvas;
+fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+fabric.Object.prototype.objectCaching = true;
+fabric.Object.prototype.transparentCorners = false;
 
 
-    fabric.Canvas.prototype.getItemByName = function (name) {
-        var object = null,
-            objects = this.getObjects();
+fabric.Canvas.prototype.getItemByName = function (name) {
+    var object = null,
+        objects = this.getObjects();
 
-        for (var i = 0, len = this.size(); i < len; i++) {
-            if (objects[i].name && objects[i].name === name) {
-                object = objects[i];
-                break;
-            }
+    for (var i = 0, len = this.size(); i < len; i++) {
+        if (objects[i].name && objects[i].name === name) {
+            object = objects[i];
+            break;
         }
-
-        return object;
-    };
-    fabric.Canvas.prototype.setObjOpacity = function (name, value) {
-        var objects = this.getObjects();
-        for (var i = 0, len = this.size(); i < len; i++) {
-            if (objects[i].name && objects[i].name === name) {
-                objects[i].opacity = value;
-                break;
-            }
-        }
-    };
-
-
-    fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
-        return {
-            left: object.left + this._offset.left,
-            top: object.top + this._offset.top
-        };
     }
 
+    return object;
+};
+fabric.Canvas.prototype.setObjOpacity = function (name, value) {
+    var objects = this.getObjects();
+    for (var i = 0, len = this.size(); i < len; i++) {
+        if (objects[i].name && objects[i].name === name) {
+            objects[i].opacity = value;
+            break;
+        }
+    }
+};
 
+
+fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
+    return {
+        left: object.left + this._offset.left,
+        top: object.top + this._offset.top
+    };
+}
+
+window.onload = function () {
+    //TODO font change
 
     var Gstats = {
         httpSucc: false,
@@ -191,12 +190,14 @@ window.onload = function () {
 
 
 
-    var canvas = new fabric.Canvas('c', {
+    canvas = new fabric.Canvas('c', {
         hoverCursor: 'context-menu',
         selection: false,
         perPixelTargetFind: true,
         targetFindTolerance: 5,
+        localization: 'town'
     });
+
 
     ///init
     var helmetDrop = document.getElementById('helmet');
@@ -212,8 +213,7 @@ window.onload = function () {
 
 
     canvas.on('mouse:over', function (e) {
-        if (e.target != null) {
-            console.log(e.target.name + " left: " + e.target.left + " top: " + e.target.top);
+        if (e.target != null&& canvas.localization=='town') {
             if (e.target.scalable == true) {
                 e.target.scale(2);
                 canvas.renderAll();
@@ -222,12 +222,13 @@ window.onload = function () {
         }
     });
     canvas.on('mouse:out', function (e) {
-        if (e.target != null && e.target.scalable == true) {
+        if (e.target != null && e.target.scalable == true&& canvas.localization=='town') {
             e.target.scale(1.75);
             canvas.renderAll();
         }
     });
     canvas.on('mouse:down', function (e) {
+        if(e.target !=null&& canvas.localization=='town'){
         switch (e.target.name) {
             case 'arena':
                 hideEqControls()
@@ -301,7 +302,7 @@ window.onload = function () {
 
         }
         canvas.renderAll();
-
+    }
     });
     function loadElements() {
         fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
@@ -695,7 +696,7 @@ window.onload = function () {
             fabric.loadSVGFromURL('../svg/armor.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 +10})
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 10 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQarmmor';
