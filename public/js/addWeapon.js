@@ -23,6 +23,7 @@ window.onload = function () {
             type: type.value,
             variants: {
                 variantId: 0,
+                armor: armor.value,
                 damageMin: damageMin.value,
                 damageMax: damageMax.value,
                 level: level.value,
@@ -39,7 +40,7 @@ window.onload = function () {
 
 }
 function addItem(input) { //TODO
-   
+
 
 }
 
@@ -52,26 +53,26 @@ function getMaxId()//TODO
     return 12
 }
 
-function callCheckType(){
-var type = document.getElementById('type');
-var armor = document.getElementById('armor');
-var damageMin = document.getElementById('damageMin');
-var damageMax = document.getElementById('damageMax');
-if(type.value=='helmet'){
-    damageMin.disabled = true;
-    damageMax.disabled = true;
-    armor.disabled = false;
-}
-else if(type.value=='armor'){
-    damageMin.disabled = false;
-    damageMax.disabled = false;
-    armor.disabled = true;
-}
-else if(type.value=='weapon'){
-    damageMin.disabled = false;
-    damageMax.disabled = false;
-    armor.disabled = true;
-}
+function callCheckType() {
+    var type = document.getElementById('type');
+    var armor = document.getElementById('armor');
+    var damageMin = document.getElementById('damageMin');
+    var damageMax = document.getElementById('damageMax');
+    if (type.value == 'helmet') {
+        damageMin.disabled = true;
+        damageMax.disabled = true;
+        armor.disabled = false;
+    }
+    else if (type.value == 'armor') {
+        damageMin.disabled = true;
+        damageMax.disabled = true;
+        armor.disabled = false;
+    }
+    else if (type.value == 'weapon') {
+        damageMin.disabled = false;
+        damageMax.disabled = false;
+        armor.disabled = true;
+    }
 
 }
 
