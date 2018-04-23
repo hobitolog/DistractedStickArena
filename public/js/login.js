@@ -32,11 +32,22 @@ window.onload = function () {
     registerTerms.addEventListener('change', function () {
         checkTerms()
     })
-
+    
     checkEmail()
     checkLogin()
     checkPasswords()
     checkTerms()
+    
+    document.getElementById('login').addEventListener('keypress', function (e) {
+        if(e.keyCode === 13) {
+            loginButton.click()
+        }
+    })
+    document.getElementById('password').addEventListener('keypress', function (e) {
+        if(e.keyCode === 13) {
+            loginButton.click()
+        }
+    })
 }
 
 function callCheckEmail() {

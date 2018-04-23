@@ -59,7 +59,7 @@ function callCheckValue() {
     }
     else {
         valueOk = false;
-        document.getElementById('valueError').hidden = true
+        document.getElementById('valueError').hidden = false
 
     }
     refreshButton()
