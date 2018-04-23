@@ -75,8 +75,26 @@ app.get('/activate', (req, res) => {
 app.get('/', login.isLoggedIn, login.isActivated, (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'main.html'))
 })
+
 app.get('/addWeapon', (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'addWeapon.html'))
+})
+
+//TODO TEST
+app.post('/addWeapon', (req, res) => {
+    
+    var newWeapon = {
+        req.body.name
+        req.body.type
+        req.body.damageMin
+        req.body.damageMax
+        req.body.level
+        req.body.value
+    }
+    
+    mongooseConnection.collection('prototypes').insert(newWeapon)
+    
+    res.redirect('/addWeapon')
 })
 
 app.get('/login', (req, res) => {
