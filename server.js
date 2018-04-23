@@ -86,6 +86,7 @@ app.post('/addWeapon', (req, res) => {
     var newWeapon = {
         "name": req.body.name,
         "type": req.body.type,
+        "armor": req.body.armor,
         "damageMin": req.body.damageMin,
         "damageMax": req.body.damageMax,
         "level": req.body.level,
