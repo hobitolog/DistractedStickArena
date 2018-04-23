@@ -92,7 +92,7 @@ app.post('/addWeapon', (req, res) => {
         "value": req.body.value
     }
     
-    mongooseConnection.collection('prototypes').insert(newWeapon)
+    mongoose.connection.collection('prototypes').insert(newWeapon)
     
     res.redirect('/addWeapon')
 })
