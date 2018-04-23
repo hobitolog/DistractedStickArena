@@ -84,12 +84,12 @@ app.get('/addWeapon', (req, res) => {
 app.post('/addWeapon', (req, res) => {
     
     var newWeapon = {
-        req.body.name
-        req.body.type
-        req.body.damageMin
-        req.body.damageMax
-        req.body.level
-        req.body.value
+        "name": req.body.name,
+        "type": req.body.type,
+        "damageMin": req.body.damageMin,
+        "damageMax": req.body.damageMax,
+        "level": req.body.level,
+        "value": req.body.value
     }
     
     mongooseConnection.collection('prototypes').insert(newWeapon)
