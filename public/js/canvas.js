@@ -67,11 +67,13 @@ window.onload = function () {
     };
 
     var Gchar = {
-        httpSucc: false,
         level: 1,
         exp: 0,
         gold: 0,
-        ranking: 0
+        ranking: 0,
+        hp: 0,
+        armor:0,
+        energy: 0
     };
 
 
@@ -208,12 +210,12 @@ window.onload = function () {
     loadBG('inBlacksmith');
     loadBG('inStatue');
     loadBG('inStickman');
-    reqCharacter().then(loadGold);
+    reqCharacter().then(loadCharMain);
     loadElements();
 
 
     canvas.on('mouse:over', function (e) {
-        if (e.target != null&& canvas.localization=='town') {
+        if (e.target != null && canvas.localization == 'town') {
             if (e.target.scalable == true) {
                 e.target.scale(2);
                 canvas.renderAll();
@@ -222,87 +224,87 @@ window.onload = function () {
         }
     });
     canvas.on('mouse:out', function (e) {
-        if (e.target != null && e.target.scalable == true&& canvas.localization=='town') {
+        if (e.target != null && e.target.scalable == true && canvas.localization == 'town') {
             e.target.scale(1.75);
             canvas.renderAll();
         }
     });
     canvas.on('mouse:down', function (e) {
-        if(e.target !=null&& canvas.localization=='town'){
-        switch (e.target.name) {
-            case 'arena':
-                hideEqControls()
-                loadInArena();
-                canvas.getItemByName('inArena').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inArena'));
-                canvas.bringToFront(canvas.getItemByName('findOpButton'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
-                //open arena
-                break;
-            case 'tavern':
-                hideEqControls()
-                canvas.getItemByName('inTavern').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inTavern'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
+        if (e.target != null && canvas.localization == 'town') {
+            switch (e.target.name) {
+                case 'arena':
+                    hideEqControls()
+                    loadInArena();
+                    canvas.getItemByName('inArena').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inArena'));
+                    canvas.bringToFront(canvas.getItemByName('findOpButton'));
+                    canvas.bringToFront(canvas.getItemByName('exit'));
+                    //open arena
+                    break;
+                case 'tavern':
+                    hideEqControls()
+                    canvas.getItemByName('inTavern').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inTavern'));
+                    canvas.bringToFront(canvas.getItemByName('exit'));
 
-                //open tavern
-                break;
-            case 'blacksmith':
-                hideEqControls()
-                canvas.getItemByName('inBlacksmith').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
-                //open blacksmith
-                break;
-            case 'statue':
-                hideEqControls()
-                canvas.getItemByName('inStatue').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inStatue'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
-                canvas.bringToFront(canvas.getItemByName('coinText'));
-                console.log(Gstats);
+                    //open tavern
+                    break;
+                case 'blacksmith':
+                    hideEqControls()
+                    canvas.getItemByName('inBlacksmith').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
+                    canvas.bringToFront(canvas.getItemByName('exit'));
+                    //open blacksmith
+                    break;
+                case 'statue':
+                    hideEqControls()
+                    canvas.getItemByName('inStatue').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inStatue'));
+                    canvas.bringToFront(canvas.getItemByName('exit'));
+                    canvas.bringToFront(canvas.getItemByName('coinText'));
+                    loadHp();//TMP Button
 
-                //open statue
-                break;
-            case 'stickman':
-                canvas.getItemByName('inStickman').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inStickman'));
-                reqStat().then(loadStats);
-                loadEq();
-                //TODO
-                //reqEq().then
-                //reqBp().then
-                console.log(Gstats);
-                //open stickman
-                break;
-            case 'addStr':
-                updateStat("str", 1).then(refreshStat);
-                break;
-            case 'addAtt':
-                updateStat("att", 1).then(refreshStat);
-                break;
-            case 'addAgi':
-                updateStat("agi", 1).then(refreshStat);
-                break;
-            case 'addSta':
-                updateStat("sta", 1).then(refreshStat);
-                break;
-            case 'addVit':
-                updateStat("vit", 1).then(refreshStat);
-                break;
-            case 'findOpButton':
-                window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
-                break;
-            case 'exit':
-                closeButton();
-                break;
-            case 'bg':
-                closeButton();
-                break;
+                    //open statue
+                    break;
+                case 'stickman':
+                    canvas.getItemByName('inStickman').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inStickman'));
+                    reqStat().then(loadStats);
+                    loadEq();
+                    reqCharacter().then(loadCharStickman);
+                    //TODO
+                    //reqEq().then
+                    //reqBp().then
+                    //open stickman
+                    break;
+                case 'addStr':
+                    updateStat("str", 1).then(refreshStat);
+                    break;
+                case 'addAtt':
+                    updateStat("att", 1).then(refreshStat);
+                    break;
+                case 'addAgi':
+                    updateStat("agi", 1).then(refreshStat);
+                    break;
+                case 'addSta':
+                    updateStat("sta", 1).then(refreshStat);
+                    break;
+                case 'addVit':
+                    updateStat("vit", 1).then(refreshStat);
+                    break;
+                case 'findOpButton':
+                    window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
+                    break;
+                case 'exit':
+                    closeButton();
+                    break;
+                case 'bg':
+                    closeButton();
+                    break;
 
+            }
+            canvas.renderAll();
         }
-        canvas.renderAll();
-    }
     });
     function loadElements() {
         fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
@@ -370,7 +372,36 @@ window.onload = function () {
             obj.name = 'coin';
             obj.on('after:render', canvas.bringToFront(canvas.getItemByName('coinText')));
             canvas.add(obj);
-
+        });
+        fabric.loadSVGFromURL('../svg/heart.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.12);
+            obj.set({ left: 25, top: 25 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'heart';
+            obj.on('after:render', canvas.bringToFront(canvas.getItemByName('heartText')));
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/shield.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(2.9);
+            obj.set({ left: 120, top: 25 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'shield';
+            obj.on('after:render', canvas.bringToFront(canvas.getItemByName('shieldText')));
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/energy.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(2.1);
+            obj.set({ left: 210, top: 25 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'energy';
+            obj.on('after:render', canvas.bringToFront(canvas.getItemByName('energyText')));
+            canvas.add(obj);
         });
         fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
@@ -430,10 +461,20 @@ window.onload = function () {
         }
 
     };
+    function loadCharMain() {
+        loadGold();
+        loadHp();
+        loadArmor();
+        loadEnergy();
+    };
+    function loadCharStickman() {
+        loadLvl();
+        loadExp();
+    };
     function loadGold() {
-        if (!canvas.getItemByName('coinText') && Gchar.httpSucc == true) {
+        if (!canvas.getItemByName('coinText')) {
             var coinText = new fabric.Text(String(Gchar.gold), {
-                left: canvas.width - 90,
+                left: canvas.width - 120,
                 top: canvas.height - 30,
                 selectable: false,
                 scalable: false,
@@ -441,18 +482,105 @@ window.onload = function () {
                 fill: '#000',
                 fontSize: 20,
                 fontFamily: 'Comic Sans',
-                textAlign: 'right',
-                originX: 'right',
+                textAlign: 'left',
+                originX: 'left',
             });
             canvas.add(coinText);
             canvas.bringToFront(coinText);
         }
-        Gchar.httpSucc = false;
     };
-    function loadExp() {
-        //TODO
+    function loadExp() {//required exp mechanism may be changed by Pan Kosakowski
+        if (!canvas.getItemByName('expText')) {
+            var expText = new fabric.Text('Exp: '+String(Gchar.exp)+'/'+String(Gchar.level*100*2), {
+                left: canvas.width/2-165,
+                top: 115,
+                selectable: false,
+                scalable: false,
+                name: 'expText',
+                fill: '#fff',
+                fontSize: 18,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(expText);
+            canvas.bringToFront(expText);
+        }
     };
     function loadLvl() {
+        if (!canvas.getItemByName('lvlText')) {
+            var lvlText = new fabric.Text('LvL: '+String(Gchar.level), {
+                left: canvas.width/2-240,
+                top: 115,
+                selectable: false,
+                scalable: false,
+                name: 'lvlText',
+                fill: '#fff',
+                fontSize: 18,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(lvlText);
+            canvas.bringToFront(lvlText);
+        }
+    };
+    function loadHp() {
+        //TODO
+        if (!canvas.getItemByName('heartText')) {
+            var heartText = new fabric.Text(String(Gchar.hp), {
+                left: 48,
+                top: 25,
+                selectable: false,
+                scalable: false,
+                name: 'heartText',
+                fill: '#000',
+                fontSize: 25,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(heartText);
+            canvas.bringToFront(heartText);
+        }
+    };
+    function loadArmor() {
+        if (!canvas.getItemByName('shieldText')) {
+            var shieldText = new fabric.Text(String(Gchar.armor), {
+                left: 140,
+                top: 25,
+                selectable: false,
+                scalable: false,
+                name: 'shieldText',
+                fill: '#000',
+                fontSize: 25,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(shieldText);
+            canvas.bringToFront(shieldText);
+        }
+    };
+    function loadEnergy() {
+        if (!canvas.getItemByName('energyText')) {
+            var energyText = new fabric.Text(String(Gchar.energy), {
+                left: 230,
+                top: 25,
+                selectable: false,
+                scalable: false,
+                name: 'energyText',
+                fill: '#000',
+                fontSize: 25,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(energyText);
+            canvas.bringToFront(energyText);
+        }
+    };
+    function loadRanking() {
         //TODO
     };
 
@@ -673,6 +801,9 @@ window.onload = function () {
         canvas.remove(canvas.getItemByName('addAgi'));
         canvas.remove(canvas.getItemByName('addSta'));
         canvas.remove(canvas.getItemByName('addVit'));
+        canvas.remove(canvas.getItemByName('expText'));
+        canvas.remove(canvas.getItemByName('lvlText'));
+
     }
     function removeEq() {
         canvas.remove(canvas.getItemByName('EQhelmet'));
@@ -682,7 +813,6 @@ window.onload = function () {
 
     function loadEq() {
         //TODO if httpSucc
-        //TODO change path for each selected item
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
             fabric.loadSVGFromURL('../svg/Helmet.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);

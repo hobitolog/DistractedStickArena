@@ -169,14 +169,11 @@ function showArena() {
             });
             canvas.add(timer);
             canvas.renderAll();
-            console.log(time)
             if (time <= 0) {
               clearInterval(x);
               //TODO  END ROUND
             }
-          }, 1000);
-
-        
+          }, 1000);       
 
     }
 
