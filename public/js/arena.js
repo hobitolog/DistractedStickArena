@@ -1,3 +1,4 @@
+var arenaTimer;
 function showArena() {
     canvas.clear();
     canvas.localization = 'arena';
@@ -5,13 +6,36 @@ function showArena() {
 
     canvas.on('mouse:over', function (e) {
         if (e.target != null && canvas.localization == 'arena') {
+            switch (e.target.name) {
+                case 'weapon1':
+                    mouseOverWeapon1();
+                    break;
+                case 'weapon2':
+                    mouseOverWeapon2();
 
+                    break;
+                case 'weapon3':
+                    mouseOverWeapon3();
+
+                    break;
+                case 'zzz':
+                    mouseOverZzz();
+                    break;
+
+
+            }
+            canvas.renderAll();
         }
     });
     canvas.on('mouse:out', function (e) {
-        if (e.target != null && e.target.scalable == true && canvas.localization == 'town') {
-            e.target.scale(1.75);
-            canvas.renderAll();
+        if (e.target != null && canvas.localization == 'arena') {
+            canvas.remove(canvas.getItemByName('overWeapon1'));
+            canvas.remove(canvas.getItemByName('overWeapon2'));
+            canvas.remove(canvas.getItemByName('overWeapon3'));
+            canvas.remove(canvas.getItemByName('overZzz'));
+            canvas.remove(canvas.getItemByName('skillText'));
+
+
         }
     });
     canvas.on('mouse:down', function (e) {
@@ -31,6 +55,10 @@ function showArena() {
                 case 'zzz':
                     //sleep
                     break;
+                case 'exitArena':
+                    //exitArena
+                    clearInterval(arenaTimer);
+
 
             }
             canvas.renderAll();
@@ -47,6 +75,11 @@ function showArena() {
             obj.name = 'bg';
             obj.on('added', function () {
                 canvas.bringToFront(canvas.getItemByName('menu'))
+                canvas.bringToFront(canvas.getItemByName('weapon3'))
+                canvas.bringToFront(canvas.getItemByName('weapon2'))
+                canvas.bringToFront(canvas.getItemByName('weapon1'))
+                canvas.bringToFront(canvas.getItemByName('stickman'))
+                canvas.bringToFront(canvas.getItemByName('opponent'))
             });
             canvas.add(obj);
 
@@ -63,12 +96,8 @@ function showArena() {
             fill: 'green',
         });
         menu.on('added', function () {
-            canvas.bringToFront(canvas.getItemByName('weapon3'))
-            canvas.bringToFront(canvas.getItemByName('weapon2'))
-            canvas.bringToFront(canvas.getItemByName('weapon1'))
-            canvas.bringToFront(canvas.getItemByName('stickman'))
-            canvas.bringToFront(canvas.getItemByName('opponent'))
-           
+
+
 
         });
         canvas.add(menu);
@@ -149,15 +178,15 @@ function showArena() {
     }
 
     function timer(time) {
-        
 
-        var x = setInterval(function() {
-            time = time - 1;          
+
+        arenaTimer = setInterval(function () {
+            time = time - 1;
 
             canvas.remove(canvas.getItemByName('timer'))
             var timer = new fabric.Text(String(time), {
-                left: canvas.width/2,
-                top:  30,
+                left: canvas.width / 2,
+                top: 30,
                 selectable: false,
                 scalable: false,
                 name: 'timer',
@@ -170,11 +199,134 @@ function showArena() {
             canvas.add(timer);
             canvas.renderAll();
             if (time <= 0) {
-              clearInterval(x);
-              //TODO  END ROUND
+                clearInterval(arenaTimer);
+                //TODO  END ROUND
             }
-          }, 1000);       
+        }, 1000);
 
+    }
+
+    function mouseOverWeapon1(){
+        fabric.loadSVGFromURL('../svg/arena/Cloud.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(12);
+            obj.set({ left: 52, top: 370});
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'overWeapon1';
+            obj.on('added', function () {
+                canvas.bringToFront(obj);
+                canvas.bringToFront(canvas.getItemByName('skillText'))
+            });
+            canvas.add(obj);
+        });
+
+        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t'+12+' - '+23+'\nszansa:\t'+50+'%'+'\nkoszt:\t'+30 ), {
+            left: 10,
+            top: 355,
+            selectable: false,
+            scalable: false,
+            name: 'skillText',
+            fill: '#000',
+            fontSize: 12,
+            fontFamily: 'Comic Sans',
+            textAlign: 'left',
+            originX: 'left',
+        });
+        canvas.add(skillText);
+        canvas.bringToFront(skillText);
+
+    }
+    function mouseOverWeapon2(){
+        fabric.loadSVGFromURL('../svg/arena/Cloud.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(12);
+            obj.set({ left: 130, top: 370});
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'overWeapon2';
+            obj.on('added', function () {
+                canvas.bringToFront(obj);
+                canvas.bringToFront(canvas.getItemByName('skillText'))
+
+            });
+            canvas.add(obj);
+
+        });
+        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t'+6+' - '+13+'\nszansa:\t'+70+'%'+'\nkoszt:\t'+20 ), {
+            left: 85,
+            top: 355,
+            selectable: false,
+            scalable: false,
+            name: 'skillText',
+            fill: '#000',
+            fontSize: 12,
+            fontFamily: 'Comic Sans',
+            textAlign: 'left',
+            originX: 'left',
+        });
+        canvas.add(skillText);
+        canvas.bringToFront(skillText);
+    }
+    function mouseOverWeapon3(){
+        fabric.loadSVGFromURL('../svg/arena/Cloud.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(12);
+            obj.set({ left: 215, top: 370});
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'overWeapon3';
+            obj.on('added', function () {
+                canvas.bringToFront(obj);
+                canvas.bringToFront(canvas.getItemByName('skillText'))
+
+            });
+            canvas.add(obj);
+
+        });
+        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t'+30+' - '+42+'\nszansa:\t'+20+'%'+'\nkoszt:\t'+60 ), {
+            left: 172,
+            top: 355,
+            selectable: false,
+            scalable: false,
+            name: 'skillText',
+            fill: '#000',
+            fontSize: 12,
+            fontFamily: 'Comic Sans',
+            textAlign: 'left',
+            originX: 'left',
+        });
+        canvas.add(skillText);
+        canvas.bringToFront(skillText);
+    }
+    function mouseOverZzz(){
+        fabric.loadSVGFromURL('../svg/arena/Cloud.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(12);
+            obj.set({ left: 300, top: 370});
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'overZzz';
+            obj.on('added', function () {
+                canvas.bringToFront(obj);
+                canvas.bringToFront(canvas.getItemByName('skillText'))
+            });
+            canvas.add(obj);
+        });
+        var skillText = new fabric.Text(String('Odpocznij \n\nRegen:\t'+35+'%' ), {
+            left: 260,
+            top: 355,
+            selectable: false,
+            scalable: false,
+            name: 'skillText',
+            fill: '#000',
+            fontSize: 12,
+            fontFamily: 'Comic Sans',
+            textAlign: 'left',
+            originX: 'left',
+        });
+        canvas.add(skillText);
+        canvas.bringToFront(skillText);
     }
 
 

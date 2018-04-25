@@ -72,7 +72,7 @@ window.onload = function () {
         gold: 0,
         ranking: 0,
         hp: 0,
-        armor:0,
+        armor: 0,
         energy: 0
     };
 
@@ -181,14 +181,19 @@ window.onload = function () {
                     Gchar.exp = xmlhttp.response.exp;
                     Gchar.gold = xmlhttp.response.gold;
                     Gchar.ranking = xmlhttp.response.ranking;
-                    Gchar.httpSucc = true;
+                    // Gchar.hp = xmlhttp.response.hp;
+                    // Gchar.armor = xmlhttp.response.armor;
+                    // Gchar.energy = xmlhttp.response.energy;
                     resolve();
                 }
             };
             xmlhttp.send();
         });
-    } //TODO refresh gold
-
+    }
+    function refreshChar() {
+        removeChar();
+        reqCharacter().then(loadCharMain);
+    }
 
 
 
@@ -491,8 +496,8 @@ window.onload = function () {
     };
     function loadExp() {//required exp mechanism may be changed by Pan Kosakowski
         if (!canvas.getItemByName('expText')) {
-            var expText = new fabric.Text('Exp: '+String(Gchar.exp)+'/'+String(Gchar.level*100*2), {
-                left: canvas.width/2-165,
+            var expText = new fabric.Text('Exp: ' + String(Gchar.exp) + '/' + String(Gchar.level * 100 * 2), {
+                left: canvas.width / 2 - 165,
                 top: 115,
                 selectable: false,
                 scalable: false,
@@ -509,8 +514,8 @@ window.onload = function () {
     };
     function loadLvl() {
         if (!canvas.getItemByName('lvlText')) {
-            var lvlText = new fabric.Text('LvL: '+String(Gchar.level), {
-                left: canvas.width/2-240,
+            var lvlText = new fabric.Text('LvL: ' + String(Gchar.level), {
+                left: canvas.width / 2 - 240,
                 top: 115,
                 selectable: false,
                 scalable: false,
@@ -526,7 +531,6 @@ window.onload = function () {
         }
     };
     function loadHp() {
-        //TODO
         if (!canvas.getItemByName('heartText')) {
             var heartText = new fabric.Text(String(Gchar.hp), {
                 left: 48,
@@ -791,6 +795,7 @@ window.onload = function () {
         canvas.remove(canvas.getItemByName('findOpButton'));
         removeStats();
         removeEq();
+        refreshChar();
 
     }
     function removeStats() {
@@ -810,6 +815,13 @@ window.onload = function () {
         canvas.remove(canvas.getItemByName('EQarmmor'));
         canvas.remove(canvas.getItemByName('EQweapon'));
     }
+    function removeChar() {
+        canvas.remove(canvas.getItemByName('coinText'));
+        canvas.remove(canvas.getItemByName('heartText'));
+        canvas.remove(canvas.getItemByName('shieldText'));
+        canvas.remove(canvas.getItemByName('energyText'));
+    }
+
 
     function loadEq() {
         //TODO if httpSucc

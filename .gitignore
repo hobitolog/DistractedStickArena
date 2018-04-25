@@ -2,9 +2,8 @@
 node_modules/
 
 config.json
+public/svg/arena/EnergyBar.svg
+public/svg/arena/HealthBar.svg
 public/svg/arena/bar1.svg
 public/svg/arena/bar2.svg
-public/svg/arena/HealthBar.svg
-public/svg/arena/EnergyBar.svg
-public/svg/arena/Cloud.svg
 public/svg/arena/ArmorBar.svg
