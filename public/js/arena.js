@@ -1,8 +1,28 @@
 var arenaTimer;
+var tmp =
+{
+    hp: 45,
+    hpMax: 120,
+    armor: 20,
+    armorMax: 60,
+    energy: 80,
+    energyMax: 100
+}
+var tmpOp =
+{
+    hp: 5,
+    hpMax: 100,
+    armor: 0,
+    armorMax: 50,
+    energy: 20,
+    energyMax: 300
+}
 function showArena() {
     canvas.clear();
     canvas.localization = 'arena';
     load();
+
+
 
     canvas.on('mouse:over', function (e) {
         if (e.target != null && canvas.localization == 'arena') {
@@ -80,6 +100,24 @@ function showArena() {
                 canvas.bringToFront(canvas.getItemByName('weapon1'))
                 canvas.bringToFront(canvas.getItemByName('stickman'))
                 canvas.bringToFront(canvas.getItemByName('opponent'))
+                canvas.bringToFront(canvas.getItemByName('hpL'))
+                canvas.bringToFront(canvas.getItemByName('hpLText'))
+                canvas.bringToFront(canvas.getItemByName('hpP'))
+                canvas.bringToFront(canvas.getItemByName('hpPText'))
+                canvas.bringToFront(canvas.getItemByName('HealthBarL'))
+                canvas.bringToFront(canvas.getItemByName('HealthBarP'))
+                canvas.bringToFront(canvas.getItemByName('arL'))
+                canvas.bringToFront(canvas.getItemByName('arLText'))
+                canvas.bringToFront(canvas.getItemByName('arP'))
+                canvas.bringToFront(canvas.getItemByName('arPText'))
+                canvas.bringToFront(canvas.getItemByName('ArmorBarL'))
+                canvas.bringToFront(canvas.getItemByName('ArmorBarP'))
+                canvas.bringToFront(canvas.getItemByName('enL'))
+                canvas.bringToFront(canvas.getItemByName('enLText'))
+                canvas.bringToFront(canvas.getItemByName('enP'))
+                canvas.bringToFront(canvas.getItemByName('enPText'))
+                canvas.bringToFront(canvas.getItemByName('EnergyBarL'))
+                canvas.bringToFront(canvas.getItemByName('EnergyBarP'))
             });
             canvas.add(obj);
 
@@ -96,9 +134,7 @@ function showArena() {
             fill: 'green',
         });
         menu.on('added', function () {
-
-
-
+    
         });
         canvas.add(menu);
 
@@ -157,7 +193,7 @@ function showArena() {
             obj.scale(2);
             obj.set({ left: 330, top: 300 });
             obj.selectable = false;
-            obj.scalable = true;
+            obj.scalable = false;
             obj.name = 'stickman';
             canvas.add(obj);
         });
@@ -166,12 +202,219 @@ function showArena() {
             obj.scale(1.7);
             obj.set({ left: 420, top: 280 });
             obj.selectable = false;
-            obj.scalable = true;
+            obj.scalable = false;
             obj.name = 'opponent';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/arena/HealthBar.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.38);
+            obj.set({ left: canvas.width/2-150, top: 0 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'HealthBarL';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/arena/HealthBar.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.38);
+            obj.set({ left: canvas.width/2+230, top: 0 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'HealthBarP';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/arena/ArmorBar.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.38);
+            obj.set({ left: canvas.width/2-150, top: 20 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'ArmorBarL';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/arena/ArmorBar.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.38);
+            obj.set({ left: canvas.width/2+230, top: 20 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'ArmorBarP';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/arena/EnergyBar.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.38);
+            obj.set({ left: canvas.width/2-150, top: 45 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'EnergyBarL';
+            canvas.add(obj);
+        });
+        fabric.loadSVGFromURL('../svg/arena/EnergyBar.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.38);
+            obj.set({ left: canvas.width/2+230, top: 45 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'EnergyBarP';
             canvas.add(obj);
         });
 
 
+        var hpL = new fabric.Rect({
+            top: 27,
+            left: 24,
+            width: (tmp.hp*293)/tmp.hpMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'hpL',
+            fill: 'red',
+        });
+        canvas.add(hpL);
+
+        var hpLText = new fabric.Text(String(tmp.hp+'/'+tmp.hpMax), {
+            left: 150,
+            top: 27,
+            selectable: false,
+            scalable: false,
+            name: 'hpLText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(hpLText);
+
+        var arL = new fabric.Rect({
+            top: 47,
+            left: 24,
+            width: (tmp.armor*293)/tmp.armorMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'arL',
+            fill: 'grey',
+        });
+        canvas.add(arL);
+
+        var arLText = new fabric.Text(String(tmp.armor+'/'+tmp.armorMax), {
+            left: 150,
+            top: 47,
+            selectable: false,
+            scalable: false,
+            name: 'arLText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(arLText);
+        var enL = new fabric.Rect({
+            top: 72,
+            left: 24,
+            width: (tmp.energy*293)/tmp.energyMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'enL',
+            fill: 'khaki',
+        });
+        canvas.add(enL);
+
+        var enLText = new fabric.Text(String(tmp.energy+'/'+tmp.energyMax), {
+            left: 150,
+            top: 72,
+            selectable: false,
+            scalable: false,
+            name: 'enLText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(enLText);
+
+        var hpP = new fabric.Rect({
+            top: 27,
+            left: 404,
+            width: (tmpOp.hp*293)/tmpOp.hpMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'hpP',
+            fill: 'red',
+        });
+        canvas.add(hpP);
+
+        var hpPText = new fabric.Text(String(tmpOp.hp+'/'+tmpOp.hpMax), {
+            left: 482,
+            top: 27,
+            selectable: false,
+            scalable: false,
+            name: 'hpPText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(hpPText);
+
+        var arP = new fabric.Rect({
+            top: 47,
+            left: 404,
+            width: (tmpOp.armor*293)/tmpOp.armorMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'arP',
+            fill: 'grey',
+        });
+        canvas.add(arP);
+
+        var arPText = new fabric.Text(String(tmpOp.armor+'/'+tmpOp.armorMax), {
+            left: 482,
+            top: 47,
+            selectable: false,
+            scalable: false,
+            name: 'arPText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(arPText);
+        var enP = new fabric.Rect({
+            top: 72,
+            left: 404,
+            width: (tmpOp.energy*293)/tmpOp.energyMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'enP',
+            fill: 'khaki',
+        });
+        canvas.add(enP);
+
+        var enPText = new fabric.Text(String(tmpOp.energy+'/'+tmpOp.energyMax), {
+            left: 482,
+            top: 72,
+            selectable: false,
+            scalable: false,
+            name: 'enPText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(enPText);
 
 
         canvas.renderAll();
@@ -186,15 +429,14 @@ function showArena() {
             canvas.remove(canvas.getItemByName('timer'))
             var timer = new fabric.Text(String(time), {
                 left: canvas.width / 2,
-                top: 30,
+                top: 45,
                 selectable: false,
                 scalable: false,
                 name: 'timer',
                 fill: 'red',
                 fontSize: 50,
                 fontFamily: 'Comic Sans',
-                textAlign: 'right',
-                originX: 'right',
+                textAlign: 'center',
             });
             canvas.add(timer);
             canvas.renderAll();
