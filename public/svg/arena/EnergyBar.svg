@@ -1,0 +1,7 @@
+<svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" width="1300" height="300">
+    <rect x="161" y="204" style="fill:none;stroke:black;stroke-width:1px;"  width="774" height="34" ry="0" rx="0" />
+    <path stroke="#000" d="M32,72h32v56l32,-72h-32v-56Z" style="fill:khaki;"  transform="matrix(0.536034 0.194742 -0.194742 0.536034 139.407 172.73)"/>
+    <path stroke="#000" d="M1307.843509497812,-392.80738991995486h32.00000000000068v56l32.000000000000455,-72h-32.000000000000455v-56Z" style="fill:khaki;" transform="matrix(0.536034 0.194742 -0.194742 0.536034 139.407 172.73)"/>
+</svg>
