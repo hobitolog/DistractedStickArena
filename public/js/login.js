@@ -152,7 +152,7 @@ function register() {
 
     var json = JSON.stringify(formData)
     var xmlhttp = new XMLHttpRequest()
-    xmlhttp.open("POST", "/register", true)
+    xmlhttp.open("POST", "register", true)
     xmlhttp.setRequestHeader("Content-Type", "application/json")
     xmlhttp.responseType = "json"
     xmlhttp.onreadystatechange = function () {
@@ -191,7 +191,7 @@ function login()
 
     var json = JSON.stringify(formData)
     var xmlhttp = new XMLHttpRequest()
-    xmlhttp.open("POST", "/login", true)
+    xmlhttp.open("POST", "login", true)
     xmlhttp.setRequestHeader("Content-Type", "application/json")
     xmlhttp.responseType = "json"
     xmlhttp.onreadystatechange = function () {

@@ -80,7 +80,7 @@ window.onload = function () {
     function reqStat() {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "/getStats", true);
+            xmlhttp.open("GET", "getStats", true);
             xmlhttp.setRequestHeader("Content-Type", "application/json");
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
@@ -102,7 +102,7 @@ window.onload = function () {
             }
             var json = JSON.stringify(stats)
             var xmlhttp = new XMLHttpRequest()
-            xmlhttp.open("POST", "/spendPoints", true)
+            xmlhttp.open("POST", "spendPoints", true)
             xmlhttp.setRequestHeader("Content-Type", "application/json")
             xmlhttp.responseType = "json"
             xmlhttp.onreadystatechange = function () {
@@ -127,7 +127,7 @@ window.onload = function () {
     function reqEq() {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "/getEquipment", true);
+            xmlhttp.open("GET", "getEquipment", true);
             xmlhttp.setRequestHeader("Content-Type", "application/json");
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
@@ -148,7 +148,7 @@ window.onload = function () {
     //         }
     //         var json = JSON.stringify(stats)
     //         var xmlhttp = new XMLHttpRequest()
-    //         xmlhttp.open("POST", ??"/spendEquipment"??, true)
+    //         xmlhttp.open("POST", ??"spendEquipment"??, true)
     //         xmlhttp.setRequestHeader("Content-Type", "application/json")
     //         xmlhttp.responseType = "json"
     //         xmlhttp.onreadystatechange = function () {
@@ -172,7 +172,7 @@ window.onload = function () {
     function reqCharacter() {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "/getCharacter", true);
+            xmlhttp.open("GET", "getCharacter", true);
             xmlhttp.setRequestHeader("Content-Type", "application/json");
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {

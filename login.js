@@ -120,7 +120,7 @@ module.exports = {
         if (req.isAuthenticated())
             return next()
 
-        return res.redirect('/login')
+        return res.redirect('login')
     },
 
     isActivated: (req, res, next) => {
@@ -128,6 +128,6 @@ module.exports = {
         if (req.user.activation.activated)
             return next()
 
-        return res.redirect('/activation')
+        return res.redirect('activation')
     }
 }

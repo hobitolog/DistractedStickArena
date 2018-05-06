@@ -41,7 +41,7 @@ api(app)
 
 app.get('/activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)
-        res.redirect('/')
+        res.redirect('../')
     else
         res.sendFile(path.join(__dirname, '/html', 'activation.html'))
 })
@@ -93,12 +93,12 @@ app.post('/addWeapon', (req, res) => {
     }
     
     mongoose.connection.collection('prototypes').insert(newWeapon)
-    res.redirect('/addWeapon')
+    res.redirect('addWeapon')
 })
 
 app.get('/login', (req, res) => {
     if (req.isAuthenticated())
-        res.redirect('/')
+        res.redirect('../')
     else
         res.sendFile(path.join(__dirname, '/html', 'login.html'))
 })
@@ -141,7 +141,7 @@ app.post('/register', (req, res, next) => {
 
 app.get('/logout', (req, res) => {
     req.logout()
-    res.redirect('/login');
+    res.redirect('login')
 })
 
 server.listen(80, () => {
