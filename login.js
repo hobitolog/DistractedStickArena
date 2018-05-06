@@ -5,7 +5,7 @@ var User = require('./models/user')
 var log = require('./log')
 
 var allowedChars = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    + "ąćęśżźńół_-+=<>,.S"
+    + "ąćęśżźńół_-+=<>,.?"
 
 module.exports = {
     init: function (passport) {
@@ -45,6 +45,7 @@ module.exports = {
                     return done(null, false)
                 }
 
+                //TODO możliwe że ten forEach się wyjebie, przetestować
                 username.forEach(char => {
                     if (!allowedChars.includes(char)) {
                         req.registerMessage = "Login zawiera niedozwolony znak: '" + char + "'"

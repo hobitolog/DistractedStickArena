@@ -7,6 +7,18 @@ var defaults = {
     mailConfig: null
 }
 
+/*
+Przykładowy mailConfig:
+mailConfig: {
+    host: 'mail.student.put.poznan.pl',
+    port: 587,
+    secure: false,
+    auth: {
+        user: "imie.nazwisko@student.put.poznan.pl",
+        pass: "haslo"
+    }
+}*/
+
 if (!fs.existsSync('config.json')) {
     var json = JSON.stringify(defaults)
     fs.writeFileSync('config.json', json, { encoding: 'utf8' })

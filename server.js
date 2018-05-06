@@ -80,7 +80,6 @@ app.get('/addWeapon', (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'addWeapon.html'))
 })
 
-//TODO TEST
 app.post('/addWeapon', (req, res) => {
     
     var newWeapon = {
@@ -94,7 +93,6 @@ app.post('/addWeapon', (req, res) => {
     }
     
     mongoose.connection.collection('prototypes').insert(newWeapon)
-    
     res.redirect('/addWeapon')
 })
 
