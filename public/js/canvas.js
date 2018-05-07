@@ -312,7 +312,7 @@ window.onload = function () {
         }
     });
     function loadElements() {
-        fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/Background.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.set({ left: 360, top: 243 })
             obj.selectable = false;
@@ -321,7 +321,7 @@ window.onload = function () {
             canvas.add(obj);
         })
 
-        fabric.loadSVGFromURL('../svg/Circus.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/Circus.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(1.75);
             obj.set({ left: 344, top: 100 });
@@ -331,7 +331,7 @@ window.onload = function () {
             canvas.add(obj);
         })
 
-        fabric.loadSVGFromURL('../svg/Inn.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/Inn.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(1.75);
             obj.set({ left: 192, top: 224 });
@@ -341,7 +341,7 @@ window.onload = function () {
             canvas.add(obj);
         })
 
-        fabric.loadSVGFromURL('../svg/Blacksmith.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/Blacksmith.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(1.75);
             obj.set({ left: 128, top: 374 });
@@ -350,7 +350,7 @@ window.onload = function () {
             obj.name = 'blacksmith';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/Statue.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/Statue.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(1.75);
             obj.set({ left: 532, top: 276 });
@@ -359,7 +359,7 @@ window.onload = function () {
             obj.name = 'statue';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/Stickman.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/Stickman.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(1.75);
             obj.set({ left: 350, top: 400 });
@@ -368,7 +368,7 @@ window.onload = function () {
             obj.name = 'stickman';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/coin.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/coin.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.08);
             obj.set({ left: canvas.width - 150, top: canvas.height - 30 })
@@ -378,7 +378,7 @@ window.onload = function () {
             obj.on('after:render', canvas.bringToFront(canvas.getItemByName('coinText')));
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/heart.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/heart.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.12);
             obj.set({ left: 25, top: 25 });
@@ -388,7 +388,7 @@ window.onload = function () {
             obj.on('after:render', canvas.bringToFront(canvas.getItemByName('heartText')));
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/shield.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/shield.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(2.9);
             obj.set({ left: 120, top: 25 });
@@ -398,7 +398,7 @@ window.onload = function () {
             obj.on('after:render', canvas.bringToFront(canvas.getItemByName('shieldText')));
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/energy.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/energy.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(2.1);
             obj.set({ left: 210, top: 25 });
@@ -408,7 +408,7 @@ window.onload = function () {
             obj.on('after:render', canvas.bringToFront(canvas.getItemByName('energyText')));
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/exit.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.2);
             obj.set({ left: canvas.width / 2 + 220, top: canvas.height / 2 - 120 });
@@ -424,7 +424,7 @@ window.onload = function () {
 
     function loadBG(BGname) {
         if (!canvas.getItemByName(BGname)) {
-            fabric.loadSVGFromURL('../svg/' + BGname + '.svg', function (objects, options) {
+            fabric.loadSVGFromURL('svg/' + BGname + '.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(1);
                 obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
@@ -720,7 +720,7 @@ window.onload = function () {
                 });
             canvas.add(statsPoints);
             if (Gstats.stats.free != 0) {
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 138 });
@@ -729,7 +729,7 @@ window.onload = function () {
                     obj.name = 'addStr';
                     canvas.add(obj);
                 });
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 168 });
@@ -738,7 +738,7 @@ window.onload = function () {
                     obj.name = 'addAtt';
                     canvas.add(obj);
                 });
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 198 });
@@ -747,7 +747,7 @@ window.onload = function () {
                     obj.name = 'addAgi';
                     canvas.add(obj);
                 });
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 228 });
@@ -756,7 +756,7 @@ window.onload = function () {
                     obj.name = 'addSta';
                     canvas.add(obj);
                 });
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 258 });
@@ -826,7 +826,7 @@ window.onload = function () {
     function loadEq() {
         //TODO if httpSucc
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
-            fabric.loadSVGFromURL('../svg/Helmet.svg', function (objects, options) {
+            fabric.loadSVGFromURL('svg/Helmet.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.2);
                 obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 90 })
@@ -835,7 +835,7 @@ window.onload = function () {
                 obj.name = 'EQhelmet';
                 canvas.add(obj);
             });
-            fabric.loadSVGFromURL('../svg/armor.svg', function (objects, options) {
+            fabric.loadSVGFromURL('svg/armor.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.2);
                 obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 10 })
@@ -844,7 +844,7 @@ window.onload = function () {
                 obj.name = 'EQarmmor';
                 canvas.add(obj);
             });
-            fabric.loadSVGFromURL('../svg/weapon.svg', function (objects, options) {
+            fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.3);
                 obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 100 })

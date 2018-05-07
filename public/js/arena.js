@@ -87,7 +87,7 @@ function showArena() {
     });
 
     function load() {
-        fabric.loadSVGFromURL('../svg/arena/arenaBG.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/arenaBG.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(1.2);
             obj.set({ left: canvas.width / 2, top: 140 });
@@ -122,7 +122,7 @@ function showArena() {
         });
         canvas.add(menu);
 
-        fabric.loadSVGFromURL('../svg/weapon.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.3);
             obj.set({ left: 40, top: 440 });
@@ -136,7 +136,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        fabric.loadSVGFromURL('../svg/weapon.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.3);
             obj.set({ left: 120, top: 440 });
@@ -148,7 +148,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        fabric.loadSVGFromURL('../svg/weapon.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.3);
             obj.set({ left: 200, top: 440 });
@@ -160,7 +160,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        fabric.loadSVGFromURL('../svg/arena/zzz.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/zzz.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.3);
             obj.set({ left: 290, top: 460 });
@@ -172,7 +172,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        fabric.loadSVGFromURL('../svg/Stickman.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/Stickman.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(2);
             obj.set({ left: 330, top: 300 });
@@ -181,7 +181,7 @@ function showArena() {
             obj.name = 'stickman';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/Stickman.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/Stickman.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(1.7);
             obj.set({ left: 420, top: 280 });
@@ -190,7 +190,7 @@ function showArena() {
             obj.name = 'opponent';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/arena/HealthBar.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/HealthBar.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.38);
             obj.set({ left: canvas.width / 2 - 150, top: 0 });
@@ -199,7 +199,7 @@ function showArena() {
             obj.name = 'HealthBarL';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/arena/HealthBar.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/HealthBar.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.38);
             obj.set({ left: canvas.width / 2 + 230, top: 0 });
@@ -208,7 +208,7 @@ function showArena() {
             obj.name = 'HealthBarP';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/arena/ArmorBar.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/ArmorBar.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.38);
             obj.set({ left: canvas.width / 2 - 150, top: 20 });
@@ -217,7 +217,7 @@ function showArena() {
             obj.name = 'ArmorBarL';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/arena/ArmorBar.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/ArmorBar.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.38);
             obj.set({ left: canvas.width / 2 + 230, top: 20 });
@@ -226,7 +226,7 @@ function showArena() {
             obj.name = 'ArmorBarP';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/arena/EnergyBar.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/EnergyBar.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.38);
             obj.set({ left: canvas.width / 2 - 150, top: 45 });
@@ -235,7 +235,7 @@ function showArena() {
             obj.name = 'EnergyBarL';
             canvas.add(obj);
         });
-        fabric.loadSVGFromURL('../svg/arena/EnergyBar.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/EnergyBar.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.38);
             obj.set({ left: canvas.width / 2 + 230, top: 45 });
@@ -282,7 +282,7 @@ function showArena() {
     }
 
     function mouseOverWeapon1() {
-        fabric.loadSVGFromURL('../svg/arena/Cloud.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(12);
             obj.set({ left: 52, top: 370 });
@@ -313,7 +313,7 @@ function showArena() {
 
     }
     function mouseOverWeapon2() {
-        fabric.loadSVGFromURL('../svg/arena/Cloud.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(12);
             obj.set({ left: 130, top: 370 });
@@ -344,7 +344,7 @@ function showArena() {
         canvas.bringToFront(skillText);
     }
     function mouseOverWeapon3() {
-        fabric.loadSVGFromURL('../svg/arena/Cloud.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(12);
             obj.set({ left: 215, top: 370 });
@@ -375,7 +375,7 @@ function showArena() {
         canvas.bringToFront(skillText);
     }
     function mouseOverZzz() {
-        fabric.loadSVGFromURL('../svg/arena/Cloud.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(12);
             obj.set({ left: 300, top: 370 });
