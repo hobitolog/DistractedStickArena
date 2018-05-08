@@ -39,7 +39,6 @@ window.onload = function () {
     //TODO font change
 
     var Gstats = {
-        httpSucc: false,
         stats: {
             free: 0,
             str: 0,
@@ -51,7 +50,6 @@ window.onload = function () {
     };
 
     var Geq = {
-        httpSucc: false,
         equipment: {
             helmet: {
                 itemId: 0
@@ -86,7 +84,6 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     Gstats.stats = xmlhttp.response;
-                    Gstats.httpSucc = true;
                     resolve();
                 }
             };
@@ -119,8 +116,8 @@ window.onload = function () {
         });
     }
     function refreshStat() {
-        removeStats();
-        reqStat().then(loadStats);
+        removeStats().then(reqStat).then(loadStats);
+        //reqStat().then(loadStats);
     }
 
 
@@ -133,7 +130,6 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     Geq.equipment = xmlhttp.response;
-                    Geq.httpSucc = true;
                     resolve();
                 }
             };
@@ -590,7 +586,7 @@ window.onload = function () {
 
 
     function loadStats() {
-        if (!canvas.getItemByName('statsText') && Gstats.httpSucc == true) {
+        if (!canvas.getItemByName('statsText')) {
             var statsText = new fabric.Group([
                 new fabric.Text('Siła:', {
                     // left: 200,
@@ -768,11 +764,9 @@ window.onload = function () {
 
 
             }
-            Gstats.httpSucc = false;
         }
-        else {
-            //TODO
-        }
+        loadExp();
+        loadLvl();
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
         canvas.bringToFront(canvas.getItemByName('addStr'));
@@ -799,32 +793,33 @@ window.onload = function () {
 
     }
     function removeStats() {
-        canvas.remove(canvas.getItemByName('statsPoints'));
-        canvas.remove(canvas.getItemByName('statsText'));
-        canvas.remove(canvas.getItemByName('addStr'));
-        canvas.remove(canvas.getItemByName('addAtt'));
-        canvas.remove(canvas.getItemByName('addAgi'));
-        canvas.remove(canvas.getItemByName('addSta'));
-        canvas.remove(canvas.getItemByName('addVit'));
-        canvas.remove(canvas.getItemByName('expText'));
-        canvas.remove(canvas.getItemByName('lvlText'));
-
+        return new Promise(function (resolve, reject) {
+            if (canvas.getItemByName('statsPoints')) { canvas.remove(canvas.getItemByName('statsPoints')); }
+            if (canvas.getItemByName('statsText')) { canvas.remove(canvas.getItemByName('statsText')); }
+            if (canvas.getItemByName('addStr')) { canvas.remove(canvas.getItemByName('addStr')); }
+            if (canvas.getItemByName('addAtt')) { canvas.remove(canvas.getItemByName('addAtt')); }
+            if (canvas.getItemByName('addAgi')) { canvas.remove(canvas.getItemByName('addAgi')); }
+            if (canvas.getItemByName('addSta')) { canvas.remove(canvas.getItemByName('addSta')); }
+            if (canvas.getItemByName('addVit')) { canvas.remove(canvas.getItemByName('addVit')); }
+            if (canvas.getItemByName('expText')) { canvas.remove(canvas.getItemByName('expText')); }
+            if (canvas.getItemByName('lvlText')) { canvas.remove(canvas.getItemByName('lvlText')); }
+            resolve();
+        });
     }
     function removeEq() {
-        canvas.remove(canvas.getItemByName('EQhelmet'));
-        canvas.remove(canvas.getItemByName('EQarmmor'));
-        canvas.remove(canvas.getItemByName('EQweapon'));
+        if (canvas.getItemByName('EQhelmet')) { canvas.remove(canvas.getItemByName('EQhelmet')); }
+        if (canvas.getItemByName('EQarmmor')) { canvas.remove(canvas.getItemByName('EQarmmor')); }
+        if (canvas.getItemByName('EQweapon')) { canvas.remove(canvas.getItemByName('EQweapon')); }
     }
     function removeChar() {
-        canvas.remove(canvas.getItemByName('coinText'));
-        canvas.remove(canvas.getItemByName('heartText'));
-        canvas.remove(canvas.getItemByName('shieldText'));
-        canvas.remove(canvas.getItemByName('energyText'));
-    }
+        if (canvas.getItemByName('coinText')) { canvas.remove(canvas.getItemByName('coinText')); }
+        if (canvas.getItemByName('heartText')) { canvas.remove(canvas.getItemByName('heartText')); }
+        if (canvas.getItemByName('shieldText')) { canvas.remove(canvas.getItemByName('shieldText')); }
+        if (canvas.getItemByName('energyText')) { canvas.remove(canvas.getItemByName('energyText')); }
+  }
 
 
     function loadEq() {
-        //TODO if httpSucc
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
             fabric.loadSVGFromURL('svg/Helmet.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
