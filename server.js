@@ -2,6 +2,7 @@ var log = require("./log")
 var config = require("./config")
 var login = require("./login")
 var api = require("./api")
+var weapons = require('./models/weapon')
 //TODO var fight = require("./fight")
 
 var path = require('path')
