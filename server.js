@@ -84,7 +84,7 @@ app.get('/addWeapon', (req, res) => {
 })
 
 app.post('/addWeapon', (req, res) => {
-    
+
     var newWeapon = {
         "name": req.body.name,
         "type": req.body.type,
@@ -94,7 +94,7 @@ app.post('/addWeapon', (req, res) => {
         "level": req.body.level,
         "value": req.body.value
     }
-    
+
     mongoose.connection.collection('prototypes').insert(newWeapon)
     res.redirect('addWeapon')
 })
@@ -145,6 +145,16 @@ app.post('/register', (req, res, next) => {
 app.get('/logout', (req, res) => {
     req.logout()
     res.redirect('login')
+})
+
+// UWAGA - NIE DODAWAĆ NIC PO TYM
+app.use(function (req, res) {
+    res.status(404).send('404: Page not Found')
+})
+
+app.use(function (err, req, res, next) {
+    log.error(err)
+    res.status(500).send('500: Internal Server Error<br>Dlaczego zepsułeś nam stronę? ;_;')
 })
 
 server.listen(80, () => {
