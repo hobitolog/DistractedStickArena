@@ -206,6 +206,9 @@ window.onload = function () {
     var helmetDrop = document.getElementById('helmet');
     var armorDrop = document.getElementById('armor');
     var weaponDrop = document.getElementById('weapon');
+    var buyDrop = document.getElementById('buy');
+    var sellDrop = document.getElementById('sell');
+
     loadBG('inArena');
     loadBG('inTavern');
     loadBG('inBlacksmith');
@@ -234,6 +237,7 @@ window.onload = function () {
             switch (e.target.name) {
                 case 'arena':
                     hideEqControls()
+                    hideShopControls()
                     loadInArena();
                     refreshChar();
                     canvas.getItemByName('inArena').opacity = 1;
@@ -248,11 +252,14 @@ window.onload = function () {
                     canvas.getItemByName('inTavern').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inTavern'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
+                    loadInTavern();
+
 
                     //open tavern
                     break;
                 case 'blacksmith':
                     hideEqControls()
+                    hideShopControls()
                     refreshChar();
                     canvas.getItemByName('inBlacksmith').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
@@ -261,6 +268,7 @@ window.onload = function () {
                     break;
                 case 'statue':
                     hideEqControls()
+                    hideShopControls()
                     refreshChar();
                     canvas.getItemByName('inStatue').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStatue'));
@@ -270,6 +278,7 @@ window.onload = function () {
                     //open statue
                     break;
                 case 'stickman':
+                    hideShopControls()
                     canvas.getItemByName('inStickman').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStickman'));
                     reqStat().then(loadStats);
@@ -788,8 +797,202 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('exit'));
 
     }
+    function loadInTavern() {
+        loadShopItemStats("Item name", "atk min 2", "atk max 24", "type weapon", " ", "23", "KUP", 'svg/weapon.svg')
+
+        if (!canvas.getItemByName('tradeBuy')) {
+
+            sellDrop.style.left = 130 + 'px';
+            sellDrop.style.top = -290 + 'px';
+            sellDrop.style.visibility = 'visible';
+
+            buyDrop.style.left = -333 + 'px';
+            buyDrop.style.top = -350 + 'px';
+            buyDrop.style.visibility = 'visible';
+
+
+
+            var tradeBuy = new fabric.Text(String("Kup"), {
+                left: canvas.width / 2 - 155,
+                top: canvas.height / 2 - 120,
+                selectable: false,
+                scalable: false,
+                name: 'tradeBuy',
+                fill: 'red',
+                fontSize: 20,
+                fontFamily: 'Comic Sans',
+                textAlign: 'center',
+            });
+            canvas.add(tradeBuy);
+            var tradeSell = new fabric.Text(String("Sprzedaj"), {
+                left: canvas.width / 2 - 155,
+                top: canvas.height / 2 + 30,
+                selectable: false,
+                scalable: false,
+                name: 'tradeSell',
+                fill: 'red',
+                fontSize: 20,
+                fontFamily: 'Comic Sans',
+                textAlign: 'center',
+            });
+            canvas.add(tradeSell);
+
+
+            canvas.bringToFront(canvas.getItemByName('tradeBuy'))
+            canvas.bringToFront(canvas.getItemByName('tradeSell'))
+
+
+        }
+
+    }
+    function loadShopItemStats(selectedName, selectedStat1, selectedStat2, selectedStat3, selectedStat4, selectedValue, selectedButtonOption, itemPath) {
+        // loadShopItemStats("Item name", "atk min 2", "atk max 24", "type weapon", " ", "23", "KUP",'svg/weapon.svg' )
+
+        fabric.loadSVGFromURL(itemPath, function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.4);
+            obj.set({ left: canvas.width/2, top: canvas.height/2 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'shopImg';
+            obj.on('added', function () {
+            });
+            canvas.add(obj);
+
+        });
+
+
+        var itemName = new fabric.Text(String(selectedName), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2 - 90,
+            selectable: false,
+            scalable: false,
+            name: 'itemName',
+            fill: 'red',
+            fontSize: 30,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(itemName);
+        var stat1 = new fabric.Text(String(selectedStat1), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2 - 60,
+            selectable: false,
+            scalable: false,
+            name: 'stat1',
+            fill: 'red',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(stat1);
+        var stat2 = new fabric.Text(String(selectedStat2), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2 - 40,
+            selectable: false,
+            scalable: false,
+            name: 'stat2',
+            fill: 'red',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(stat2);
+        var stat3 = new fabric.Text(String(selectedStat3), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2 - 20,
+            selectable: false,
+            scalable: false,
+            name: 'stat3',
+            fill: 'red',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(stat3);
+        var stat4 = new fabric.Text(String(selectedStat4), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2,
+            selectable: false,
+            scalable: false,
+            name: 'stat4',
+            fill: 'red',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(stat4);
+
+
+
+        var tradeButton = new fabric.Group([new fabric.Rect({
+            width: 120,
+            height: 35,
+            fill: '#ccc',
+            name: 'inTavernButtonBG',
+            selectable: false
+        }),
+        new fabric.Text(String(selectedButtonOption), {
+            // left: 200,
+            // top: 100,
+            fill: '#000',
+            name: 'inTavernButtonText',
+            fontSize: 15
+        })], {
+                name: 'tradeButton',
+                left: canvas.width / 2 + 150,
+                top: 330,
+                opacity: 1,
+                selectable: false
+
+            });
+        canvas.add(tradeButton);
+        canvas.sendToBack(tradeButton);
+
+
+
+        fabric.loadSVGFromURL('svg/coin.svg', function (objects, options) {
+            var coinShop = fabric.util.groupSVGElements(objects, options);
+            coinShop.scale(0.04);
+            // coinShop.set({ left: 0 , top: 30 })
+            coinShop.selectable = false;
+            coinShop.scalable = false;
+            coinShop.name = 'coinShop';
+
+
+            var itemValue = new fabric.Group([
+
+                new fabric.Text(String(selectedValue), {
+                    left: 40,
+                    // top: 100,
+                    fill: '#000',
+                    name: 'inTavernValueText',
+                    textAlign: 'left',
+                    fontSize: 25
+                }), coinShop], {
+                    name: 'itemValue',
+                    left: canvas.width / 2 + 150,
+                    top: 290,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(itemValue);
+        })
+        canvas.bringToFront(canvas.getItemByName('shopImg'))
+        canvas.bringToFront(canvas.getItemByName('tradeButton'))
+        canvas.bringToFront(canvas.getItemByName('itemName'))
+        canvas.bringToFront(canvas.getItemByName('stat1'))
+        canvas.bringToFront(canvas.getItemByName('stat2'))
+        canvas.bringToFront(canvas.getItemByName('stat3'))
+        canvas.bringToFront(canvas.getItemByName('stat4'))
+        canvas.bringToFront(canvas.getItemByName('itemValue'))
+
+
+    }
     function closeButton() {
         hideEqControls();
+        hideShopControls();
         canvas.sendToBack(canvas.getItemByName('inArena'));
         canvas.sendToBack(canvas.getItemByName('inTavern'));
         canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
@@ -800,6 +1003,7 @@ window.onload = function () {
         if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
         removeStats();
         removeEq();
+        removeTavern();
 
     }
     function removeStats() {
@@ -826,6 +1030,19 @@ window.onload = function () {
         if (canvas.getItemByName('heartText')) { canvas.remove(canvas.getItemByName('heartText')); }
         if (canvas.getItemByName('shieldText')) { canvas.remove(canvas.getItemByName('shieldText')); }
         if (canvas.getItemByName('energyText')) { canvas.remove(canvas.getItemByName('energyText')); }
+    }
+    function removeTavern() {
+        if (canvas.getItemByName('itemName')) { canvas.remove(canvas.getItemByName('itemName')); }
+        if (canvas.getItemByName('stat1')) { canvas.remove(canvas.getItemByName('stat1')); }
+        if (canvas.getItemByName('stat2')) { canvas.remove(canvas.getItemByName('stat2')); }
+        if (canvas.getItemByName('stat3')) { canvas.remove(canvas.getItemByName('stat3')); }
+        if (canvas.getItemByName('stat4')) { canvas.remove(canvas.getItemByName('stat4')); }
+        if (canvas.getItemByName('tradeButton')) { canvas.remove(canvas.getItemByName('tradeButton')); }
+        if (canvas.getItemByName('itemValue')) { canvas.remove(canvas.getItemByName('itemValue')); }
+        if (canvas.getItemByName('tradeSell')) { canvas.remove(canvas.getItemByName('tradeSell')); }
+        if (canvas.getItemByName('tradeBuy')) { canvas.remove(canvas.getItemByName('tradeBuy')); }
+        if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
+
     }
     function loadEq() {
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
@@ -877,7 +1094,10 @@ window.onload = function () {
         helmetDrop.style.visibility = 'hidden';
         armorDrop.style.visibility = 'hidden';
         weaponDrop.style.visibility = 'hidden';
-
+    }
+    function hideShopControls() {
+        buyDrop.style.visibility = 'hidden';
+        sellDrop.style.visibility = 'hidden';
     }
 
 
