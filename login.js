@@ -45,8 +45,7 @@ module.exports = {
                     return done(null, false)
                 }
 
-                //TODO możliwe że ten forEach się wyjebie, przetestować
-                username.forEach(char => {
+                username.split("").forEach(char => {
                     if (!allowedChars.includes(char)) {
                         req.registerMessage = "Login zawiera niedozwolony znak: '" + char + "'"
                         return done(null, false)
