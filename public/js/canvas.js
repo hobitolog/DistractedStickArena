@@ -313,6 +313,9 @@ window.onload = function () {
                 case 'findOpButton':
                     window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
                     break;
+                case 'tradeButton':
+                    //TODO Finalize transaction by Pan Minta
+                    break;
                 case 'exit':
                     closeButton();
                     refreshChar();
@@ -851,7 +854,7 @@ window.onload = function () {
         fabric.loadSVGFromURL(itemPath, function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.4);
-            obj.set({ left: canvas.width/2, top: canvas.height/2 });
+            obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'shopImg';
