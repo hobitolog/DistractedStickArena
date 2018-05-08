@@ -23,12 +23,14 @@ var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection })
 
 app.use(expressSession({
     store: mongoStore,
-    secret: config.sessionSecret
+    secret: config.sessionSecret,
+    resave: true,
+    saveUninitialized: true
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cookieParser())
-app.use(bodyParser())
+app.use(bodyParser.json())
 login.init(passport)
 
 app.use(express.static(path.join(__dirname, '/public')))
