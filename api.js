@@ -29,27 +29,33 @@ module.exports = function (app) {
         let counter = 0
 
         if (eq.weapon) {
-            itemFetcher.getCurrentVariant(eq.weapon.itemId).then(weapon => {
+            itemFetcher.getCurrentVariant(eq.weapon.itemId)
+            .then(weapon => {
                 response.weapon = weapon
                 ready()
             }).catch(err => {
                 log.error(err)
+                ready()
             })
         }
         if (eq.helmet) {
-            itemFetcher.getCurrentVariant(eq.helmet.itemId).then(helmet => {
+            itemFetcher.getCurrentVariant(eq.helmet.itemId)
+            .then(helmet => {
                 response.helmet = helmet
                 ready()
             }).catch(err => {
                 log.error(err)
+                ready()
             })
         }
         if (eq.armor) {
-            itemFetcher.getCurrentVariant(eq.armor.itemId).then(armor => {
+            itemFetcher.getCurrentVariant(eq.armor.itemId)
+            .then(armor => {
                 response.armor = armor
                 ready()
             }).catch(err => {
                 log.error(err)
+                ready()
             })
         }
 
@@ -61,7 +67,29 @@ module.exports = function (app) {
     })
 
     app.get('/getBackpack', login.isLoggedIn, login.isActivated, (req, res) => {
-        res.json({ "backpack": req.user.character.backpack })
+
+        const response = []
+        let count = req.user.character.backpack.length
+        req.user.character.backpack.forEach(element => {
+
+            itemFetcher.getCurrentVariant(element.itemId)
+            .then(item => {
+                response.push({
+                    "name": item.name,
+                    "itemId": item.itemId
+                })
+                ready()
+            }).catch(err => {
+                log.error(err)
+                ready()
+            })
+        })
+
+        function ready() {
+            count--
+            if (count == 0)
+                res.json({ "backpack": response })
+        }
     })
 
     app.post('/setWeapon', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
