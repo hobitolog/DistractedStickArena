@@ -252,6 +252,8 @@ window.onload = function () {
                     canvas.getItemByName('inTavern').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inTavern'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
+                    loadBuyItemList();
+                    loadSellItemList();
                     loadInTavern();
 
 
@@ -314,7 +316,13 @@ window.onload = function () {
                     window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
                     break;
                 case 'tradeButton':
-                    //TODO Finalize transaction by Pan Minta
+                    if(canvas.getItemByName('tradeButton').option == 'sell') {
+                        var itemToSell = document.getElementById('sell').value
+                        //TODO sell item
+                    } else {
+                        var itemToBuy = document.getElementById('buy').value
+                        //TODO buy item
+                    }
                     break;
                 case 'exit':
                     closeButton();
@@ -800,9 +808,97 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('exit'));
 
     }
+
+    function loadSellItemList() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getBackpack", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    clearSellList()
+                    xmlhttp.response.backpack.forEach((element, index) => {
+                        var option = document.createElement("option");
+                        option.text = element.name;
+                        switch(element.type) {
+                            case 'weapon':
+                            option.addEventListener("click", loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "SPRZEDAJ", element.image))
+                            break
+
+                            case 'armor':
+                            option.addEventListener("click",loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "SPRZEDAJ", element.image))
+                            break
+
+                            case 'helmet':
+                            option.addEventListener("click",loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "SPRZEDAJ", element.image))
+                            break
+                        }
+                        sellDrop.add(option);
+                })
+                if(sellDrop.length == 0) {
+                    var option = document.createElement("option");
+                    option.text = "Pusto!";
+                    sellDrop.add(option);
+                    }
+                    resolve();
+                }
+            }
+            xmlhttp.send();
+        })
+    }
+
+    function loadBuyItemList() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getShopItemList", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            // TODO set(Level/User)Param to get proper equipment
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    clearBuyList()
+                    xmlhttp.response.backpack.forEach((element, index) => {
+                        var option = document.createElement("option");
+                        option.text = element.name;
+                        switch(element.type) {
+                            case 'weapon':
+                            option.addEventListener("click", loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "KUP", element.image))
+                            break
+
+                            case 'armor':
+                            option.addEventListener("click",loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "KUP", element.image))
+                            break
+
+                            case 'helmet':
+                            option.addEventListener("click",loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "KUP", element.image))
+                            break
+                        }
+                        buyDrop.add(option);
+                })
+                    resolve();
+                }
+            }
+            xmlhttp.send();
+        })
+    }
+
+
+    function clearSellList() {
+        for(var i = 0; i < sellDrop.length; i++) {
+            sellDrop.remove(0);
+        }
+    }
+
+    function clearBuyList() {
+        for(var i = 0; i < buyDrop.length; i++) {
+            buyDrop.remove(0);
+        }
+    }
+
     function loadInTavern() {
         loadShopItemStats("Item name", "atk min 2", "atk max 24", "type weapon", " ", "23", "KUP", 'svg/weapon.svg')
-
+        //TODO delete it, instead set iteam with 0 index from list
         if (!canvas.getItemByName('tradeBuy')) {
 
             sellDrop.style.left = 130 + 'px';
@@ -813,7 +909,7 @@ window.onload = function () {
             buyDrop.style.top = -350 + 'px';
             buyDrop.style.visibility = 'visible';
 
-
+            
 
             var tradeBuy = new fabric.Text(String("Kup"), {
                 left: canvas.width / 2 - 155,
@@ -949,6 +1045,7 @@ window.onload = function () {
                 selectable: false
 
             });
+        tradeButton.option = selectedButtonOption;
         canvas.add(tradeButton);
         canvas.sendToBack(tradeButton);
 
@@ -990,9 +1087,8 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('stat3'))
         canvas.bringToFront(canvas.getItemByName('stat4'))
         canvas.bringToFront(canvas.getItemByName('itemValue'))
-
-
     }
+
     function closeButton() {
         hideEqControls();
         hideShopControls();
