@@ -1,0 +1,32 @@
+{
+    "version": 0,
+    "baseId": 200,
+    "name": "Buzdygan",
+    "type": "weapon",
+    "level": 2,
+    "image": "items/buzdygan.png",
+    "variants": [
+        {
+            "variantId": 0,
+            "damageMin": 3,
+            "damageMax": 5,
+            "upgradePrice": 70, 
+            "value": 50
+        },
+        {
+            "variantId": 1,
+            "name": "Buzdygan Rozkoszy",
+            "damageMin": 6,
+            "damageMax": 9,
+            "upgradePrice": 200, 
+            "value": 70
+        },
+        {
+            "variantId": 2,
+            "name": "Podwójny Buzdygan Rozkoszy",
+            "damageMin": 12,
+            "damageMax": 16,
+            "value": 200
+        }
+    ]
+}

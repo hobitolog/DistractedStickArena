@@ -10,17 +10,21 @@ const weaponSchema = mongoose.Schema({
     "name": String,
     "type": String,     // "helmet|armor|weapon"
     "level": Number,    // poziom sugerowany do sklepu
+    "image": String,    // relatywny url do obrazka np. "items/buzdygan.png"
     "variants": []
 })
 /*
 variant:
 {
     "variantId": Number,    <- max 2 cyfrowy
+    "name": String,         <- tylko jeśli wariant ma zmienić nazwę przedmiotu
+    "image": String,        <- tylko jeśli wariant ma zmienić wygląd przedmiotu
     "damageMin": Number,
     "damageMax": Number,
     LUB "armor": Number,    <- zamiast damageMin i damageMax
     "upgradePrice": Number, <- cena upgrade'u tego przedmiotu na variantId+1
-    "value": Number         <- cena kupna w sklepie
+    "value": Number         <- cena dla sklepu, starajcie się żeby były parzyste
+                            sprzedaż = 0.5*value, kupno = value ale tylko dla variantu 0
 }*/
 
 const Weapon = mongoose.model('Weapon', weaponSchema)
@@ -29,37 +33,45 @@ module.exports = Weapon
 
 const weaponResourcePath = './models/weapons'
 
-if (config.skipWeaponChanges)
+if (config.skipWeaponChanges) {
+    log.info("Skipping database item check")
     return
+}
 
+log.info("Starting database item check")
 if (!fs.existsSync(weaponResourcePath))
     fs.mkdirSync(weaponResourcePath)
 
 const files = fs.readdirSync(weaponResourcePath)
 let parsed = 0
 let updateCount = 0
-log.info("Starting database item check")
 
 files.forEach(file => {
-    log.info("Parsing item file: " + file)
     fs.readFile(path.join(weaponResourcePath, file), (err, json) => {
         const weapon = JSON.parse(json)
         Weapon.findOne({ 'baseId': weapon.baseId }, (err, res) => {
-            parsed++
             if (res && res.version >= weapon.version) {
-                check()
+                progress(file, false)
                 return
             }
-            updateCount++
             Weapon.findOneAndRemove({ 'baseId': weapon.baseId }, (err, res) => {
                 mongoose.connection.collection('weapons').insert(weapon)
-                check()
+                progress(file, true)
             })
         })
     })
 })
 
-function check() {
+function progress(file, updated) {
+
+    if (updated)
+        log.info("File", file, "has been updated")
+    else
+        log.info("File", file, "is already up-to-date")
+
+    parsed++
+    updateCount += updated
+
     if (parsed != files.length)
         return
 

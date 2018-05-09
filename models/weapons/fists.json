@@ -1,9 +1,10 @@
 {
-    "version": 0,
+    "version": 1,
     "baseId": 100,
     "name": "Pięści",
     "type": "weapon",
     "level": 1,
+    "image": "",
     "variants": [
         {
             "variantId": 0,
