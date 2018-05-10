@@ -1,0 +1,16 @@
+{
+    "version": 1,
+    "baseId": 100,
+    "name": "Pięści",
+    "type": "weapon",
+    "level": 1,
+    "image": "",
+    "variants": [
+        {
+            "variantId": 0,
+            "damageMin": 1,
+            "damageMax": 2,
+            "value": 0
+        }
+    ]
+}

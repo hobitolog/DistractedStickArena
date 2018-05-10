@@ -32,13 +32,22 @@ window.onload = function () {
     registerTerms.addEventListener('change', function () {
         checkTerms()
     })
-
+    
     checkEmail()
     checkLogin()
     checkPasswords()
     checkTerms()
-
-    console.log("Init completed")
+    
+    document.getElementById('login').addEventListener('keypress', function (e) {
+        if(e.keyCode === 13) {
+            loginButton.click()
+        }
+    })
+    document.getElementById('password').addEventListener('keypress', function (e) {
+        if(e.keyCode === 13) {
+            loginButton.click()
+        }
+    })
 }
 
 function callCheckEmail() {
@@ -143,7 +152,7 @@ function register() {
 
     var json = JSON.stringify(formData)
     var xmlhttp = new XMLHttpRequest()
-    xmlhttp.open("POST", "/register", true)
+    xmlhttp.open("POST", "register", true)
     xmlhttp.setRequestHeader("Content-Type", "application/json")
     xmlhttp.responseType = "json"
     xmlhttp.onreadystatechange = function () {
@@ -164,7 +173,7 @@ function handleRegisterResponse(res) {
         }, 500)
     }
     else {
-        window.location.href = '../'
+        window.location.href = '.'
     }
 }
 
@@ -182,7 +191,7 @@ function login()
 
     var json = JSON.stringify(formData)
     var xmlhttp = new XMLHttpRequest()
-    xmlhttp.open("POST", "/login", true)
+    xmlhttp.open("POST", "login", true)
     xmlhttp.setRequestHeader("Content-Type", "application/json")
     xmlhttp.responseType = "json"
     xmlhttp.onreadystatechange = function () {
@@ -204,6 +213,6 @@ function handleLoginResponse(res)
         }, 500)
     }
     else {
-        window.location.href = '../'
+        window.location.href = '.'
     }
 }

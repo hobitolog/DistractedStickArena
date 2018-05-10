@@ -73,7 +73,7 @@ user.methods.initActivation = function (callback) {
     var transporter = nodemailer.createTransport(config.mailConfig)
 
     var mailOptions = {
-        from: '"StickArena" <robert.kosakowski@student.put.poznan.pl>',
+        from: '"StickArena" <' + config.mailConfig.auth.user + '>',
         to: this.email,
         subject: 'Rejestracja w StickArena',
         text: `Tej,

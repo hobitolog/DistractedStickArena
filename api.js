@@ -1,6 +1,7 @@
-var login = require('./login')
-var log = require('./log')
-var fight = require('./fight')
+const login = require('./login')
+const log = require('./log')
+const fight = require('./fight')
+const itemFetcher = require('./itemFetcher')
 
 module.exports = function (app) {
 
@@ -15,15 +16,92 @@ module.exports = function (app) {
     })
 
     app.get('/getStats', login.isLoggedIn, login.isActivated, (req, res) => {
-        res.json(res.req.user.character.stats)
+        res.json(req.user.character.stats)
     })
 
     app.get('/getEquipment', login.isLoggedIn, login.isActivated, (req, res) => {
-        res.json(res.req.user.character.equipment)
+        const eq = req.user.character.equipment
+        const response = {
+            "weapon": null,
+            "armor": null,
+            "helmet": null
+        }
+        let counter = 0
+
+        if (eq.weapon) {
+            itemFetcher.getCurrentVariant(eq.weapon.itemId)
+            .then(weapon => {
+                response.weapon = weapon
+                ready()
+            }).catch(err => {
+                log.error(err)
+                ready()
+            })
+        }
+        if (eq.helmet) {
+            itemFetcher.getCurrentVariant(eq.helmet.itemId)
+            .then(helmet => {
+                response.helmet = helmet
+                ready()
+            }).catch(err => {
+                log.error(err)
+                ready()
+            })
+        }
+        if (eq.armor) {
+            itemFetcher.getCurrentVariant(eq.armor.itemId)
+            .then(armor => {
+                response.armor = armor
+                ready()
+            }).catch(err => {
+                log.error(err)
+                ready()
+            })
+        }
+
+        function ready() {
+            counter++
+            if (counter == 3)
+                res.json(req.user.character.equipment)
+        }
     })
 
     app.get('/getBackpack', login.isLoggedIn, login.isActivated, (req, res) => {
-        res.json({ "backpack" : res.req.user.character.backpack })
+
+        const response = []
+        let count = req.user.character.backpack.length
+        req.user.character.backpack.forEach(element => {
+
+            itemFetcher.getCurrentVariant(element.itemId)
+            .then(item => {
+                response.push({
+                    "name": item.name,
+                    "itemId": item.itemId
+                })
+                ready()
+            }).catch(err => {
+                log.error(err)
+                ready()
+            })
+        })
+
+        function ready() {
+            count--
+            if (count == 0)
+                res.json({ "backpack": response })
+        }
+    })
+
+    app.post('/setWeapon', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+        //TODO
+    })
+
+    app.post('/setArmor', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+        //TODO
+    })
+
+    app.post('/setHelmet', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+        //TODO
     })
 
     app.post('/spendPoints', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
@@ -48,7 +126,7 @@ module.exports = function (app) {
                 req.user.character.stats[stat] += amount
                 req.user.character.stats.free -= amount
                 req.user.save(function (err) {
-                    if(err) 
+                    if (err)
                         log.error(err)
                     var json = { "error": err ? "Błąd bazy danych" : null }
                     res.send(json)

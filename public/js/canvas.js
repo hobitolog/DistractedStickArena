@@ -1,46 +1,44 @@
+var canvas;
+fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+fabric.Object.prototype.objectCaching = true;
+fabric.Object.prototype.transparentCorners = false;
+
+
+fabric.Canvas.prototype.getItemByName = function (name) {
+    var object = null,
+        objects = this.getObjects();
+
+    for (var i = 0, len = this.size(); i < len; i++) {
+        if (objects[i].name && objects[i].name === name) {
+            object = objects[i];
+            break;
+        }
+    }
+
+    return object;
+};
+fabric.Canvas.prototype.setObjOpacity = function (name, value) {
+    var objects = this.getObjects();
+    for (var i = 0, len = this.size(); i < len; i++) {
+        if (objects[i].name && objects[i].name === name) {
+            objects[i].opacity = value;
+            break;
+        }
+    }
+};
+
+
+fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
+    return {
+        left: object.left + this._offset.left,
+        top: object.top + this._offset.top
+    };
+}
+
 window.onload = function () {
     //TODO font change
 
-    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-    fabric.Object.prototype.objectCaching = true;
-    fabric.Object.prototype.transparentCorners = false;
-
-
-    fabric.Canvas.prototype.getItemByName = function (name) {
-        var object = null,
-            objects = this.getObjects();
-
-        for (var i = 0, len = this.size(); i < len; i++) {
-            if (objects[i].name && objects[i].name === name) {
-                object = objects[i];
-                break;
-            }
-        }
-
-        return object;
-    };
-    fabric.Canvas.prototype.setObjOpacity = function (name, value) {
-        var objects = this.getObjects();
-        for (var i = 0, len = this.size(); i < len; i++) {
-            if (objects[i].name && objects[i].name === name) {
-                objects[i].opacity = value;
-                break;
-            }
-        }
-    };
-
-
-    fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
-        return {
-            left: object.left + this._offset.left,
-            top: object.top + this._offset.top
-        };
-    }
-
-
-
     var Gstats = {
-        httpSucc: false,
         stats: {
             free: 0,
             str: 0,
@@ -52,7 +50,6 @@ window.onload = function () {
     };
 
     var Geq = {
-        httpSucc: false,
         equipment: {
             helmet: {
                 itemId: 0
@@ -67,25 +64,26 @@ window.onload = function () {
 
     };
 
-    var Gchar ={
-        httpSucc: false,
+    var Gchar = {
         level: 1,
         exp: 0,
         gold: 0,
-        ranking: 0
+        ranking: 0,
+        hp: 0,
+        armor: 0,
+        energy: 0
     };
 
 
     function reqStat() {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "/getStats", true);
+            xmlhttp.open("GET", "getStats", true);
             xmlhttp.setRequestHeader("Content-Type", "application/json");
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     Gstats.stats = xmlhttp.response;
-                    Gstats.httpSucc = true;
                     resolve();
                 }
             };
@@ -101,7 +99,7 @@ window.onload = function () {
             }
             var json = JSON.stringify(stats)
             var xmlhttp = new XMLHttpRequest()
-            xmlhttp.open("POST", "/spendPoints", true)
+            xmlhttp.open("POST", "spendPoints", true)
             xmlhttp.setRequestHeader("Content-Type", "application/json")
             xmlhttp.responseType = "json"
             xmlhttp.onreadystatechange = function () {
@@ -118,21 +116,20 @@ window.onload = function () {
         });
     }
     function refreshStat() {
-        removeStats();
-        reqStat().then(loadStats);
+        removeStats().then(reqStat).then(loadStats);
+        //reqStat().then(loadStats);
     }
 
 
     function reqEq() {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET", "/getEquipment", true);
+            xmlhttp.open("GET", "getEquipment", true);
             xmlhttp.setRequestHeader("Content-Type", "application/json");
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     Geq.equipment = xmlhttp.response;
-                    Geq.httpSucc = true;
                     resolve();
                 }
             };
@@ -147,7 +144,7 @@ window.onload = function () {
     //         }
     //         var json = JSON.stringify(stats)
     //         var xmlhttp = new XMLHttpRequest()
-    //         xmlhttp.open("POST", ??"/spendEquipment"??, true)
+    //         xmlhttp.open("POST", ??"spendEquipment"??, true)
     //         xmlhttp.setRequestHeader("Content-Type", "application/json")
     //         xmlhttp.responseType = "json"
     //         xmlhttp.onreadystatechange = function () {
@@ -168,226 +165,287 @@ window.onload = function () {
     //     reqEq().then(??loadStats??);
     // }
 
-function reqCharacter(){
-    return new Promise(function (resolve, reject) {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", "/getCharacter", true);
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.responseType = "json";
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                Gchar.level = xmlhttp.response.level;
-                Gchar.exp = xmlhttp.response.exp;
-                Gchar.gold = xmlhttp.response.gold;
-                Gchar.ranking = xmlhttp.response.ranking;
-                Gchar.httpSucc = true;
-                resolve();
-            }
-        };
-        xmlhttp.send();
-    });
-}
+    function reqCharacter() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getCharacter", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    Gchar.level = xmlhttp.response.level;
+                    Gchar.exp = xmlhttp.response.exp;
+                    Gchar.gold = xmlhttp.response.gold;
+                    Gchar.ranking = xmlhttp.response.ranking;
+                    // Gchar.hp = xmlhttp.response.hp;
+                    // Gchar.armor = xmlhttp.response.armor;
+                    // Gchar.energy = xmlhttp.response.energy;
+                    resolve();
+                }
+            };
+            xmlhttp.send();
+        });
+    }
+    function refreshChar() {
+        removeChar();
+        reqCharacter().then(loadCharMain);
+    }
 
 
 
-
-    var canvas = new fabric.Canvas('c', {
+    canvas = new fabric.Canvas('c', {
         hoverCursor: 'context-menu',
         selection: false,
         perPixelTargetFind: true,
         targetFindTolerance: 5,
+        localization: 'town'
     });
+
 
     ///init
     var helmetDrop = document.getElementById('helmet');
     var armorDrop = document.getElementById('armor');
     var weaponDrop = document.getElementById('weapon');
+    var buyDrop = document.getElementById('buy');
+    var sellDrop = document.getElementById('sell');
+
     loadBG('inArena');
     loadBG('inTavern');
     loadBG('inBlacksmith');
     loadBG('inStatue');
     loadBG('inStickman');
-    reqCharacter().then(loadGold);
+    reqCharacter().then(loadCharMain);
     loadElements();
 
 
     canvas.on('mouse:over', function (e) {
-        if (e.target != null) {
-            console.log(e.target.name + " left: " + e.target.left + " top: " + e.target.top);
+        if (e.target != null && canvas.localization == 'town') {
             if (e.target.scalable == true) {
                 e.target.scale(2);
                 canvas.renderAll();
-
             }
         }
     });
     canvas.on('mouse:out', function (e) {
-        if (e.target != null && e.target.scalable == true) {
+        if (e.target != null && e.target.scalable == true && canvas.localization == 'town') {
             e.target.scale(1.75);
             canvas.renderAll();
         }
     });
     canvas.on('mouse:down', function (e) {
-        switch (e.target.name) {
-            case 'arena':
-                hideEqControls()
-                loadInArena();
-                canvas.getItemByName('inArena').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inArena'));
-                canvas.bringToFront(canvas.getItemByName('findOpButton'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
-                //open arena
-                break;
-            case 'tavern':
-                hideEqControls()
-                canvas.getItemByName('inTavern').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inTavern'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
+        if (e.target != null && canvas.localization == 'town') {
+            switch (e.target.name) {
+                case 'arena':
+                    hideEqControls()
+                    hideShopControls()
+                    loadInArena();
+                    refreshChar();
+                    canvas.getItemByName('inArena').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inArena'));
+                    canvas.bringToFront(canvas.getItemByName('findOpButton'));
+                    canvas.bringToFront(canvas.getItemByName('exit'));
+                    //open arena
+                    break;
+                case 'tavern':
+                    hideEqControls()
+                    refreshChar();
+                    canvas.getItemByName('inTavern').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inTavern'));
+                    canvas.bringToFront(canvas.getItemByName('exit'));
+                    loadInTavern();
 
-                //open tavern
-                break;
-            case 'blacksmith':
-                hideEqControls()
-                canvas.getItemByName('inBlacksmith').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
-                //open blacksmith
-                break;
-            case 'statue':
-                hideEqControls()
-                canvas.getItemByName('inStatue').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inStatue'));
-                canvas.bringToFront(canvas.getItemByName('exit'));
-                canvas.bringToFront(canvas.getItemByName('coinText'));
-                console.log(Gstats);
 
-                //open statue
-                break;
-            case 'stickman':
-                canvas.getItemByName('inStickman').opacity = 1;
-                canvas.bringToFront(canvas.getItemByName('inStickman'));
-                reqStat().then(loadStats);
-                loadEq();
-                //TODO
-                //reqEq().then
-                //reqBp().then
-                console.log(Gstats);
-                //open stickman
-                break;
-            case 'addStr':
-                updateStat("str", 1).then(refreshStat);
-                break;
-            case 'addAtt':
-                updateStat("att", 1).then(refreshStat);
-                break;
-            case 'addAgi':
-                updateStat("agi", 1).then(refreshStat);
-                break;
-            case 'addSta':
-                updateStat("sta", 1).then(refreshStat);
-                break;
-            case 'addVit':
-                updateStat("vit", 1).then(refreshStat);
-                break;
-            case 'findOpButton':
-                window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
-                break;
-            case 'exit':
-                closeButton();
-                break;
-            case 'bg':
-                closeButton();
-                break;
+                    //open tavern
+                    break;
+                case 'blacksmith':
+                    hideEqControls()
+                    hideShopControls()
+                    refreshChar();
+                    canvas.getItemByName('inBlacksmith').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
+                    canvas.bringToFront(canvas.getItemByName('exit'));
+                    //open blacksmith
+                    break;
+                case 'statue':
+                    hideEqControls()
+                    hideShopControls()
+                    refreshChar();
+                    canvas.getItemByName('inStatue').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inStatue'));
+                    canvas.bringToFront(canvas.getItemByName('exit'));
+                    canvas.bringToFront(canvas.getItemByName('coinText'));
 
+                    //open statue
+                    break;
+                case 'stickman':
+                    hideShopControls()
+                    canvas.getItemByName('inStickman').opacity = 1;
+                    canvas.bringToFront(canvas.getItemByName('inStickman'));
+                    reqStat().then(loadStats);
+                    loadEq();
+                    reqCharacter().then(loadCharStickman);
+                    refreshChar();
+                    //TODO
+                    //reqEq().then
+                    //reqBp().then
+                    //open stickman
+                    break;
+                case 'addStr':
+                    updateStat("str", 1).then(refreshStat);
+                    refreshChar();
+                    break;
+                case 'addAtt':
+                    updateStat("att", 1).then(refreshStat);
+                    refreshChar();
+                    break;
+                case 'addAgi':
+                    updateStat("agi", 1).then(refreshStat);
+                    refreshChar();
+                    break;
+                case 'addSta':
+                    updateStat("sta", 1).then(refreshStat);
+                    refreshChar();
+                    break;
+                case 'addVit':
+                    updateStat("vit", 1).then(refreshStat);
+                    refreshChar();
+                    break;
+                case 'findOpButton':
+                    window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
+                    break;
+                case 'tradeButton':
+                    //TODO Finalize transaction by Pan Minta
+                    break;
+                case 'exit':
+                    closeButton();
+                    refreshChar();
+                    break;
+                case 'bg':
+                    closeButton();
+                    break;
+
+            }
+            canvas.renderAll();
         }
-        canvas.renderAll();
-
     });
-function loadElements(){
-    fabric.loadSVGFromURL('../svg/Background.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.set({ left: 360, top: 243 })
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'bg';
-        canvas.add(obj);
-    })
+    function loadElements() {
+        fabric.loadSVGFromURL('svg/Background.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.set({ left: 360, top: 243 })
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'bg';
+            obj.on('added', function () {
+                fabric.loadSVGFromURL('svg/Circus.svg', function (objects, options) {
+                    var obj = fabric.util.groupSVGElements(objects, options);
+                    obj.scale(1.75);
+                    obj.set({ left: 344, top: 100 });
+                    obj.selectable = false;
+                    obj.scalable = true;
+                    obj.name = 'arena';
+                    obj.on('added', function () {
+                        fabric.loadSVGFromURL('svg/Inn.svg', function (objects, options) {
+                            var obj = fabric.util.groupSVGElements(objects, options);
+                            obj.scale(1.75);
+                            obj.set({ left: 192, top: 224 });
+                            obj.selectable = false;
+                            obj.scalable = true;
+                            obj.name = 'tavern';
+                            obj.on('added', function () {
+                                fabric.loadSVGFromURL('svg/Blacksmith.svg', function (objects, options) {
+                                    var obj = fabric.util.groupSVGElements(objects, options);
+                                    obj.scale(1.75);
+                                    obj.set({ left: 128, top: 374 });
+                                    obj.selectable = false;
+                                    obj.scalable = true;
+                                    obj.name = 'blacksmith';
+                                    canvas.add(obj);
+                                });
+                                fabric.loadSVGFromURL('svg/Statue.svg', function (objects, options) {
+                                    var obj = fabric.util.groupSVGElements(objects, options);
+                                    obj.scale(1.75);
+                                    obj.set({ left: 532, top: 276 });
+                                    obj.selectable = false;
+                                    obj.scalable = true;
+                                    obj.name = 'statue';
+                                    canvas.add(obj);
+                                });
+                                fabric.loadSVGFromURL('svg/Stickman.svg', function (objects, options) {
+                                    var obj = fabric.util.groupSVGElements(objects, options);
+                                    obj.scale(1.75);
+                                    obj.set({ left: 350, top: 400 });
+                                    obj.selectable = false;
+                                    obj.scalable = true;
+                                    obj.name = 'stickman';
+                                    canvas.add(obj);
+                                });
+                                fabric.loadSVGFromURL('svg/coin.svg', function (objects, options) {
+                                    var obj = fabric.util.groupSVGElements(objects, options);
+                                    obj.scale(0.08);
+                                    obj.set({ left: canvas.width - 150, top: canvas.height - 30 })
+                                    obj.selectable = false;
+                                    obj.scalable = false;
+                                    obj.name = 'coin';
+                                    obj.on('after:render', canvas.bringToFront(canvas.getItemByName('coinText')));
+                                    canvas.add(obj);
+                                });
+                                fabric.loadSVGFromURL('svg/heart.svg', function (objects, options) {
+                                    var obj = fabric.util.groupSVGElements(objects, options);
+                                    obj.scale(0.12);
+                                    obj.set({ left: 25, top: 25 });
+                                    obj.selectable = false;
+                                    obj.scalable = false;
+                                    obj.name = 'heart';
+                                    obj.on('after:render', canvas.bringToFront(canvas.getItemByName('heartText')));
+                                    canvas.add(obj);
+                                });
+                                fabric.loadSVGFromURL('svg/shield.svg', function (objects, options) {
+                                    var obj = fabric.util.groupSVGElements(objects, options);
+                                    obj.scale(2.9);
+                                    obj.set({ left: 120, top: 25 });
+                                    obj.selectable = false;
+                                    obj.scalable = false;
+                                    obj.name = 'shield';
+                                    obj.on('after:render', canvas.bringToFront(canvas.getItemByName('shieldText')));
+                                    canvas.add(obj);
+                                });
+                                fabric.loadSVGFromURL('svg/energy.svg', function (objects, options) {
+                                    var obj = fabric.util.groupSVGElements(objects, options);
+                                    obj.scale(2.1);
+                                    obj.set({ left: 210, top: 25 });
+                                    obj.selectable = false;
+                                    obj.scalable = false;
+                                    obj.name = 'energy';
+                                    obj.on('after:render', canvas.bringToFront(canvas.getItemByName('energyText')));
+                                    canvas.add(obj);
+                                });
+                                fabric.loadSVGFromURL('svg/exit.svg', function (objects, options) {
+                                    var obj = fabric.util.groupSVGElements(objects, options);
+                                    obj.scale(0.2);
+                                    obj.set({ left: canvas.width / 2 + 220, top: canvas.height / 2 - 120 });
+                                    obj.selectable = false;
+                                    obj.scalable = false;
+                                    obj.name = 'exit';
+                                    canvas.add(obj);
+                                    canvas.sendToBack(obj);
+                                });
 
-    fabric.loadSVGFromURL('../svg/Circus.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 344, top: 100 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'arena';
-        canvas.add(obj);
-    })
+                            });
+                            canvas.add(obj);
+                        })
 
-    fabric.loadSVGFromURL('../svg/Inn.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 192, top: 224 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'tavern';
-        canvas.add(obj);
-    })
+                    });
+                    canvas.add(obj);
+                })
 
-    fabric.loadSVGFromURL('../svg/Blacksmith.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 128, top: 374 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'blacksmith';
-        canvas.add(obj);
-    });
-    fabric.loadSVGFromURL('../svg/Statue.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 532, top: 276 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'statue';
-        canvas.add(obj);
-    });
-    fabric.loadSVGFromURL('../svg/Stickman.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(1.75);
-        obj.set({ left: 350, top: 400 });
-        obj.selectable = false;
-        obj.scalable = true;
-        obj.name = 'stickman';
-        canvas.add(obj);
-    });
-    fabric.loadSVGFromURL('../svg/coin.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(0.08);
-        obj.set({ left: canvas.width - 150, top: canvas.height -30 })
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'coin';
-        obj.on('after:render',canvas.bringToFront(canvas.getItemByName('coinText')));
-        canvas.add(obj);
-        
-    });
-    fabric.loadSVGFromURL('../svg/exit.svg', function (objects, options) {
-        var obj = fabric.util.groupSVGElements(objects, options);
-        obj.scale(0.2);
-        obj.set({ left: canvas.width / 2 + 220, top: canvas.height / 2 - 120 });
-        obj.selectable = false;
-        obj.scalable = false;
-        obj.name = 'exit';
-        canvas.add(obj);
-        canvas.sendToBack(obj);
-    });
+            });
+            canvas.add(obj);
+        })
 
-
-}
-
+    }
     function loadBG(BGname) {
         if (!canvas.getItemByName(BGname)) {
-            fabric.loadSVGFromURL('../svg/' + BGname + '.svg', function (objects, options) {
+            fabric.loadSVGFromURL('svg/' + BGname + '.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(1);
                 obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
@@ -429,35 +487,129 @@ function loadElements(){
         }
 
     };
-    function loadGold() { //TODO GET, text
-        if(!canvas.getItemByName('coinText')&& Gchar.httpSucc==true )
-        {
+    function loadCharMain() {
+        loadGold();
+        loadHp();
+        loadArmor();
+        loadEnergy();
+    };
+    function loadCharStickman() {
+        loadLvl();
+        loadExp();
+    };
+    function loadGold() {
+        if (!canvas.getItemByName('coinText')) {
             var coinText = new fabric.Text(String(Gchar.gold), {
-                left: canvas.width - 90,
-                top: canvas.height -30,
+                left: canvas.width - 120,
+                top: canvas.height - 30,
                 selectable: false,
                 scalable: false,
                 name: 'coinText',
                 fill: '#000',
                 fontSize: 20,
                 fontFamily: 'Comic Sans',
-                textAlign: 'right',
-                originX: 'right',
+                textAlign: 'left',
+                originX: 'left',
             });
             canvas.add(coinText);
             canvas.bringToFront(coinText);
         }
     };
-    function loadExp(){
+    function loadExp() {//required exp mechanism may be changed by Pan Kosakowski
+        if (!canvas.getItemByName('expText')) {
+            var expText = new fabric.Text('Exp: ' + String(Gchar.exp) + '/' + String(Gchar.level * 100 * 2), {
+                left: canvas.width / 2 - 165,
+                top: 115,
+                selectable: false,
+                scalable: false,
+                name: 'expText',
+                fill: '#fff',
+                fontSize: 18,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(expText);
+            canvas.bringToFront(expText);
+        }
+    };
+    function loadLvl() {
+        if (!canvas.getItemByName('lvlText')) {
+            var lvlText = new fabric.Text('LvL: ' + String(Gchar.level), {
+                left: canvas.width / 2 - 240,
+                top: 115,
+                selectable: false,
+                scalable: false,
+                name: 'lvlText',
+                fill: '#fff',
+                fontSize: 18,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(lvlText);
+            canvas.bringToFront(lvlText);
+        }
+    };
+    function loadHp() {
+        if (!canvas.getItemByName('heartText')) {
+            var heartText = new fabric.Text(String(Gchar.hp), {
+                left: 48,
+                top: 25,
+                selectable: false,
+                scalable: false,
+                name: 'heartText',
+                fill: '#000',
+                fontSize: 25,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(heartText);
+            canvas.bringToFront(heartText);
+        }
+    };
+    function loadArmor() {
+        if (!canvas.getItemByName('shieldText')) {
+            var shieldText = new fabric.Text(String(Gchar.armor), {
+                left: 140,
+                top: 25,
+                selectable: false,
+                scalable: false,
+                name: 'shieldText',
+                fill: '#000',
+                fontSize: 25,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(shieldText);
+            canvas.bringToFront(shieldText);
+        }
+    };
+    function loadEnergy() {
+        if (!canvas.getItemByName('energyText')) {
+            var energyText = new fabric.Text(String(Gchar.energy), {
+                left: 230,
+                top: 25,
+                selectable: false,
+                scalable: false,
+                name: 'energyText',
+                fill: '#000',
+                fontSize: 25,
+                fontFamily: 'Comic Sans',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(energyText);
+            canvas.bringToFront(energyText);
+        }
+    };
+    function loadRanking() {
         //TODO
     };
-    function loadLvl(){
-        //TODO
-    };
-
-
     function loadStats() {
-        if (!canvas.getItemByName('statsText') && Gstats.httpSucc == true) {
+        if (!canvas.getItemByName('statsText')) {
             var statsText = new fabric.Group([
                 new fabric.Text('Siła:', {
                     // left: 200,
@@ -587,7 +739,7 @@ function loadElements(){
                 });
             canvas.add(statsPoints);
             if (Gstats.stats.free != 0) {
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 138 });
@@ -596,7 +748,7 @@ function loadElements(){
                     obj.name = 'addStr';
                     canvas.add(obj);
                 });
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 168 });
@@ -605,7 +757,7 @@ function loadElements(){
                     obj.name = 'addAtt';
                     canvas.add(obj);
                 });
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 198 });
@@ -614,7 +766,7 @@ function loadElements(){
                     obj.name = 'addAgi';
                     canvas.add(obj);
                 });
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 228 });
@@ -623,7 +775,7 @@ function loadElements(){
                     obj.name = 'addSta';
                     canvas.add(obj);
                 });
-                fabric.loadSVGFromURL('../svg/plus.svg', function (objects, options) {
+                fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
                     obj.set({ left: canvas.width / 2 - 38, top: 258 });
@@ -635,11 +787,9 @@ function loadElements(){
 
 
             }
-            Gstats.httpSucc = false;
         }
-        else {
-            //TODO
-        }
+        loadExp();
+        loadLvl();
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
         canvas.bringToFront(canvas.getItemByName('addStr'));
@@ -650,8 +800,202 @@ function loadElements(){
         canvas.bringToFront(canvas.getItemByName('exit'));
 
     }
+    function loadInTavern() {
+        loadShopItemStats("Item name", "atk min 2", "atk max 24", "type weapon", " ", "23", "KUP", 'svg/weapon.svg')
+
+        if (!canvas.getItemByName('tradeBuy')) {
+
+            sellDrop.style.left = 130 + 'px';
+            sellDrop.style.top = -290 + 'px';
+            sellDrop.style.visibility = 'visible';
+
+            buyDrop.style.left = -333 + 'px';
+            buyDrop.style.top = -350 + 'px';
+            buyDrop.style.visibility = 'visible';
+
+
+
+            var tradeBuy = new fabric.Text(String("Kup"), {
+                left: canvas.width / 2 - 155,
+                top: canvas.height / 2 - 120,
+                selectable: false,
+                scalable: false,
+                name: 'tradeBuy',
+                fill: 'red',
+                fontSize: 20,
+                fontFamily: 'Comic Sans',
+                textAlign: 'center',
+            });
+            canvas.add(tradeBuy);
+            var tradeSell = new fabric.Text(String("Sprzedaj"), {
+                left: canvas.width / 2 - 155,
+                top: canvas.height / 2 + 30,
+                selectable: false,
+                scalable: false,
+                name: 'tradeSell',
+                fill: 'red',
+                fontSize: 20,
+                fontFamily: 'Comic Sans',
+                textAlign: 'center',
+            });
+            canvas.add(tradeSell);
+
+
+            canvas.bringToFront(canvas.getItemByName('tradeBuy'))
+            canvas.bringToFront(canvas.getItemByName('tradeSell'))
+
+
+        }
+
+    }
+    function loadShopItemStats(selectedName, selectedStat1, selectedStat2, selectedStat3, selectedStat4, selectedValue, selectedButtonOption, itemPath) {
+        // loadShopItemStats("Item name", "atk min 2", "atk max 24", "type weapon", " ", "23", "KUP",'svg/weapon.svg' )
+
+        fabric.loadSVGFromURL(itemPath, function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.4);
+            obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'shopImg';
+            obj.on('added', function () {
+            });
+            canvas.add(obj);
+
+        });
+
+
+        var itemName = new fabric.Text(String(selectedName), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2 - 90,
+            selectable: false,
+            scalable: false,
+            name: 'itemName',
+            fill: 'red',
+            fontSize: 30,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(itemName);
+        var stat1 = new fabric.Text(String(selectedStat1), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2 - 60,
+            selectable: false,
+            scalable: false,
+            name: 'stat1',
+            fill: 'red',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(stat1);
+        var stat2 = new fabric.Text(String(selectedStat2), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2 - 40,
+            selectable: false,
+            scalable: false,
+            name: 'stat2',
+            fill: 'red',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(stat2);
+        var stat3 = new fabric.Text(String(selectedStat3), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2 - 20,
+            selectable: false,
+            scalable: false,
+            name: 'stat3',
+            fill: 'red',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(stat3);
+        var stat4 = new fabric.Text(String(selectedStat4), {
+            left: canvas.width / 2 + 150,
+            top: canvas.height / 2,
+            selectable: false,
+            scalable: false,
+            name: 'stat4',
+            fill: 'red',
+            fontSize: 20,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(stat4);
+
+
+
+        var tradeButton = new fabric.Group([new fabric.Rect({
+            width: 120,
+            height: 35,
+            fill: '#ccc',
+            name: 'inTavernButtonBG',
+            selectable: false
+        }),
+        new fabric.Text(String(selectedButtonOption), {
+            // left: 200,
+            // top: 100,
+            fill: '#000',
+            name: 'inTavernButtonText',
+            fontSize: 15
+        })], {
+                name: 'tradeButton',
+                left: canvas.width / 2 + 150,
+                top: 330,
+                opacity: 1,
+                selectable: false
+
+            });
+        canvas.add(tradeButton);
+        canvas.sendToBack(tradeButton);
+
+
+
+        fabric.loadSVGFromURL('svg/coin.svg', function (objects, options) {
+            var coinShop = fabric.util.groupSVGElements(objects, options);
+            coinShop.scale(0.04);
+            // coinShop.set({ left: 0 , top: 30 })
+            coinShop.selectable = false;
+            coinShop.scalable = false;
+            coinShop.name = 'coinShop';
+
+
+            var itemValue = new fabric.Group([
+
+                new fabric.Text(String(selectedValue), {
+                    left: 40,
+                    // top: 100,
+                    fill: '#000',
+                    name: 'inTavernValueText',
+                    textAlign: 'left',
+                    fontSize: 25
+                }), coinShop], {
+                    name: 'itemValue',
+                    left: canvas.width / 2 + 150,
+                    top: 290,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(itemValue);
+        })
+        canvas.bringToFront(canvas.getItemByName('shopImg'))
+        canvas.bringToFront(canvas.getItemByName('tradeButton'))
+        canvas.bringToFront(canvas.getItemByName('itemName'))
+        canvas.bringToFront(canvas.getItemByName('stat1'))
+        canvas.bringToFront(canvas.getItemByName('stat2'))
+        canvas.bringToFront(canvas.getItemByName('stat3'))
+        canvas.bringToFront(canvas.getItemByName('stat4'))
+        canvas.bringToFront(canvas.getItemByName('itemValue'))
+
+
+    }
     function closeButton() {
         hideEqControls();
+        hideShopControls();
         canvas.sendToBack(canvas.getItemByName('inArena'));
         canvas.sendToBack(canvas.getItemByName('inTavern'));
         canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
@@ -659,49 +1003,71 @@ function loadElements(){
         canvas.sendToBack(canvas.getItemByName('inStickman'));
         canvas.sendToBack(canvas.getItemByName('findOpButton'));
         canvas.sendToBack(canvas.getItemByName('exit'));
-        canvas.remove(canvas.getItemByName('findOpButton'));
+        if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
         removeStats();
         removeEq();
+        removeTavern();
 
     }
     function removeStats() {
-        canvas.remove(canvas.getItemByName('statsPoints'));
-        canvas.remove(canvas.getItemByName('statsText'));
-        canvas.remove(canvas.getItemByName('addStr'));
-        canvas.remove(canvas.getItemByName('addAtt'));
-        canvas.remove(canvas.getItemByName('addAgi'));
-        canvas.remove(canvas.getItemByName('addSta'));
-        canvas.remove(canvas.getItemByName('addVit'));
+        return new Promise(function (resolve, reject) {
+            if (canvas.getItemByName('statsPoints')) { canvas.remove(canvas.getItemByName('statsPoints')); }
+            if (canvas.getItemByName('statsText')) { canvas.remove(canvas.getItemByName('statsText')); }
+            if (canvas.getItemByName('addStr')) { canvas.remove(canvas.getItemByName('addStr')); }
+            if (canvas.getItemByName('addAtt')) { canvas.remove(canvas.getItemByName('addAtt')); }
+            if (canvas.getItemByName('addAgi')) { canvas.remove(canvas.getItemByName('addAgi')); }
+            if (canvas.getItemByName('addSta')) { canvas.remove(canvas.getItemByName('addSta')); }
+            if (canvas.getItemByName('addVit')) { canvas.remove(canvas.getItemByName('addVit')); }
+            if (canvas.getItemByName('expText')) { canvas.remove(canvas.getItemByName('expText')); }
+            if (canvas.getItemByName('lvlText')) { canvas.remove(canvas.getItemByName('lvlText')); }
+            resolve();
+        });
     }
     function removeEq() {
-        canvas.remove(canvas.getItemByName('EQhelmet'));
-        canvas.remove(canvas.getItemByName('EQarmmor'));
-        canvas.remove(canvas.getItemByName('EQweapon'));
+        if (canvas.getItemByName('EQhelmet')) { canvas.remove(canvas.getItemByName('EQhelmet')); }
+        if (canvas.getItemByName('EQarmmor')) { canvas.remove(canvas.getItemByName('EQarmmor')); }
+        if (canvas.getItemByName('EQweapon')) { canvas.remove(canvas.getItemByName('EQweapon')); }
     }
+    function removeChar() {
+        if (canvas.getItemByName('coinText')) { canvas.remove(canvas.getItemByName('coinText')); }
+        if (canvas.getItemByName('heartText')) { canvas.remove(canvas.getItemByName('heartText')); }
+        if (canvas.getItemByName('shieldText')) { canvas.remove(canvas.getItemByName('shieldText')); }
+        if (canvas.getItemByName('energyText')) { canvas.remove(canvas.getItemByName('energyText')); }
+    }
+    function removeTavern() {
+        if (canvas.getItemByName('itemName')) { canvas.remove(canvas.getItemByName('itemName')); }
+        if (canvas.getItemByName('stat1')) { canvas.remove(canvas.getItemByName('stat1')); }
+        if (canvas.getItemByName('stat2')) { canvas.remove(canvas.getItemByName('stat2')); }
+        if (canvas.getItemByName('stat3')) { canvas.remove(canvas.getItemByName('stat3')); }
+        if (canvas.getItemByName('stat4')) { canvas.remove(canvas.getItemByName('stat4')); }
+        if (canvas.getItemByName('tradeButton')) { canvas.remove(canvas.getItemByName('tradeButton')); }
+        if (canvas.getItemByName('itemValue')) { canvas.remove(canvas.getItemByName('itemValue')); }
+        if (canvas.getItemByName('tradeSell')) { canvas.remove(canvas.getItemByName('tradeSell')); }
+        if (canvas.getItemByName('tradeBuy')) { canvas.remove(canvas.getItemByName('tradeBuy')); }
+        if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
 
+    }
     function loadEq() {
-        //TODO if httpSucc
-        //TODO change path for each selected item
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
-            fabric.loadSVGFromURL('../svg/Helmet.svg', function (objects, options) {
+            fabric.loadSVGFromURL('svg/Helmet.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 100 })
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 90 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQhelmet';
                 canvas.add(obj);
             });
-            fabric.loadSVGFromURL('../svg/armor.svg', function (objects, options) {
+            fabric.loadSVGFromURL('svg/armor.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 })
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 10 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQarmmor';
                 canvas.add(obj);
             });
-            fabric.loadSVGFromURL('../svg/weapon.svg', function (objects, options) {
+            fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
                 obj.scale(0.3);
                 obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 100 })
@@ -709,33 +1075,32 @@ function loadElements(){
                 obj.scalable = false;
                 obj.name = 'EQweapon';
                 canvas.add(obj);
-            });    
+            });
         }
         canvas.bringToFront(canvas.getItemByName('EQhelmet'));
         canvas.bringToFront(canvas.getItemByName('EQarmmor'));
         canvas.bringToFront(canvas.getItemByName('EQweapon'));
 
-
-        var absCoords = canvas.getAbsoluteCoords(canvas.getItemByName("inArena"));
-
-        helmetDrop.style.left = ((absCoords.left / 2) + 185) + 'px';//200
-        helmetDrop.style.top = ((absCoords.top / 2) - 600) + 'px';
+        helmetDrop.style.left = ((canvas.width / 2) + 85) + 'px';//200
+        helmetDrop.style.top = ((canvas.height / 2) - 580) + 'px';
         helmetDrop.style.visibility = 'visible';
 
-        armorDrop.style.left = ((absCoords.left / 2) + 30) + 'px';//50
-        armorDrop.style.top = ((absCoords.top / 2) - 500) + 'px';
+        armorDrop.style.left = ((canvas.width / 2) + -70) + 'px';//50
+        armorDrop.style.top = ((canvas.height / 2) - 490) + 'px';
         armorDrop.style.visibility = 'visible';
 
-        weaponDrop.style.left = ((absCoords.left / 2) - 125) + 'px';
-        weaponDrop.style.top = ((absCoords.top / 2) - 400) + 'px';
+        weaponDrop.style.left = ((canvas.width / 2) - 225) + 'px';
+        weaponDrop.style.top = ((canvas.height / 2) - 390) + 'px';
         weaponDrop.style.visibility = 'visible';
     }
-
     function hideEqControls() {
         helmetDrop.style.visibility = 'hidden';
         armorDrop.style.visibility = 'hidden';
         weaponDrop.style.visibility = 'hidden';
-
+    }
+    function hideShopControls() {
+        buyDrop.style.visibility = 'hidden';
+        sellDrop.style.visibility = 'hidden';
     }
 
 

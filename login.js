@@ -4,6 +4,9 @@ var bcrypt = require('bcrypt')
 var User = require('./models/user')
 var log = require('./log')
 
+var allowedChars = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    + "ąćęśżźńół_-+=<>,.?"
+
 module.exports = {
     init: function (passport) {
 
@@ -38,9 +41,16 @@ module.exports = {
                 }
 
                 if (username.length < 2 || username.length > 30) {
-                    req.registerMessage = "Login musi zawierać od 2 a 30 znaków"
+                    req.registerMessage = "Login musi zawierać od 2 do 30 znaków"
                     return done(null, false)
                 }
+
+                username.split("").forEach(char => {
+                    if (!allowedChars.includes(char)) {
+                        req.registerMessage = "Login zawiera niedozwolony znak: '" + char + "'"
+                        return done(null, false)
+                    }
+                })
 
                 if (password.length < 8) {
                     req.registerMessage = "Hasło musi zawierać conajmniej 8 znaków"
@@ -109,7 +119,7 @@ module.exports = {
         if (req.isAuthenticated())
             return next()
 
-        res.redirect('/login')
+        return res.redirect('login')
     },
 
     isActivated: (req, res, next) => {
@@ -117,6 +127,6 @@ module.exports = {
         if (req.user.activation.activated)
             return next()
 
-        res.redirect('/activation')
+        return res.redirect('activation')
     }
 }

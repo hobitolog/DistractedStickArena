@@ -2,6 +2,7 @@ var log = require("./log")
 var config = require("./config")
 var login = require("./login")
 var api = require("./api")
+var weapons = require('./models/weapon')
 //TODO var fight = require("./fight")
 
 var path = require('path')
@@ -22,12 +23,14 @@ var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection })
 
 app.use(expressSession({
     store: mongoStore,
-    secret: config.sessionSecret
+    secret: config.sessionSecret,
+    resave: true,
+    saveUninitialized: true
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(cookieParser())
-app.use(bodyParser())
+app.use(bodyParser.json())
 login.init(passport)
 
 app.use(express.static(path.join(__dirname, '/public')))
@@ -47,7 +50,7 @@ api(app)
 
 app.get('/activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)
-        res.redirect('/')
+        res.redirect('../')
     else
         res.sendFile(path.join(__dirname, '/html', 'activation.html'))
 })
@@ -82,9 +85,29 @@ app.get('/', login.isLoggedIn, login.isActivated, (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'main.html'))
 })
 
+app.get('/addWeapon', (req, res) => {
+    res.sendFile(path.join(__dirname, '/html', 'addWeapon.html'))
+})
+
+app.post('/addWeapon', (req, res) => {
+
+    var newWeapon = {
+        "name": req.body.name,
+        "type": req.body.type,
+        "armor": req.body.armor,
+        "damageMin": req.body.damageMin,
+        "damageMax": req.body.damageMax,
+        "level": req.body.level,
+        "value": req.body.value
+    }
+
+    mongoose.connection.collection('prototypes').insert(newWeapon)
+    res.redirect('addWeapon')
+})
+
 app.get('/login', (req, res) => {
     if (req.isAuthenticated())
-        res.redirect('/')
+        res.redirect('../')
     else
         res.sendFile(path.join(__dirname, '/html', 'login.html'))
 })
@@ -127,7 +150,17 @@ app.post('/register', (req, res, next) => {
 
 app.get('/logout', (req, res) => {
     req.logout()
-    res.redirect('/login');
+    res.redirect('login')
+})
+
+// UWAGA - NIE DODAWAĆ NIC PO TYM
+app.use(function (req, res) {
+    res.status(404).send('404: Page not Found')
+})
+
+app.use(function (err, req, res, next) {
+    log.error(err)
+    res.status(500).send('500: Internal Server Error<br>Dlaczego zepsułeś nam stronę? ;_;')
 })
 
 server.listen(80, () => {
