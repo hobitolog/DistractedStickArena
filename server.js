@@ -38,6 +38,12 @@ app.use(morgan('dev'))
 
 var server = require('http').createServer(app)
 var io = require('socket.io')(server)
+io.use(passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key: 'express.sid',
+    secret: config.sessionSecret,
+    store: mongoStore,
+}))
 
 api(app)
 //TODO fight.init(app, io)
