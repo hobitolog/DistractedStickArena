@@ -1,0 +1,29 @@
+{
+    "version": 0,
+    "baseId": 300,
+    "name": "Papieska Jarmułka",
+    "type": "helmet",
+    "level": 2,
+    "image": "",
+    "variants": [
+        {
+            "variantId": 0,
+            "armor": 4,
+            "upgradePrice": 21,
+            "value": 37
+        },
+        {
+            "variantId": 1,
+            "name": "Papieska Jarmułka Zamszowa",
+            "armor": 6,
+            "upgradePrice": 200,
+            "value": 70
+        },
+        {
+            "variantId": 2,
+            "name": "Papieska Jarmułka Papieża",
+            "armor": 10,
+            "value": 200
+        }
+    ]
+}

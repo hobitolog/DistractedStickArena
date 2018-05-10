@@ -1,0 +1,36 @@
+{
+    "version": 0,
+    "baseId": 400,
+    "name": "Podkoszulek",
+    "type": "armor",
+    "level": 1,
+    "image": "",
+    "variants": [
+        {
+            "variantId": 0,
+            "armor": 1,
+            "upgradePrice": 30,
+            "value": 2
+        },
+        {
+            "variantId": 1,
+            "name": "Biały Podkoszulek",
+            "armor": 3,
+            "upgradePrice": 50,
+            "value": 40
+        },
+        {
+            "variantId": 2,
+            "name": "Aksamitny Podkoszulek",
+            "armor": 5,
+            "upgradePrice":250,
+            "value": 100
+        },
+        {
+            "variantId": 3,
+            "name": "Podkoszulek starego",
+            "armor": 10,
+            "value": 120 
+        }
+    ]
+}

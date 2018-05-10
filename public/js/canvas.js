@@ -53,13 +53,34 @@ window.onload = function () {
     var Geq = {
         equipment: {
             helmet: {
-                itemId: 0
-            },
+                itemId: 0,
+                level: 1,
+                type: "helmet",
+                name: "BuzdyganArmorianu",
+                image: "items/buzdygan.png",
+                armor: 0,
+                upgradePrice: 70,
+                value: 50            },
             armor: {
-                itemId: 0
+                itemId: 0,
+                level: 1,
+                type: "armor",
+                name: "BuzdyganArmorianu",
+                image: "items/buzdygan.png",
+                armor: 0,
+                upgradePrice: 70,
+                value: 50
             },
             weapon: {
-                itemId: 0
+                itemId: 0,
+                level: 1,
+                type: "weapon",
+                name: "Pięści",
+                image: "",
+                damageMin: 1,
+                damageMax: 2,
+                upgradePrice: 0,
+                value: 0
             }
         }
 
@@ -85,8 +106,8 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     Gstats.stats = xmlhttp.response;
-                    Gchar.hp=30+2*Gstats.stats.vit;
-                    Gchar.energy=Math.round(20+1.5*Gstats.stats.sta);
+                    Gchar.hp = 30 + 2 * Gstats.stats.vit;
+                    Gchar.energy = Math.round(20 + 1.5 * Gstats.stats.sta);
                     resolve();
                 }
             };
@@ -133,6 +154,7 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     Geq.equipment = xmlhttp.response;
+                    Gchar.armor=Geq.equipment.armor.armor+Geq.equipment.helmet.armor;
                     resolve();
                 }
             };
@@ -287,7 +309,7 @@ window.onload = function () {
                     reqCharacter().then(loadCharStickman);
                     refreshChar();
                     //TODO
-                    //reqEq().then
+                    reqEq()//.then
                     //reqBp().then
                     //open stickman
                     break;
@@ -556,8 +578,8 @@ window.onload = function () {
     };
     function loadHp() {
         if (!canvas.getItemByName('heartText')) {
-            var heartText = new fabric.Text("Health: "+String(Gchar.hp), {
-                left:  canvas.width / 2 - 240,
+            var heartText = new fabric.Text("Health: " + String(Gchar.hp), {
+                left: canvas.width / 2 - 240,
                 top: 110,
                 selectable: false,
                 scalable: false,
@@ -575,8 +597,8 @@ window.onload = function () {
     };
     function loadArmor() {
         if (!canvas.getItemByName('shieldText')) {
-            var shieldText = new fabric.Text("Armor: "+String(Gchar.armor), {
-                left: canvas.width / 2 -85,
+            var shieldText = new fabric.Text("Armor: " + String(Gchar.armor), {
+                left: canvas.width / 2 - 85,
                 top: 110,
                 selectable: false,
                 scalable: false,
@@ -594,8 +616,8 @@ window.onload = function () {
     };
     function loadEnergy() {
         if (!canvas.getItemByName('energyText')) {
-            var energyText = new fabric.Text("Energy: "+String(Gchar.energy), {
-                left: canvas.width / 2 +65,
+            var energyText = new fabric.Text("Energy: " + String(Gchar.energy), {
+                left: canvas.width / 2 + 65,
                 top: 110,
                 selectable: false,
                 scalable: false,
@@ -663,7 +685,7 @@ window.onload = function () {
                     originX: 'right'
                 }),
                 new fabric.Text('Punkty rozwoju:', {
-                     left: 20,
+                    left: 20,
                     top: 160,
                     fill: '#fff',
                     fontSize: 22,
@@ -728,7 +750,7 @@ window.onload = function () {
                     originX: 'right'
                 }),
                 new fabric.Text(String(Gstats.stats.free), {
-                     left: 20,
+                    left: 20,
                     top: 160,
                     fill: '#fff',
                     fontSize: 22,
@@ -1083,7 +1105,7 @@ window.onload = function () {
             if (canvas.getItemByName('heartText')) { canvas.remove(canvas.getItemByName('heartText')); }
             if (canvas.getItemByName('shieldText')) { canvas.remove(canvas.getItemByName('shieldText')); }
             if (canvas.getItemByName('energyText')) { canvas.remove(canvas.getItemByName('energyText')); }
-      
+
             resolve();
         });
     }
@@ -1094,7 +1116,7 @@ window.onload = function () {
     }
     function removeChar() {
         if (canvas.getItemByName('coinText')) { canvas.remove(canvas.getItemByName('coinText')); }
-  }
+    }
     function removeTavern() {
         if (canvas.getItemByName('itemName')) { canvas.remove(canvas.getItemByName('itemName')); }
         if (canvas.getItemByName('stat1')) { canvas.remove(canvas.getItemByName('stat1')); }
@@ -1108,7 +1130,7 @@ window.onload = function () {
         if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
 
     }
-    
+
     function hideEqControls() {
         helmetDrop.style.visibility = 'hidden';
         armorDrop.style.visibility = 'hidden';

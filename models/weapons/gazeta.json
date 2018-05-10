@@ -1,0 +1,36 @@
+{
+    "version": 0,
+    "baseId": 500,
+    "name": "Gazeta",
+    "type": "helmet",
+    "level": 1,
+    "image": "",
+    "variants": [
+        {
+            "variantId": 0,
+            "armor": 1,
+            "upgradePrice": 30,
+            "value": 1
+        },
+        {
+            "variantId": 1,
+            "name": "Gazeta wyborcza",
+            "armor": 1,
+            "upgradePrice": 100,
+            "value": 1
+        },
+        {
+            "variantId": 2,
+            "name": "Playboy",
+            "armor": 1,
+            "upgradePrice": 200,
+            "value": 1
+        },
+        {
+            "variantId": 3,
+            "name": "CdAction",
+            "armor": 1,
+            "value": 1
+        }
+    ]
+}
