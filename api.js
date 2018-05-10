@@ -64,6 +64,19 @@ module.exports = function (app) {
         res.json({ "backpack": req.user.character.backpack })
     })
 
+    app.get('/getVariant', login.isLoggedIn, login.isActivated, (req, res) => {
+        const response = {
+            'variant': null
+        }
+
+        itemFetcher.getCurrentVariant(req.body.itemId).then(item => {
+            response.item = item
+        }).catch(err => {
+            log.error(err)
+        })
+        res.json(response)
+    })
+
     app.post('/setWeapon', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
         //TODO
     })

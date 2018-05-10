@@ -821,19 +821,7 @@ window.onload = function () {
                     xmlhttp.response.backpack.forEach((element, index) => {
                         var option = document.createElement("option");
                         option.text = element.name;
-                        switch(element.type) {
-                            case 'weapon':
-                            option.addEventListener("click", loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "SPRZEDAJ", element.image))
-                            break
-
-                            case 'armor':
-                            option.addEventListener("click",loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "SPRZEDAJ", element.image))
-                            break
-
-                            case 'helmet':
-                            option.addEventListener("click",loadShopItemStats(element.name, "atk min 2", "atk max 24", element.type, "level " + element.level, "23", "SPRZEDAJ", element.image))
-                            break
-                        }
+                        option.addEventListener("click", getAndLoadShopItem(element.itemId, "SELL"))
                         sellDrop.add(option);
                 })
                 if(sellDrop.length == 0) {
@@ -885,15 +873,41 @@ window.onload = function () {
 
 
     function clearSellList() {
-        for(var i = 0; i < sellDrop.length; i++) {
-            sellDrop.remove(0);
-        }
+        sellDrop.innerHTML = ""
     }
 
     function clearBuyList() {
-        for(var i = 0; i < buyDrop.length; i++) {
-            buyDrop.remove(0);
-        }
+        buyDrop.innerHTML = ""
+    }
+
+    function getAndLoadShopItem(itemId, operation) {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getVariant", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var variant = xmlhttp.response.variant
+                        switch(variant.type) {
+                            case 'weapon':
+                            loadShopItemStats(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, variant.value * (option == "SELL" ? 0.75 : 1), (option == "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            break
+
+                            case 'armor':
+                            loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (option == "SELL" ? 0.75 : 1), (option == "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            break
+
+                            case 'helmet':
+                            loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (option == "SELL" ? 0.75 : 1), (option == "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            break
+                        }
+                    resolve();
+                }
+            }
+            var json = JSON.stringify({'itemId': itemId})
+            xmlhttp.send(json);
+        })
     }
 
     function loadInTavern() {
