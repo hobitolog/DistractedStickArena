@@ -47,6 +47,7 @@ window.onload = function () {
             vit: 0,
             sta: 0
         },
+
     };
 
     var Geq = {
@@ -84,6 +85,8 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     Gstats.stats = xmlhttp.response;
+                    Gchar.hp=30+2*Gstats.stats.vit;
+                    Gchar.energy=Math.round(20+1.5*Gstats.stats.sta);
                     resolve();
                 }
             };
@@ -177,9 +180,7 @@ window.onload = function () {
                     Gchar.exp = xmlhttp.response.exp;
                     Gchar.gold = xmlhttp.response.gold;
                     Gchar.ranking = xmlhttp.response.ranking;
-                    // Gchar.hp = xmlhttp.response.hp;
-                    // Gchar.armor = xmlhttp.response.armor;
-                    // Gchar.energy = xmlhttp.response.energy;
+
                     resolve();
                 }
             };
@@ -389,36 +390,36 @@ window.onload = function () {
                                     obj.on('after:render', canvas.bringToFront(canvas.getItemByName('coinText')));
                                     canvas.add(obj);
                                 });
-                                fabric.loadSVGFromURL('svg/heart.svg', function (objects, options) {
-                                    var obj = fabric.util.groupSVGElements(objects, options);
-                                    obj.scale(0.12);
-                                    obj.set({ left: 25, top: 25 });
-                                    obj.selectable = false;
-                                    obj.scalable = false;
-                                    obj.name = 'heart';
-                                    obj.on('after:render', canvas.bringToFront(canvas.getItemByName('heartText')));
-                                    canvas.add(obj);
-                                });
-                                fabric.loadSVGFromURL('svg/shield.svg', function (objects, options) {
-                                    var obj = fabric.util.groupSVGElements(objects, options);
-                                    obj.scale(2.9);
-                                    obj.set({ left: 120, top: 25 });
-                                    obj.selectable = false;
-                                    obj.scalable = false;
-                                    obj.name = 'shield';
-                                    obj.on('after:render', canvas.bringToFront(canvas.getItemByName('shieldText')));
-                                    canvas.add(obj);
-                                });
-                                fabric.loadSVGFromURL('svg/energy.svg', function (objects, options) {
-                                    var obj = fabric.util.groupSVGElements(objects, options);
-                                    obj.scale(2.1);
-                                    obj.set({ left: 210, top: 25 });
-                                    obj.selectable = false;
-                                    obj.scalable = false;
-                                    obj.name = 'energy';
-                                    obj.on('after:render', canvas.bringToFront(canvas.getItemByName('energyText')));
-                                    canvas.add(obj);
-                                });
+                                // fabric.loadSVGFromURL('svg/heart.svg', function (objects, options) {
+                                //     var obj = fabric.util.groupSVGElements(objects, options);
+                                //     obj.scale(0.12);
+                                //     obj.set({ left: 25, top: 25 });
+                                //     obj.selectable = false;
+                                //     obj.scalable = false;
+                                //     obj.name = 'heart';
+                                //     obj.on('after:render', canvas.bringToFront(canvas.getItemByName('heartText')));
+                                //     canvas.add(obj);
+                                // });
+                                // fabric.loadSVGFromURL('svg/shield.svg', function (objects, options) {
+                                //     var obj = fabric.util.groupSVGElements(objects, options);
+                                //     obj.scale(2.9);
+                                //     obj.set({ left: 120, top: 25 });
+                                //     obj.selectable = false;
+                                //     obj.scalable = false;
+                                //     obj.name = 'shield';
+                                //     obj.on('after:render', canvas.bringToFront(canvas.getItemByName('shieldText')));
+                                //     canvas.add(obj);
+                                // });
+                                // fabric.loadSVGFromURL('svg/energy.svg', function (objects, options) {
+                                //     var obj = fabric.util.groupSVGElements(objects, options);
+                                //     obj.scale(2.1);
+                                //     obj.set({ left: 210, top: 25 });
+                                //     obj.selectable = false;
+                                //     obj.scalable = false;
+                                //     obj.name = 'energy';
+                                //     obj.on('after:render', canvas.bringToFront(canvas.getItemByName('energyText')));
+                                //     canvas.add(obj);
+                                // });
                                 fabric.loadSVGFromURL('svg/exit.svg', function (objects, options) {
                                     var obj = fabric.util.groupSVGElements(objects, options);
                                     obj.scale(0.2);
@@ -489,13 +490,13 @@ window.onload = function () {
     };
     function loadCharMain() {
         loadGold();
-        loadHp();
-        loadArmor();
-        loadEnergy();
     };
     function loadCharStickman() {
         loadLvl();
         loadExp();
+        loadHp();
+        loadArmor();
+        loadEnergy();
     };
     function loadGold() {
         if (!canvas.getItemByName('coinText')) {
@@ -507,7 +508,7 @@ window.onload = function () {
                 name: 'coinText',
                 fill: '#000',
                 fontSize: 20,
-                fontFamily: 'Comic Sans',
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
@@ -518,92 +519,97 @@ window.onload = function () {
     function loadExp() {//required exp mechanism may be changed by Pan Kosakowski
         if (!canvas.getItemByName('expText')) {
             var expText = new fabric.Text('Exp: ' + String(Gchar.exp) + '/' + String(Gchar.level * 100 * 2), {
-                left: canvas.width / 2 - 165,
-                top: 115,
+                left: canvas.width / 2 - 150,
+                top: 350,
                 selectable: false,
                 scalable: false,
                 name: 'expText',
                 fill: '#fff',
-                fontSize: 18,
-                fontFamily: 'Comic Sans',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(expText);
-            canvas.bringToFront(expText);
         }
+        canvas.bringToFront(expText);
+
     };
     function loadLvl() {
         if (!canvas.getItemByName('lvlText')) {
             var lvlText = new fabric.Text('LvL: ' + String(Gchar.level), {
                 left: canvas.width / 2 - 240,
-                top: 115,
+                top: 350,
                 selectable: false,
                 scalable: false,
                 name: 'lvlText',
                 fill: '#fff',
-                fontSize: 18,
-                fontFamily: 'Comic Sans',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(lvlText);
-            canvas.bringToFront(lvlText);
         }
+        canvas.bringToFront(lvlText);
+
     };
     function loadHp() {
         if (!canvas.getItemByName('heartText')) {
-            var heartText = new fabric.Text(String(Gchar.hp), {
-                left: 48,
-                top: 25,
+            var heartText = new fabric.Text("Health: "+String(Gchar.hp), {
+                left:  canvas.width / 2 - 240,
+                top: 110,
                 selectable: false,
                 scalable: false,
                 name: 'heartText',
-                fill: '#000',
-                fontSize: 25,
-                fontFamily: 'Comic Sans',
+                fill: '#fff',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(heartText);
-            canvas.bringToFront(heartText);
         }
+        canvas.bringToFront(heartText);
+
     };
     function loadArmor() {
         if (!canvas.getItemByName('shieldText')) {
-            var shieldText = new fabric.Text(String(Gchar.armor), {
-                left: 140,
-                top: 25,
+            var shieldText = new fabric.Text("Armor: "+String(Gchar.armor), {
+                left: canvas.width / 2 -85,
+                top: 110,
                 selectable: false,
                 scalable: false,
                 name: 'shieldText',
-                fill: '#000',
-                fontSize: 25,
-                fontFamily: 'Comic Sans',
+                fill: '#fff',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(shieldText);
-            canvas.bringToFront(shieldText);
         }
+        canvas.bringToFront(shieldText);
+
     };
     function loadEnergy() {
         if (!canvas.getItemByName('energyText')) {
-            var energyText = new fabric.Text(String(Gchar.energy), {
-                left: 230,
-                top: 25,
+            var energyText = new fabric.Text("Energy: "+String(Gchar.energy), {
+                left: canvas.width / 2 +65,
+                top: 110,
                 selectable: false,
                 scalable: false,
                 name: 'energyText',
-                fill: '#000',
-                fontSize: 25,
-                fontFamily: 'Comic Sans',
+                fill: '#fff',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(energyText);
-            canvas.bringToFront(energyText);
         }
+        canvas.bringToFront(energyText);
+
     };
     function loadRanking() {
         //TODO
@@ -615,8 +621,8 @@ window.onload = function () {
                     // left: 200,
                     top: 0,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
@@ -624,8 +630,8 @@ window.onload = function () {
                     // left: 200,
                     top: 30,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
@@ -633,8 +639,8 @@ window.onload = function () {
                     // left: 200,
                     top: 60,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
@@ -642,8 +648,8 @@ window.onload = function () {
                     // left: 200,
                     top: 90,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
@@ -651,22 +657,22 @@ window.onload = function () {
                     // left: 200,
                     top: 120,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text('Punkty rozwoju:', {
-                    // left: 200,
+                     left: 20,
                     top: 160,
                     fill: '#fff',
-                    fontSize: 24,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 22,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 })], {
                     name: 'statsText',
-                    left: canvas.width / 2 - 160,
+                    left: canvas.width / 2 - 165,
                     top: 220,
                     opacity: 1,
                     selectable: false
@@ -680,8 +686,8 @@ window.onload = function () {
                     // left: 200,
                     top: 0,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
@@ -689,8 +695,8 @@ window.onload = function () {
                     // left: 200,
                     top: 30,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
@@ -698,8 +704,8 @@ window.onload = function () {
                     // left: 200,
                     top: 60,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
@@ -707,8 +713,8 @@ window.onload = function () {
                     // left: 200,
                     top: 90,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
@@ -716,22 +722,22 @@ window.onload = function () {
                     // left: 200,
                     top: 120,
                     fill: '#fff',
-                    fontSize: 20,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text(String(Gstats.stats.free), {
-                    // left: 200,
+                     left: 20,
                     top: 160,
                     fill: '#fff',
-                    fontSize: 24,
-                    fontFamily: 'Comic Sans',
+                    fontSize: 22,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 })], {
                     name: 'statsPoints',
-                    left: canvas.width / 2 - 60,
+                    left: canvas.width / 2 - 65,
                     top: 220,
                     opacity: 1,
                     selectable: false
@@ -790,8 +796,16 @@ window.onload = function () {
         }
         loadExp();
         loadLvl();
+        loadHp();
+        loadArmor();
+        loadEnergy();
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
+        canvas.bringToFront(canvas.getItemByName('expText'));
+        canvas.bringToFront(canvas.getItemByName('lvlText'));
+        canvas.bringToFront(canvas.getItemByName('heartText'));
+        canvas.bringToFront(canvas.getItemByName('shieldText'));
+        canvas.bringToFront(canvas.getItemByName('energyText'));
         canvas.bringToFront(canvas.getItemByName('addStr'));
         canvas.bringToFront(canvas.getItemByName('addAtt'));
         canvas.bringToFront(canvas.getItemByName('addAgi'));
@@ -823,7 +837,7 @@ window.onload = function () {
                 name: 'tradeBuy',
                 fill: 'red',
                 fontSize: 20,
-                fontFamily: 'Comic Sans',
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'center',
             });
             canvas.add(tradeBuy);
@@ -835,7 +849,7 @@ window.onload = function () {
                 name: 'tradeSell',
                 fill: 'red',
                 fontSize: 20,
-                fontFamily: 'Comic Sans',
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'center',
             });
             canvas.add(tradeSell);
@@ -873,7 +887,7 @@ window.onload = function () {
             name: 'itemName',
             fill: 'red',
             fontSize: 30,
-            fontFamily: 'Comic Sans',
+            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(itemName);
@@ -885,7 +899,7 @@ window.onload = function () {
             name: 'stat1',
             fill: 'red',
             fontSize: 20,
-            fontFamily: 'Comic Sans',
+            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat1);
@@ -897,7 +911,7 @@ window.onload = function () {
             name: 'stat2',
             fill: 'red',
             fontSize: 20,
-            fontFamily: 'Comic Sans',
+            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat2);
@@ -909,7 +923,7 @@ window.onload = function () {
             name: 'stat3',
             fill: 'red',
             fontSize: 20,
-            fontFamily: 'Comic Sans',
+            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat3);
@@ -921,7 +935,7 @@ window.onload = function () {
             name: 'stat4',
             fill: 'red',
             fontSize: 20,
-            fontFamily: 'Comic Sans',
+            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat4);
@@ -993,6 +1007,52 @@ window.onload = function () {
 
 
     }
+    function loadEq() {
+        if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
+            fabric.loadSVGFromURL('svg/Helmet.svg', function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(0.2);
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 90 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQhelmet';
+                canvas.add(obj);
+            });
+            fabric.loadSVGFromURL('svg/armor.svg', function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(0.2);
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 10 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQarmmor';
+                canvas.add(obj);
+            });
+            fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(0.3);
+                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 110 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQweapon';
+                canvas.add(obj);
+            });
+        }
+        canvas.bringToFront(canvas.getItemByName('EQhelmet'));
+        canvas.bringToFront(canvas.getItemByName('EQarmmor'));
+        canvas.bringToFront(canvas.getItemByName('EQweapon'));
+
+        helmetDrop.style.left = ((canvas.width / 2) + 85) + 'px';//200
+        helmetDrop.style.top = ((canvas.height / 2) - 650) + 'px';//580
+        helmetDrop.style.visibility = 'visible';
+
+        armorDrop.style.left = ((canvas.width / 2) + -70) + 'px';//50
+        armorDrop.style.top = ((canvas.height / 2) - 550) + 'px';
+        armorDrop.style.visibility = 'visible';
+
+        weaponDrop.style.left = ((canvas.width / 2) - 225) + 'px';
+        weaponDrop.style.top = ((canvas.height / 2) - 450) + 'px';
+        weaponDrop.style.visibility = 'visible';
+    }
     function closeButton() {
         hideEqControls();
         hideShopControls();
@@ -1020,6 +1080,10 @@ window.onload = function () {
             if (canvas.getItemByName('addVit')) { canvas.remove(canvas.getItemByName('addVit')); }
             if (canvas.getItemByName('expText')) { canvas.remove(canvas.getItemByName('expText')); }
             if (canvas.getItemByName('lvlText')) { canvas.remove(canvas.getItemByName('lvlText')); }
+            if (canvas.getItemByName('heartText')) { canvas.remove(canvas.getItemByName('heartText')); }
+            if (canvas.getItemByName('shieldText')) { canvas.remove(canvas.getItemByName('shieldText')); }
+            if (canvas.getItemByName('energyText')) { canvas.remove(canvas.getItemByName('energyText')); }
+      
             resolve();
         });
     }
@@ -1030,10 +1094,7 @@ window.onload = function () {
     }
     function removeChar() {
         if (canvas.getItemByName('coinText')) { canvas.remove(canvas.getItemByName('coinText')); }
-        if (canvas.getItemByName('heartText')) { canvas.remove(canvas.getItemByName('heartText')); }
-        if (canvas.getItemByName('shieldText')) { canvas.remove(canvas.getItemByName('shieldText')); }
-        if (canvas.getItemByName('energyText')) { canvas.remove(canvas.getItemByName('energyText')); }
-    }
+  }
     function removeTavern() {
         if (canvas.getItemByName('itemName')) { canvas.remove(canvas.getItemByName('itemName')); }
         if (canvas.getItemByName('stat1')) { canvas.remove(canvas.getItemByName('stat1')); }
@@ -1047,52 +1108,7 @@ window.onload = function () {
         if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
 
     }
-    function loadEq() {
-        if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
-            fabric.loadSVGFromURL('svg/Helmet.svg', function (objects, options) {
-                var obj = fabric.util.groupSVGElements(objects, options);
-                obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 90 })
-                obj.selectable = false;
-                obj.scalable = false;
-                obj.name = 'EQhelmet';
-                canvas.add(obj);
-            });
-            fabric.loadSVGFromURL('svg/armor.svg', function (objects, options) {
-                var obj = fabric.util.groupSVGElements(objects, options);
-                obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 10 })
-                obj.selectable = false;
-                obj.scalable = false;
-                obj.name = 'EQarmmor';
-                canvas.add(obj);
-            });
-            fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
-                var obj = fabric.util.groupSVGElements(objects, options);
-                obj.scale(0.3);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 100 })
-                obj.selectable = false;
-                obj.scalable = false;
-                obj.name = 'EQweapon';
-                canvas.add(obj);
-            });
-        }
-        canvas.bringToFront(canvas.getItemByName('EQhelmet'));
-        canvas.bringToFront(canvas.getItemByName('EQarmmor'));
-        canvas.bringToFront(canvas.getItemByName('EQweapon'));
-
-        helmetDrop.style.left = ((canvas.width / 2) + 85) + 'px';//200
-        helmetDrop.style.top = ((canvas.height / 2) - 580) + 'px';
-        helmetDrop.style.visibility = 'visible';
-
-        armorDrop.style.left = ((canvas.width / 2) + -70) + 'px';//50
-        armorDrop.style.top = ((canvas.height / 2) - 490) + 'px';
-        armorDrop.style.visibility = 'visible';
-
-        weaponDrop.style.left = ((canvas.width / 2) - 225) + 'px';
-        weaponDrop.style.top = ((canvas.height / 2) - 390) + 'px';
-        weaponDrop.style.visibility = 'visible';
-    }
+    
     function hideEqControls() {
         helmetDrop.style.visibility = 'hidden';
         armorDrop.style.visibility = 'hidden';
