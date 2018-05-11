@@ -3,7 +3,8 @@ var config = require("./config")
 var login = require("./login")
 var api = require("./api")
 var weapons = require('./models/weapon')
-//TODO var fight = require("./fight")
+var fight = require("./fight")
+var passportSocketIo = require("passport.socketio")
 
 var path = require('path')
 
@@ -40,13 +41,13 @@ var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 io.use(passportSocketIo.authorize({
     cookieParser: cookieParser,
-    key: 'express.sid',
+    key: 'connect.sid',
     secret: config.sessionSecret,
     store: mongoStore,
 }))
 
 api(app)
-//TODO fight.init(app, io)
+fight.init(app, io)
 
 app.get('/activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)

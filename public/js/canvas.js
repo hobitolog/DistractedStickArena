@@ -334,7 +334,7 @@ window.onload = function () {
                     refreshChar();
                     break;
                 case 'findOpButton':
-                    window.open("https://media1.tenor.com/images/0e5b20868a069ab6ee46a5552154d021/tenor.gif?itemid=6103287", "_self")
+                    socket.emit('findGame')
                     break;
                 case 'tradeButton':
                     //TODO Finalize transaction by Pan Minta

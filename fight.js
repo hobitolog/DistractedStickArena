@@ -1,5 +1,5 @@
 var log = require("./log")
-var passportSocketIo = require("passport.socketio")
+var io
 
 var players = []
 var duels = []
@@ -87,15 +87,14 @@ module.exports = {
         return next()
     },
 
-    init: function (app, io) {
+    init: function (app, ioParam) {
 
-        this.io = io
+        io = ioParam
 
         io.on('connection', (socket) => {
-
             var player = socket.request.user
             var index = players.findIndex((element => { element.login == player.login }))
-            if (index != 1) {
+            if (index != -1) {
                 socket.emit("error", "Gracz jest już połączony")
                 socket.disconnect(true)
                 return
@@ -111,7 +110,7 @@ module.exports = {
             })
 
             socket.on('findGame', function () {
-                var index = players.findIndex((element => { element.player.login == player.login }))
+                var index = players.findIndex((element => { return element.player.login == player.login }))
                 players[index].started = Date.now()
                 updateActive()
                 matchMakingTrigger(0)
