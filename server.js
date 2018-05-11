@@ -3,7 +3,8 @@ var config = require("./config")
 var login = require("./login")
 var api = require("./api")
 var weapons = require('./models/weapon')
-//TODO var fight = require("./fight")
+var fight = require("./fight")
+var passportSocketIo = require("passport.socketio")
 
 var path = require('path')
 

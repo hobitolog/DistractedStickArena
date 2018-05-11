@@ -1,5 +1,4 @@
 var log = require("./log")
-var passportSocketIo = require("passport.socketio")
 
 var players = []
 var duels = []
