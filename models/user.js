@@ -33,13 +33,13 @@ var user = mongoose.Schema({
 
         equipment: {
             helmet: {
-                itemId: { type: Number, default: null }
+                itemId: { type: Number, default: 500 }
             },
             armor: {
-                itemId: { type: Number, default: null }
+                itemId: { type: Number, default: 400 }
             },
             weapon: {
-                itemId: { type: Number, default: null }
+                itemId: { type: Number, default: 100 }
             }
         },
         backpack: []
