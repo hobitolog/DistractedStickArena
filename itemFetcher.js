@@ -32,13 +32,17 @@ module.exports = {
                     return
                 }
                 const toReturn = []
-                weapons.forEach((weapon, index) => {
+
+                itemIds.forEach((itemId, index) => {
+                    const weapon = weapons.find((element => {
+                        return element.baseId == baseIds[index]
+                    }))
                     const variant = weapon.variants.find(element => {
                         return element.variantId == variantIds[index]
                     })
 
                     const toAdd = {
-                        "itemId": itemIds[index],
+                        "itemId": itemId,
                         "level": weapon.level,
                         "type": weapon.type,
                     }
