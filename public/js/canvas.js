@@ -335,6 +335,7 @@ window.onload = function () {
                     break;
                 case 'findOpButton':
                     socket.emit('findGame')
+                    //TODO change button label
                     break;
                 case 'tradeButton':
                     //TODO Finalize transaction by Pan Minta

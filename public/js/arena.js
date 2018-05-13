@@ -1,21 +1,18 @@
 var arenaTimer;
+var socket = io()
+
 var tmp = {
-    hp: 45,
-    hpMax: 120,
-    armor: 20,
-    armorMax: 60,
-    energy: 80,
-    energyMax: 100
+    
 }
 var tmpOp = {
-    hp: 5,
-    hpMax: 100,
-    armor: 0,
-    armorMax: 50,
-    energy: 20,
-    energyMax: 300
+    
 }
 
+socket.on('gameFound', function (me, opponent) {
+    tmp = me
+    tmpOp = opponent
+    showArena()
+})
 
 function showArena() {
     canvas.clear();
@@ -57,32 +54,6 @@ function showArena() {
             canvas.remove(canvas.getItemByName('skillText'));
 
 
-        }
-    });
-    canvas.on('mouse:down', function (e) {
-        if (e.target != null && canvas.localization == 'arena') {
-            switch (e.target.name) {
-                case 'weapon1':
-                    //atack1
-                    break;
-                case 'weapon2':
-                    //atack2
-
-                    break;
-                case 'weapon3':
-                    //atack3
-
-                    break;
-                case 'zzz':
-                    //sleep
-                    break;
-                case 'exitArena':
-                    //exitArena
-                    clearInterval(arenaTimer);
-
-
-            }
-            canvas.renderAll();
         }
     });
 
@@ -296,7 +267,7 @@ function showArena() {
             canvas.add(obj);
         });
 
-        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + 12 + ' - ' + 23 + '\nszansa:\t' + 50 + '%' + '\nkoszt:\t' + 30), {
+        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + tmp.stats.damageMin + ' - ' + tmp.stats.damageMax + '\nszansa:\t' + 50 + '%' + '\nkoszt:\t' + 30), {
             left: 10,
             top: 355,
             selectable: false,
@@ -328,7 +299,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + 6 + ' - ' + 13 + '\nszansa:\t' + 70 + '%' + '\nkoszt:\t' + 20), {
+        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(tmp.stats.damageMin * 0.7) + ' - ' + Math.round(tmp.stats.damageMax * 0.7) + '\nszansa:\t' + 70 + '%' + '\nkoszt:\t' + 20), {
             left: 85,
             top: 355,
             selectable: false,
@@ -359,7 +330,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + 30 + ' - ' + 42 + '\nszansa:\t' + 20 + '%' + '\nkoszt:\t' + 60), {
+        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + Math.round(tmp.stats.damageMin * 1.3) + ' - ' + Math.round(tmp.stats.damageMax * 1.3) + '\nszansa:\t' + 20 + '%' + '\nkoszt:\t' + 60), {
             left: 172,
             top: 355,
             selectable: false,
@@ -409,7 +380,7 @@ function showArena() {
             var hpL = new fabric.Rect({
                 top: 27,
                 left: 24,
-                width: (tmp.hp * 293) / tmp.hpMax,//max 293
+                width: (tmp.stats.hp * 293) / tmp.stats.hpMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -419,7 +390,7 @@ function showArena() {
             });
             canvas.add(hpL);
 
-            var hpLText = new fabric.Text(String(tmp.hp + '/' + tmp.hpMax), {
+            var hpLText = new fabric.Text(String(tmp.stats.hp + '/' + tmp.stats.hpMax), {
                 left: 175,
                 top: 27,
                 selectable: false,
@@ -435,7 +406,7 @@ function showArena() {
             var arL = new fabric.Rect({
                 top: 47,
                 left: 24,
-                width: (tmp.armor * 293) / tmp.armorMax,//max 293
+                width: (tmp.stats.armor * 293) / tmp.stats.armorMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -445,7 +416,7 @@ function showArena() {
             });
             canvas.add(arL);
 
-            var arLText = new fabric.Text(String(tmp.armor + '/' + tmp.armorMax), {
+            var arLText = new fabric.Text(String(tmp.stats.armor + '/' + tmp.stats.armorMax), {
                 left: 175,
                 top: 47,
                 selectable: false,
@@ -460,7 +431,7 @@ function showArena() {
             var enL = new fabric.Rect({
                 top: 72,
                 left: 24,
-                width: (tmp.energy * 293) / tmp.energyMax,//max 293
+                width: (tmp.stats.energy * 293) / tmp.stats.energyMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -470,7 +441,7 @@ function showArena() {
             });
             canvas.add(enL);
 
-            var enLText = new fabric.Text(String(tmp.energy + '/' + tmp.energyMax), {
+            var enLText = new fabric.Text(String(tmp.stats.energy + '/' + tmp.stats.energyMax), {
                 left: 175,
                 top: 72,
                 selectable: false,
@@ -490,7 +461,7 @@ function showArena() {
             var hpP = new fabric.Rect({
                 top: 27,
                 left: 404,
-                width: (tmpOp.hp * 293) / tmpOp.hpMax,//max 293
+                width: (tmpOp.stats.hp * 293) / tmpOp.stats.hpMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -500,7 +471,7 @@ function showArena() {
             });
             canvas.add(hpP);
 
-            var hpPText = new fabric.Text(String(tmpOp.hp + '/' + tmpOp.hpMax), {
+            var hpPText = new fabric.Text(String(tmpOp.stats.hp + '/' + tmpOp.stats.hpMax), {
                 left: 555,
                 top: 27,
                 selectable: false,
@@ -516,7 +487,7 @@ function showArena() {
             var arP = new fabric.Rect({
                 top: 47,
                 left: 404,
-                width: (tmpOp.armor * 293) / tmpOp.armorMax,//max 293
+                width: (tmpOp.stats.armor * 293) / tmpOp.stats.armorMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -526,7 +497,7 @@ function showArena() {
             });
             canvas.add(arP);
 
-            var arPText = new fabric.Text(String(tmpOp.armor + '/' + tmpOp.armorMax), {
+            var arPText = new fabric.Text(String(tmpOp.stats.armor + '/' + tmpOp.stats.armorMax), {
                 left: 555,
                 top: 47,
                 selectable: false,
@@ -541,7 +512,7 @@ function showArena() {
             var enP = new fabric.Rect({
                 top: 72,
                 left: 404,
-                width: (tmpOp.energy * 293) / tmpOp.energyMax,//max 293
+                width: (tmpOp.stats.energy * 293) / tmpOp.stats.energyMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -551,7 +522,7 @@ function showArena() {
             });
             canvas.add(enP);
 
-            var enPText = new fabric.Text(String(tmpOp.energy + '/' + tmpOp.energyMax), {
+            var enPText = new fabric.Text(String(tmpOp.stats.energy + '/' + tmpOp.stats.energyMax), {
                 left: 555,
                 top: 72,
                 selectable: false,
@@ -610,5 +581,31 @@ function showArena() {
         });
     }
 
+    canvas.on('mouse:down', function (e) {
+        if (e.target != null && canvas.localization == 'arena') {
+            switch (e.target.name) {
+                case 'weapon1':
+                    socket.emit('attack')
+                    break;
+                case 'weapon2':
+                    socket.emit('swiftAttack')
+
+                    break;
+                case 'weapon3':
+                    socket.emit('powerfulAttack')
+
+                    break;
+                case 'zzz':
+                    socket.emit('rest')
+                    break;
+                case 'exitArena':
+                    socket.emit('exitArena')
+                    clearInterval(arenaTimer);
+
+
+            }
+            canvas.renderAll();
+        }
+    });
 
 }

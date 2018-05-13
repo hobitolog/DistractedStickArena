@@ -1,3 +1,4 @@
+const itemFetcher = require('./itemFetcher')
 var log = require("./log")
 var io
 
@@ -23,9 +24,8 @@ function notifyDuel(player, opponent) {
 
 //TODO przetestować po zrobieniu socketów
 function matchMake() {
-
     var newDuels = []
-    var copied = getSearchers.splice()
+    var copied = getSearchers().slice()
     while (copied.length > 1) {
 
         var player = copied[0]
@@ -36,24 +36,54 @@ function matchMake() {
         }
 
         var duelId = player.player.login + "VS" + matched.player.login
-        newDuels.push({
+        var duel = {
             id: duelId,
             player1: player,
             player2: matched,
-        })
+        }
+
+        duel.character1 = extractUserCharacter(player.player)
+        duel.character2 = extractUserCharacter(matched.player)
+
+        newDuels.push(duel)
+        duels.push(duel)
         copied.splice(0, 1)
         copied.splice(i, 1)
     }
-
-    players = copied.splice()
+    players = copied.slice()
     handleNewDuels(newDuels)
     updateActive()
     scheduledMatchMaking = null
     matchMakingTrigger(5000)
 }
 
+function extractUserCharacter (player) {
+    var eq = {
+        helmet: itemFetcher.getCurrentVariant(player.character.equipment.helmet.itemId),
+        armor: itemFetcher.getCurrentVariant(player.character.equipment.armor.itemId),
+        weapon: itemFetcher.getCurrentVariant(player.character.equipment.weapon.itemId),
+    }
+
+    var character = {
+        name: player.login,
+        lvl: player.character.level,
+        stats: {
+            damageMin: eq.weapon.damageMin + Math.round(player.character.stats.str * 0.5),
+            damageMax: eq.weapon.damageMax + Math.round(player.character.stats.str * 0.6),
+            hp: 30 + player.character.stats.vit * 2,
+            hpMax: 30 + player.character.stats.vit * 2,
+            energy: 20 + Math.round(player.character.stats.sta * 1.5),
+            energyMax: 20 + Math.round(player.character.stats.sta * 1.5),
+            armor: (eq.armor.armor + eq.helmet.armor),
+            armorMax: (eq.armor.armor + eq.helmet.armor)
+        }
+    }
+
+    return character
+}
+
 function matchMakingTrigger(delay) {
-    if (scheduledMatchMaking != null || getSearchers.length < 2)
+    if (scheduledMatchMaking != null || getSearchers().length < 2)
         return
 
     scheduledMatchMaking = setTimeout(matchMake, delay)
@@ -66,9 +96,13 @@ function handleNewDuels(newDuels) {
         element.player1.socket.join(element.id)
         element.player2.socket.join(element.id)
 
-        element.player1.socket.emit('gameFound', element.player2.player)
-        element.player2.socket.emit('gameFound', element.player1.player)
+        element.player1.socket.emit('gameFound', element.character1, element.character2)
+        element.player2.socket.emit('gameFound', element.character2, element.character1)
     })
+}
+
+function getPlayerDuel (player) {
+    
 }
 
 module.exports = {
@@ -120,6 +154,22 @@ module.exports = {
                 var index = players.findIndex((element => { element.player.login == player.login }))
                 players[index].started = 0
                 updateActive()
+            })
+
+            socket.on('attack', function () {
+                console.log(player.login)
+            })
+
+            socket.on('swiftAttack', function () {
+                
+            })
+
+            socket.on('powerfulAttack', function () {
+                
+            })
+
+            socket.on('rest', function () {
+                
             })
 
             socket.on('disconnect', function () {
