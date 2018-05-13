@@ -55,7 +55,7 @@ module.exports = {
                         toAdd.upgradePrice = variant.upgradePrice
                     }
                     toAdd.value = variant.value
-                    toReturn.push(toAdd)
+                    toReturn[index] = toAdd
                 })
                 resolve(toReturn)
             })

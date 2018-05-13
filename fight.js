@@ -23,7 +23,7 @@ function notifyDuel(player, opponent) {
 }
 
 //TODO przetestować po zrobieniu socketów
-function matchMake() {
+async function matchMake() {
     var newDuels = []
     var copied = getSearchers().slice()
     while (copied.length > 1) {
@@ -42,8 +42,8 @@ function matchMake() {
             player2: matched,
         }
 
-        duel.character1 = extractUserCharacter(player.player)
-        duel.character2 = extractUserCharacter(matched.player)
+        duel.character1 = await extractUserCharacter(player.player)
+        duel.character2 = await extractUserCharacter(matched.player)
 
         newDuels.push(duel)
         duels.push(duel)
@@ -57,25 +57,25 @@ function matchMake() {
     matchMakingTrigger(5000)
 }
 
-function extractUserCharacter (player) {
-    var eq = {
-        helmet: itemFetcher.getCurrentVariant(player.character.equipment.helmet.itemId),
-        armor: itemFetcher.getCurrentVariant(player.character.equipment.armor.itemId),
-        weapon: itemFetcher.getCurrentVariant(player.character.equipment.weapon.itemId),
-    }
+async function extractUserCharacter (player) {
+    var eq = await itemFetcher.getCurrentVariants(
+        player.character.equipment.helmet.itemId,
+        player.character.equipment.armor.itemId,
+        player.character.equipment.weapon.itemId
+    )
 
     var character = {
         name: player.login,
         lvl: player.character.level,
         stats: {
-            damageMin: eq.weapon.damageMin + Math.round(player.character.stats.str * 0.5),
-            damageMax: eq.weapon.damageMax + Math.round(player.character.stats.str * 0.6),
+            damageMin: eq[2].damageMin + Math.round(player.character.stats.str * 0.5),
+            damageMax: eq[2].damageMax + Math.round(player.character.stats.str * 0.6),
             hp: 30 + player.character.stats.vit * 2,
             hpMax: 30 + player.character.stats.vit * 2,
             energy: 20 + Math.round(player.character.stats.sta * 1.5),
             energyMax: 20 + Math.round(player.character.stats.sta * 1.5),
-            armor: (eq.armor.armor + eq.helmet.armor),
-            armorMax: (eq.armor.armor + eq.helmet.armor)
+            armor: (eq[1].armor + eq[0].armor),
+            armorMax: (eq[1].armor + eq[0].armor)
         }
     }
 
