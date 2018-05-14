@@ -116,6 +116,8 @@ module.exports = {
 
     isLoggedIn: (req, res, next) => {
 
+        log.logActivity(req, res, null)
+
         if (req.isAuthenticated())
             return next()
 
