@@ -1,16 +1,27 @@
 var arenaTimer;
-var socket = io()
+var socket = io('http://127.0.0.1', {reconnection: true})
+var user
+var opponent
 
-var tmp = {
-    
-}
-var tmpOp = {
-    
-}
+var characters
 
-socket.on('gameFound', function (me, opponent) {
-    tmp = me
-    tmpOp = opponent
+setInterval(function () {
+    socket.emit('alive')
+}, 4000)
+
+socket.on('alive', function () {
+    console.log('alive')
+})
+
+socket.on('gameFound', function (us, opp) {
+    console.log('Odebrane gameFound')
+    characters = new Map()
+    characters.set(us.login, us)
+    console.log(us)
+    characters.set(opp.login, opp)
+    console.log(opp)
+    user = us.login
+    opponent = opp.login
     showArena()
 })
 
@@ -70,6 +81,7 @@ function showArena() {
                 canvas.bringToFront(canvas.getItemByName('weapon3'))
                 canvas.bringToFront(canvas.getItemByName('weapon2'))
                 canvas.bringToFront(canvas.getItemByName('weapon1'))
+                canvas.bringToFront(canvas.getItemByName('zzz'))
                 canvas.bringToFront(canvas.getItemByName('stickman'))
                 canvas.bringToFront(canvas.getItemByName('opponent'))
                 formatBars();
@@ -267,7 +279,7 @@ function showArena() {
             canvas.add(obj);
         });
 
-        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + tmp.stats.damageMin + ' - ' + tmp.stats.damageMax + '\nszansa:\t' + 50 + '%' + '\nkoszt:\t' + 30), {
+        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + characters.get(user).stats.damageMin + ' - ' + characters.get(user).stats.damageMax + '\nszansa:\t' + characters.get(user).stats.hitChance + '%' + '\nkoszt:\t' + 30), {
             left: 10,
             top: 355,
             selectable: false,
@@ -299,7 +311,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(tmp.stats.damageMin * 0.7) + ' - ' + Math.round(tmp.stats.damageMax * 0.7) + '\nszansa:\t' + 70 + '%' + '\nkoszt:\t' + 20), {
+        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(characters.get(user).stats.damageMin * 0.7) + ' - ' + Math.round(characters.get(user).stats.damageMax * 0.7) + '\nszansa:\t' + Math.round(characters.get(user).stats.hitChance * 1.3) + '%' + '\nkoszt:\t' + 20), {
             left: 85,
             top: 355,
             selectable: false,
@@ -330,7 +342,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + Math.round(tmp.stats.damageMin * 1.3) + ' - ' + Math.round(tmp.stats.damageMax * 1.3) + '\nszansa:\t' + 20 + '%' + '\nkoszt:\t' + 60), {
+        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + Math.round(characters.get(user).stats.damageMin * 1.3) + ' - ' + Math.round(characters.get(user).stats.damageMax * 1.3) + '\nszansa:\t' + Math.round(characters.get(user).stats.hitChance * 0.7) + '%' + '\nkoszt:\t' + 60), {
             left: 172,
             top: 355,
             selectable: false,
@@ -380,7 +392,7 @@ function showArena() {
             var hpL = new fabric.Rect({
                 top: 27,
                 left: 24,
-                width: (tmp.stats.hp * 293) / tmp.stats.hpMax,//max 293
+                width: (characters.get(user).stats.hp * 293) / characters.get(user).stats.hpMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -390,7 +402,7 @@ function showArena() {
             });
             canvas.add(hpL);
 
-            var hpLText = new fabric.Text(String(tmp.stats.hp + '/' + tmp.stats.hpMax), {
+            var hpLText = new fabric.Text(String(characters.get(user).stats.hp + '/' + characters.get(user).stats.hpMax), {
                 left: 175,
                 top: 27,
                 selectable: false,
@@ -406,7 +418,7 @@ function showArena() {
             var arL = new fabric.Rect({
                 top: 47,
                 left: 24,
-                width: (tmp.stats.armor * 293) / tmp.stats.armorMax,//max 293
+                width: (characters.get(user).stats.armor * 293) / characters.get(user).stats.armorMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -416,7 +428,7 @@ function showArena() {
             });
             canvas.add(arL);
 
-            var arLText = new fabric.Text(String(tmp.stats.armor + '/' + tmp.stats.armorMax), {
+            var arLText = new fabric.Text(String(characters.get(user).stats.armor + '/' + characters.get(user).stats.armorMax), {
                 left: 175,
                 top: 47,
                 selectable: false,
@@ -431,7 +443,7 @@ function showArena() {
             var enL = new fabric.Rect({
                 top: 72,
                 left: 24,
-                width: (tmp.stats.energy * 293) / tmp.stats.energyMax,//max 293
+                width: (characters.get(user).stats.energy * 293) / characters.get(user).stats.energyMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -441,7 +453,7 @@ function showArena() {
             });
             canvas.add(enL);
 
-            var enLText = new fabric.Text(String(tmp.stats.energy + '/' + tmp.stats.energyMax), {
+            var enLText = new fabric.Text(String(characters.get(user).stats.energy + '/' + characters.get(user).stats.energyMax), {
                 left: 175,
                 top: 72,
                 selectable: false,
@@ -461,7 +473,7 @@ function showArena() {
             var hpP = new fabric.Rect({
                 top: 27,
                 left: 404,
-                width: (tmpOp.stats.hp * 293) / tmpOp.stats.hpMax,//max 293
+                width: (characters.get(opponent).stats.hp * 293) / characters.get(opponent).stats.hpMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -471,7 +483,7 @@ function showArena() {
             });
             canvas.add(hpP);
 
-            var hpPText = new fabric.Text(String(tmpOp.stats.hp + '/' + tmpOp.stats.hpMax), {
+            var hpPText = new fabric.Text(String(characters.get(opponent).stats.hp + '/' + characters.get(opponent).stats.hpMax), {
                 left: 555,
                 top: 27,
                 selectable: false,
@@ -487,7 +499,7 @@ function showArena() {
             var arP = new fabric.Rect({
                 top: 47,
                 left: 404,
-                width: (tmpOp.stats.armor * 293) / tmpOp.stats.armorMax,//max 293
+                width: (characters.get(opponent).stats.armor * 293) / characters.get(opponent).stats.armorMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -497,7 +509,7 @@ function showArena() {
             });
             canvas.add(arP);
 
-            var arPText = new fabric.Text(String(tmpOp.stats.armor + '/' + tmpOp.stats.armorMax), {
+            var arPText = new fabric.Text(String(characters.get(opponent).stats.armor + '/' + characters.get(opponent).stats.armorMax), {
                 left: 555,
                 top: 47,
                 selectable: false,
@@ -512,7 +524,7 @@ function showArena() {
             var enP = new fabric.Rect({
                 top: 72,
                 left: 404,
-                width: (tmpOp.stats.energy * 293) / tmpOp.stats.energyMax,//max 293
+                width: (characters.get(opponent).stats.energy * 293) / characters.get(opponent).stats.energyMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -522,7 +534,7 @@ function showArena() {
             });
             canvas.add(enP);
 
-            var enPText = new fabric.Text(String(tmpOp.stats.energy + '/' + tmpOp.stats.energyMax), {
+            var enPText = new fabric.Text(String(characters.get(opponent).stats.energy + '/' + characters.get(opponent).stats.energyMax), {
                 left: 555,
                 top: 72,
                 selectable: false,
