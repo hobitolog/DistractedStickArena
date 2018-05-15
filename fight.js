@@ -12,7 +12,7 @@ var duels = new Map()
 var scheduledMatchMaking = null
 
 function getSearchers() {
-    return players.filter(x => x.started != 0)
+    return players.filter(x => x.started > 0)
 }
 
 function updateActive() {
@@ -37,7 +37,7 @@ async function matchMake() {
 
         var duelId = player.player.login + "VS" + matched.player.login
 
-        console.log('matchuje ' + player.socket.id + ' z ' + matched.socket.id)
+        // console.log('matchuje ' + player.socket.id + ' z ' + matched.socket.id)
         var duel = {
             id: duelId,
             player1: player,
@@ -53,10 +53,13 @@ async function matchMake() {
         newDuels.push(duel)
         duels.set(player.player.login, duel)
         duels.set(matched.player.login, duel)
+
+        players[getPlayerIndex(player.player.login)].started = -1;
+        players[getPlayerIndex(matched.player.login)].started = -1;
+
         copied.splice(0, 1)
         copied.splice(i, 1)
     }
-    players = copied.slice()
     handleNewDuels(newDuels)
     updateActive()
     scheduledMatchMaking = null
@@ -79,7 +82,7 @@ async function extractDuelCharacters (player1, player2) {
     )
 
     var character1 = {
-        name: player1.login,
+        login: player1.login,
         opponent: player2.login,
         lvl: player1.character.level,
         stats: {
@@ -96,7 +99,7 @@ async function extractDuelCharacters (player1, player2) {
     }
 
     var character2 = {
-        name: player2.login,
+        login: player2.login,
         opponent: player1.login,
         lvl: player2.character.level,
         stats: {
@@ -112,8 +115,8 @@ async function extractDuelCharacters (player1, player2) {
         }
     }
 
-    result.set(character1.name, character1)
-    result.set(character2.name, character2)
+    result.set(character1.login, character1)
+    result.set(character2.login, character2)
 
     return result
 }
@@ -135,8 +138,8 @@ function handleNewDuels(newDuels) {
         var ch1 = element.characters.get(element.player1.player.login)
         var ch2 = element.characters.get(element.player2.player.login)
 
-        console.log('leci do ' + element.player1.socket.id)
-        console.log('leci do ' + element.player2.socket.id)
+        // console.log('leci do ' + element.player1.socket.id)
+        // console.log('leci do ' + element.player2.socket.id)
 
         element.player1.socket.emit('gameFound', ch1, ch2)
         element.player2.socket.emit('gameFound', ch2, ch1)
@@ -150,7 +153,7 @@ function isUserTurn(login) {
 }
 
 function getCharacterIndex(login) {
-    if(duels.get(login) == undefined)
+    if(!duels.get(login))
         return -1;
     else if(duels.get(login).character1.login == login)
         return 0
@@ -164,21 +167,22 @@ function handleUserAction(login, socket, action) {
 
     var duel = duels.get(login)
     var room = duel.id
+    var character = duel.characters.get(login)
 
     switch(action) {
         case 'attack':
         //TODO opakowac w funkcje, zeby ladnie wygladalo!!!
-        var character = duel.characters.get(login)
         var opponent = duel.characters.get(character.opponent)
         if(isEnoughEnergy(action, character.stats.energy)) {
-            if(!hitLanded(character.stats)) {
+            character.stats.energy -= attackCost
+            if(!hitLanded(character.stats.hitChance)) {
                 io.to(room).emit('miss', login)
             } else {
-                character.stats.energy -= attackCost
+                
                 
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = character.stats.damageMin
-                + Math.round(Math.random() * character.stats.damageMax - character.stats.damageMin) 
+                + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin)) 
                 + 1
                 
                 var hparmAfterHit = hparm - damage
@@ -198,17 +202,16 @@ function handleUserAction(login, socket, action) {
         break
 
         case 'swiftAttack':
-        var character = duel.characters.get(login)
         var opponent = duel.characters.get(character.opponent)
         if(isEnoughEnergy(action, character.stats.energy)) {
-            if(!hitLanded(character.stats)) {
+            character.stats.energy -= swiftAttackCost
+
+            if(!hitLanded(character.stats.hitChance)) {
                 io.to(room).emit('swiftMiss', login)
             } else {
-                character.stats.energy -= swiftAttackCost
-                
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = Math.round((character.stats.damageMin
-                + Math.round(Math.random() * character.stats.damageMax - character.stats.damageMin) 
+                + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin)) 
                 + 1) * 0.7)
                 
                 var hparmAfterHit = hparm - damage
@@ -227,17 +230,15 @@ function handleUserAction(login, socket, action) {
         break
 
         case 'powerfulAttack':
-        var character = duel.characters.get(login)
         var opponent = duel.characters.get(character.opponent)
         if(isEnoughEnergy(action, character.stats.energy)) {
-            if(!hitLanded(character.stats)) {
+            character.stats.energy -= swiftAttackCost
+            if(!hitLanded(character.stats.hitChance)) {
                 io.to(room).emit('powerfulMiss', login)
             } else {
-                character.stats.energy -= powerfulAttackCost
-                
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = Math.round((character.stats.damageMin
-                + Math.round(Math.random() * character.stats.damageMax - character.stats.damageMin) 
+                + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin)) 
                 + 1) * 1.3)
                 
                 var hparmAfterHit = hparm - damage
@@ -257,8 +258,7 @@ function handleUserAction(login, socket, action) {
         break
 
         case 'rest':
-        var character = duel.characters.get(login)
-        var energyAfterRest = character.stats.energy + Math.round(character.energyMax * 0.2)
+        var energyAfterRest = character.stats.energy + Math.round(character.stats.energyMax * 0.2)
         if(energyAfterRest > character.stats.energyMax)
             energyAfterRest = character.stats.energyMax
         character.stats.energy = energyAfterRest;
@@ -300,16 +300,20 @@ function isEnoughEnergy(attack, energy) {
     return false
 }
 
+function getPlayerIndex(login) {
+    return players.findIndex((element => { return element.player.login == login }))
+}
+
 module.exports = {
 
     activeGameBlock: (req, res, next) => {
 
         var username = req.user.login
-        var index = getSearchers.findIndex((element => { element.player.login == username }))
+        var index = getSearchers.findIndex((element => { return element.player.login == username }))
         if (index != -1)
             return res.json({ "error": "Niedozwolone podczas szukania gry" })
 
-        index = duels.findIndex((element) => { element.player1.login == username || element.player2.login == username })
+        index = duels.findIndex((element) => { return element.player1.login == username || element.player2.login == username })
         if (index != -1)
             return res.json({ "error": "Niedozwolone podczas gry w toku" })
 
@@ -321,11 +325,10 @@ module.exports = {
         io = ioParam
 
         io.on('connection', (socket) => {
-            console.log('Przyszedl ' + socket.id)
             var player = socket.request.user
-            var index = players.findIndex((element => { element.login == player.login }))
+            var index = getPlayerIndex(player.login)
             if (index != -1) {
-                socket.emit("error", "Gracz jest już połączony")
+                socket.emit("errorMessage", "Gracz jest już połączony")
                 socket.disconnect(true)
                 return
             }
@@ -340,14 +343,14 @@ module.exports = {
             })
 
             socket.on('findGame', function () {
-                var index = players.findIndex((element => { return element.player.login == player.login }))
+                var index = getPlayerIndex(player.login)
                 players[index].started = Date.now()
                 updateActive()
                 matchMakingTrigger(0)
             })
 
             socket.on('cancelFind', function () {
-                var index = players.findIndex((element => { element.player.login == player.login }))
+                var index = getPlayerIndex(player.login)
                 players[index].started = 0
                 updateActive()
             })
@@ -369,12 +372,14 @@ module.exports = {
             })
 
             socket.on('disconnect', function () {
-                console.log('Poszedl ' + socket.id)
                 if(duels.get(player.login) != undefined) {
                     var d = duels.get(player.login)
-                    io.to(d.id).emit('endDuel', d.characters.get(player.login).opponent)
+                    var opp = d.characters.get(player.login).opponent
+                    io.to(d.id).emit('endDuel', opp)
+                    duels.delete(player.login)
+                    duels.delete(opp)
                 }
-                var index = players.findIndex((element => { element.player.login == player.login }))
+                var index = getPlayerIndex(player.login)
                 if (index == -1) return
                 players.splice(index, 1)
                 updateActive()

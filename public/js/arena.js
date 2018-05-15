@@ -1,35 +1,101 @@
 var arenaTimer;
-// var socket = io.connect({
-//   query: 'session_id=' + getCookie('connect.sid')
-// })
 var socket = io()
 var user
 var opponent
 
-var characters
+var characters = []
 
-function getCookie(name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
-  }
+function getCharacterIndex(login) {
+    if(characters) {
+        if(characters[0].nick == login) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    return -1;
+}
 
-socket.on('endDuel', function (winner) {
-    console.log(winner + ' won')
-    closeButton()
+function refreshBars(characterIndex) {
+    if(characterIndex == 0) {
+        refLeftBars()
+    } else {
+        refRightBars()
+    }
+}
+
+function refreshBars() {
+    refLeftBars()
+    refRightBars()
+}
+
+socket.on('endDuel', function (winner, prize) {
+    //TODO prizes, change view etc
+    // characters = []
 })
 
 socket.on('gameFound', function (us, opp) {
     console.log('Odebrane gameFound')
-    characters = new Map()
-    characters.set(us.login, us)
-    console.log(us)
-    characters.set(opp.login, opp)
-    console.log(opp)
-    user = us.login
-    opponent = opp.login
-    console.log(characters.get(user))
+    characters[0] = us
+    characters[1] = opp
+    console.log(characters)
     showArena()
+})
+
+socket.on('noEnoughEnergy', function () {
+    alert('Za mało energii!')
+})
+
+socket.on('incorrectAction', function () {
+    alert('Niepoprawna akcja!')
+})
+
+socket.on('attack', function (attacker, attacked) {
+    var attackerIndex = getCharacterIndex(attacker.login)
+    characters[attackedIndex] = attacker
+    
+    var attackedIndex = getCharacterIndex(attacked.login)
+    characters[attacked] = attacked
+
+    refreshBars()
+})
+
+socket.on('miss', function (character) {
+    var index = getCharacterIndex(character.login)
+    character[index] = character
+    refreshBars(index)
+})
+
+socket.on('swiftAttack', function (attacker, attacked) {
+    var attackerIndex = getCharacterIndex(attacker.login)
+    characters[attackedIndex] = attacker
+    
+    var attackedIndex = getCharacterIndex(attacked.login)
+    characters[attacked] = attacked
+
+    refreshBars()
+})
+
+socket.on('swiftMiss', function (character) {
+    var index = getCharacterIndex(character.login)
+    character[index] = character
+    refreshBars(index)
+})
+
+socket.on('powerfulAttack', function (attacker, attacked) {
+    var attackerIndex = getCharacterIndex(attacker.login)
+    characters[attackedIndex] = attacker
+    
+    var attackedIndex = getCharacterIndex(attacked.login)
+    characters[attacked] = attacked
+
+    refreshBars()
+})
+
+socket.on('powerfulMiss', function (character) {
+    var index = getCharacterIndex(character.login)
+    character[index] = character
+    refreshBars(index)
 })
 
 function showArena() {
@@ -286,7 +352,7 @@ function showArena() {
             canvas.add(obj);
         });
 
-        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + characters.get(user).stats.damageMin + ' - ' + characters.get(user).stats.damageMax + '\nszansa:\t' + characters.get(user).stats.hitChance + '%' + '\nkoszt:\t' + 30), {
+        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + characters[0].stats.damageMin + ' - ' + characters[0].stats.damageMax + '\nszansa:\t' + characters[0].stats.hitChance + '%' + '\nkoszt:\t' + 30), {
             left: 10,
             top: 355,
             selectable: false,
@@ -318,7 +384,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(characters.get(user).stats.damageMin * 0.7) + ' - ' + Math.round(characters.get(user).stats.damageMax * 0.7) + '\nszansa:\t' + Math.round(characters.get(user).stats.hitChance * 1.3) + '%' + '\nkoszt:\t' + 20), {
+        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 0.7) + ' - ' + Math.round(characters[0].stats.damageMax * 0.7) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 1.3) + '%' + '\nkoszt:\t' + 20), {
             left: 85,
             top: 355,
             selectable: false,
@@ -349,7 +415,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + Math.round(characters.get(user).stats.damageMin * 1.3) + ' - ' + Math.round(characters.get(user).stats.damageMax * 1.3) + '\nszansa:\t' + Math.round(characters.get(user).stats.hitChance * 0.7) + '%' + '\nkoszt:\t' + 60), {
+        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 1.3) + ' - ' + Math.round(characters[0].stats.damageMax * 1.3) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 0.7) + '%' + '\nkoszt:\t' + 60), {
             left: 172,
             top: 355,
             selectable: false,
@@ -399,7 +465,7 @@ function showArena() {
             var hpL = new fabric.Rect({
                 top: 27,
                 left: 24,
-                width: (characters.get(user).stats.hp * 293) / characters.get(user).stats.hpMax,//max 293
+                width: (characters[0].stats.hp * 293) / characters[0].stats.hpMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -409,7 +475,7 @@ function showArena() {
             });
             canvas.add(hpL);
 
-            var hpLText = new fabric.Text(String(characters.get(user).stats.hp + '/' + characters.get(user).stats.hpMax), {
+            var hpLText = new fabric.Text(String(characters[0].stats.hp + '/' + characters[0].stats.hpMax), {
                 left: 175,
                 top: 27,
                 selectable: false,
@@ -425,7 +491,7 @@ function showArena() {
             var arL = new fabric.Rect({
                 top: 47,
                 left: 24,
-                width: (characters.get(user).stats.armor * 293) / characters.get(user).stats.armorMax,//max 293
+                width: (characters[0].stats.armor * 293) / characters[0].stats.armorMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -435,7 +501,7 @@ function showArena() {
             });
             canvas.add(arL);
 
-            var arLText = new fabric.Text(String(characters.get(user).stats.armor + '/' + characters.get(user).stats.armorMax), {
+            var arLText = new fabric.Text(String(characters[0].stats.armor + '/' + characters[0].stats.armorMax), {
                 left: 175,
                 top: 47,
                 selectable: false,
@@ -450,7 +516,7 @@ function showArena() {
             var enL = new fabric.Rect({
                 top: 72,
                 left: 24,
-                width: (characters.get(user).stats.energy * 293) / characters.get(user).stats.energyMax,//max 293
+                width: (characters[0].stats.energy * 293) / characters[0].stats.energyMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -460,7 +526,7 @@ function showArena() {
             });
             canvas.add(enL);
 
-            var enLText = new fabric.Text(String(characters.get(user).stats.energy + '/' + characters.get(user).stats.energyMax), {
+            var enLText = new fabric.Text(String(characters[0].stats.energy + '/' + characters[0].stats.energyMax), {
                 left: 175,
                 top: 72,
                 selectable: false,
@@ -480,7 +546,7 @@ function showArena() {
             var hpP = new fabric.Rect({
                 top: 27,
                 left: 404,
-                width: (characters.get(opponent).stats.hp * 293) / characters.get(opponent).stats.hpMax,//max 293
+                width: (characters[1].stats.hp * 293) / characters[1].stats.hpMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -490,7 +556,7 @@ function showArena() {
             });
             canvas.add(hpP);
 
-            var hpPText = new fabric.Text(String(characters.get(opponent).stats.hp + '/' + characters.get(opponent).stats.hpMax), {
+            var hpPText = new fabric.Text(String(characters[1].stats.hp + '/' + characters[1].stats.hpMax), {
                 left: 555,
                 top: 27,
                 selectable: false,
@@ -506,7 +572,7 @@ function showArena() {
             var arP = new fabric.Rect({
                 top: 47,
                 left: 404,
-                width: (characters.get(opponent).stats.armor * 293) / characters.get(opponent).stats.armorMax,//max 293
+                width: (characters[1].stats.armor * 293) / characters[1].stats.armorMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -516,7 +582,7 @@ function showArena() {
             });
             canvas.add(arP);
 
-            var arPText = new fabric.Text(String(characters.get(opponent).stats.armor + '/' + characters.get(opponent).stats.armorMax), {
+            var arPText = new fabric.Text(String(characters[1].stats.armor + '/' + characters[1].stats.armorMax), {
                 left: 555,
                 top: 47,
                 selectable: false,
@@ -531,7 +597,7 @@ function showArena() {
             var enP = new fabric.Rect({
                 top: 72,
                 left: 404,
-                width: (characters.get(opponent).stats.energy * 293) / characters.get(opponent).stats.energyMax,//max 293
+                width: (characters[1].stats.energy * 293) / characters[1].stats.energyMax,//max 293
                 height: 13,
                 selectable: false,
                 originX: 'left',
@@ -541,7 +607,7 @@ function showArena() {
             });
             canvas.add(enP);
 
-            var enPText = new fabric.Text(String(characters.get(opponent).stats.energy + '/' + characters.get(opponent).stats.energyMax), {
+            var enPText = new fabric.Text(String(characters[1].stats.energy + '/' + characters[1].stats.energyMax), {
                 left: 555,
                 top: 72,
                 selectable: false,

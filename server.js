@@ -23,7 +23,7 @@ var MongoStore = require('connect-mongo')(expressSession)
 var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection })
 
 app.use(expressSession({
-    // key: 'connect.sid',
+    key: 'connect.sid',
     store: mongoStore,
     secret: config.sessionSecret,
     resave: true,
@@ -51,11 +51,13 @@ io.use(passportSocketIo.authorize({
     success: onAuthorizeSuccess,
     fail: onAuthorizeFail,  
 }))
+
 function onAuthorizeSuccess(data, accept){
     accept();
 }
   
 function onAuthorizeFail(data, message, error, accept){
+    console.log(message)
     if(error)
         accept(new Error(message));
 }
