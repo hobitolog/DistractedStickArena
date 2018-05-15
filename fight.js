@@ -36,6 +36,8 @@ async function matchMake() {
         }
 
         var duelId = player.player.login + "VS" + matched.player.login
+
+        console.log('matchuje ' + player.socket.id + ' z ' + matched.socket.id)
         var duel = {
             id: duelId,
             player1: player,
@@ -133,10 +135,11 @@ function handleNewDuels(newDuels) {
         var ch1 = element.characters.get(element.player1.player.login)
         var ch2 = element.characters.get(element.player2.player.login)
 
-        console.log('wysyla gameFound')
+        console.log('leci do ' + element.player1.socket.id)
+        console.log('leci do ' + element.player2.socket.id)
+
         element.player1.socket.emit('gameFound', ch1, ch2)
         element.player2.socket.emit('gameFound', ch2, ch1)
-        console.log('wyslalo gameFound\n' + element.player1.socket.connected + '\n' + element.player2.socket.connected)
     })
 }
 
@@ -190,6 +193,7 @@ function handleUserAction(login, socket, action) {
             }
         } else {
             socket.emit('noEnoughEnergy')
+            return
         }
         break
 
@@ -218,6 +222,7 @@ function handleUserAction(login, socket, action) {
             }
         } else {
             socket.emit('noEnoughEnergy')
+            return
         }
         break
 
@@ -247,6 +252,7 @@ function handleUserAction(login, socket, action) {
             }
         } else {
             socket.emit('noEnoughEnergy')
+            return
         }
         break
 
@@ -256,16 +262,15 @@ function handleUserAction(login, socket, action) {
         if(energyAfterRest > character.stats.energyMax)
             energyAfterRest = character.stats.energyMax
         character.stats.energy = energyAfterRest;
-        // duel.characters.set(login, character)
 
         io.to(room).emit('rest', character)
         break
 
         default:
         socket.emit('incorrectAction')
+        return
         break
     }
-
     duel.turn = duel.characters.get(login).opponent
 }
 
@@ -316,15 +321,10 @@ module.exports = {
         io = ioParam
 
         io.on('connection', (socket) => {
-            socket.on('alive', function () {
-                socket.emit('alive')
-            })
-
+            console.log('Przyszedl ' + socket.id)
             var player = socket.request.user
-            console.log("user " + player.login + " connected!")
             var index = players.findIndex((element => { element.login == player.login }))
             if (index != -1) {
-                console.log('wywala ' + player.login)
                 socket.emit("error", "Gracz jest już połączony")
                 socket.disconnect(true)
                 return
@@ -369,7 +369,11 @@ module.exports = {
             })
 
             socket.on('disconnect', function () {
-                console.log(player.login + ' disconnected')
+                console.log('Poszedl ' + socket.id)
+                if(duels.get(player.login) != undefined) {
+                    var d = duels.get(player.login)
+                    io.to(d.id).emit('endDuel', d.characters.get(player.login).opponent)
+                }
                 var index = players.findIndex((element => { element.player.login == player.login }))
                 if (index == -1) return
                 players.splice(index, 1)

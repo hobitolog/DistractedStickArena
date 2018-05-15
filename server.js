@@ -23,10 +23,14 @@ var MongoStore = require('connect-mongo')(expressSession)
 var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection })
 
 app.use(expressSession({
+    // key: 'connect.sid',
     store: mongoStore,
     secret: config.sessionSecret,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: false
+    }
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -44,8 +48,17 @@ io.use(passportSocketIo.authorize({
     key: 'connect.sid',
     secret: config.sessionSecret,
     store: mongoStore,
+    success: onAuthorizeSuccess,
+    fail: onAuthorizeFail,  
 }))
-
+function onAuthorizeSuccess(data, accept){
+    accept();
+}
+  
+function onAuthorizeFail(data, message, error, accept){
+    if(error)
+        accept(new Error(message));
+}
 api(app)
 fight.init(app, io)
 

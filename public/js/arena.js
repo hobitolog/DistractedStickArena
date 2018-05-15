@@ -1,16 +1,22 @@
 var arenaTimer;
-var socket = io('http://127.0.0.1', {reconnection: true})
+// var socket = io.connect({
+//   query: 'session_id=' + getCookie('connect.sid')
+// })
+var socket = io()
 var user
 var opponent
 
 var characters
 
-setInterval(function () {
-    socket.emit('alive')
-}, 4000)
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+  }
 
-socket.on('alive', function () {
-    console.log('alive')
+socket.on('endDuel', function (winner) {
+    console.log(winner + ' won')
+    closeButton()
 })
 
 socket.on('gameFound', function (us, opp) {
@@ -22,6 +28,7 @@ socket.on('gameFound', function (us, opp) {
     console.log(opp)
     user = us.login
     opponent = opp.login
+    console.log(characters.get(user))
     showArena()
 })
 
