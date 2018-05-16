@@ -176,7 +176,7 @@ function handleUserAction(login, socket, action) {
         if(isEnoughEnergy(action, character.stats.energy)) {
             character.stats.energy -= attackCost
             if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('miss', login)
+                io.to(room).emit('miss', character)
             } else {
                 
                 
@@ -207,7 +207,7 @@ function handleUserAction(login, socket, action) {
             character.stats.energy -= swiftAttackCost
 
             if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('swiftMiss', login)
+                io.to(room).emit('swiftMiss', character)
             } else {
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = Math.round((character.stats.damageMin
@@ -234,7 +234,7 @@ function handleUserAction(login, socket, action) {
         if(isEnoughEnergy(action, character.stats.energy)) {
             character.stats.energy -= swiftAttackCost
             if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('powerfulMiss', login)
+                io.to(room).emit('powerfulMiss', character)
             } else {
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = Math.round((character.stats.damageMin
