@@ -1469,16 +1469,34 @@ window.onload = function () {
     }
 
 
+}
 
+function refInArenaButtonText(input){
+    inArenaButtonText = input;
+    if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
 
+    var findOpButton = new fabric.Group([new fabric.Rect({
+        width: 200,
+        height: 40,
+        fill: '#ccc',
+        name: 'inArenaButtonBG',
+        selectable: false
+    }),
+    new fabric.Text(String(inArenaButtonText), {
+        // left: 200,
+        // top: 100,
+        fill: '#000',
+        name: 'inArenaButtonText',
+        fontSize: 18
+    })], {
+            name: 'findOpButton',
+            left: canvas.width / 2,
+            top: 360,
+            opacity: 1,
+            selectable: false
 
-
-
-
-
-
-
-
-
+        });
+    canvas.add(findOpButton);
+    canvas.bringToFront(findOpButton);
 
 }
