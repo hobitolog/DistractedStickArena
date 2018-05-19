@@ -422,6 +422,12 @@ module.exports = {
                 handleUserAction(player.login, socket, actionType)
             })
 
+            socket.on('surrender', function () {
+                var d = duels.get(player.login)
+                var opp = d.characters.get(player.login).opponent
+                handlePrizes(opp, player.login)
+            })
+
             socket.on('disconnect', function () {
                 if(duels.get(player.login) != undefined) {
                     var d = duels.get(player.login)
