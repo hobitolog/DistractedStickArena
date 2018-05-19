@@ -1,4 +1,5 @@
 var canvas;
+var inArenaButtonText = "Znajdź przeciwnika";
 fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 fabric.Object.prototype.objectCaching = true;
 fabric.Object.prototype.transparentCorners = false;
@@ -60,7 +61,8 @@ window.onload = function () {
                 image: "items/buzdygan.png",
                 armor: 0,
                 upgradePrice: 70,
-                value: 50            },
+                value: 50
+            },
             armor: {
                 itemId: 0,
                 level: 1,
@@ -154,7 +156,7 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     Geq.equipment = xmlhttp.response;
-                    Gchar.armor=Geq.equipment.armor.armor+Geq.equipment.helmet.armor;
+                    Gchar.armor = Geq.equipment.armor.armor + Geq.equipment.helmet.armor;
                     resolve();
                 }
             };
@@ -231,6 +233,8 @@ window.onload = function () {
     var weaponDrop = document.getElementById('weapon');
     var buyDrop = document.getElementById('buy');
     var sellDrop = document.getElementById('sell');
+    var arenaDrop = document.getElementById('arenaGold');
+
 
     loadBG('inArena');
     loadBG('inTavern');
@@ -261,16 +265,17 @@ window.onload = function () {
                 case 'arena':
                     hideEqControls()
                     hideShopControls()
-                    loadInArena();
-                    refreshChar();
+                    reqStat()
                     canvas.getItemByName('inArena').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inArena'));
-                    canvas.bringToFront(canvas.getItemByName('findOpButton'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
+                    refreshChar();
+                    loadInArena();
                     //open arena
                     break;
                 case 'tavern':
                     hideEqControls()
+                    hideArenaControls()
                     refreshChar();
                     canvas.getItemByName('inTavern').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inTavern'));
@@ -283,6 +288,7 @@ window.onload = function () {
                 case 'blacksmith':
                     hideEqControls()
                     hideShopControls()
+                    hideArenaControls()
                     refreshChar();
                     canvas.getItemByName('inBlacksmith').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
@@ -292,6 +298,7 @@ window.onload = function () {
                 case 'statue':
                     hideEqControls()
                     hideShopControls()
+                    hideArenaControls()
                     refreshChar();
                     canvas.getItemByName('inStatue').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStatue'));
@@ -302,6 +309,7 @@ window.onload = function () {
                     break;
                 case 'stickman':
                     hideShopControls()
+                    hideArenaControls()
                     canvas.getItemByName('inStickman').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStickman'));
                     reqStat().then(loadStats);
@@ -484,15 +492,19 @@ window.onload = function () {
 
     };
     function loadInArena() {
+
+        arenaDrop.style.left = ((canvas.width / 2) - 300) + 'px';
+        arenaDrop.style.top = ((canvas.height / 2) - 624) + 'px';
+        arenaDrop.style.visibility = 'visible';
         if (!canvas.getItemByName('findOpButton')) {
             var findOpButton = new fabric.Group([new fabric.Rect({
                 width: 200,
-                height: 80,
+                height: 40,
                 fill: '#ccc',
                 name: 'inArenaButtonBG',
                 selectable: false
             }),
-            new fabric.Text('Znajdź przeciwnika', {
+            new fabric.Text(String(inArenaButtonText), {
                 // left: 200,
                 // top: 100,
                 fill: '#000',
@@ -501,13 +513,314 @@ window.onload = function () {
             })], {
                     name: 'findOpButton',
                     left: canvas.width / 2,
-                    top: 320,
+                    top: 360,
                     opacity: 1,
                     selectable: false
 
                 });
             canvas.add(findOpButton);
-            canvas.sendToBack(findOpButton);
+            canvas.bringToFront(findOpButton);
+
+            var arenaCoinText = new fabric.Text(String("Stawka: "), {
+                left: canvas.width / 2 - 80,
+                top: canvas.height / 2 + 80,
+                selectable: false,
+                scalable: false,
+                name: 'arenaCoinText',
+                fill: '#fff',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(arenaCoinText);
+            canvas.bringToFront(arenaCoinText);
+
+
+
+            var arenaStatsText = new fabric.Group([
+                new fabric.Text('Nick', {
+                    // left: 200,
+                    top: 0,
+                    fill: '#fff',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'center',
+                    originX: 'right'
+                }),
+                new fabric.Text('Poziom:', {
+                    // left: 200,
+                    top: 40,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Siła:', {
+                    // left: 200,
+                    top: 70,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Celność:', {
+                    // left: 200,
+                    top: 90,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zręczność:', {
+                    // left: 200,
+                    top: 110,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Wytrzymałość:', {
+                    // left: 200,
+                    top: 130,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Witalność:', {
+                    // left: 200,
+                    top: 150,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                })], {
+                    name: 'arenaStatsText',
+                    left: canvas.width / 2 - 165,
+                    top: 200,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(arenaStatsText);
+            canvas.bringToFront(arenaStatsText);
+
+
+            var arenaStatsPoints = new fabric.Group([
+                new fabric.Text(String(Gchar.level), {
+                    // left: 200,
+                    top: 0,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.str), {
+                    // left: 200,
+                    top: 30,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.att), {
+                    // left: 200,
+                    top: 50,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.agi), {
+                    // left: 200,
+                    top: 70,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.sta), {
+                    // left: 200,
+                    top: 90,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String(Gstats.stats.vit), {
+                    // left: 200,
+                    top: 110,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                })
+                ], {
+                    name: 'arenaStatsPoints',
+                    left: canvas.width / 2 - 65,
+                    top: 222,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(arenaStatsPoints);
+            canvas.bringToFront(arenaStatsPoints);
+
+
+            var arenaStatsTextOp = new fabric.Group([
+                new fabric.Text('Godny przeciwnik', {
+                     left: 20,
+                    top: 0,
+                    fill: '#fff',
+                    fontSize: 18,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'center',
+                    originX: 'right'
+                }),
+                new fabric.Text('Poziom:', {
+                    // left: 200,
+                    top: 40,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Siła:', {
+                    // left: 200,
+                    top: 70,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Celność:', {
+                    // left: 200,
+                    top: 90,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zręczność:', {
+                    // left: 200,
+                    top: 110,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Wytrzymałość:', {
+                    // left: 200,
+                    top: 130,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Witalność:', {
+                    // left: 200,
+                    top: 150,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                })], {
+                    name: 'arenaStatsTextOp',
+                    left: canvas.width / 2 + 100,
+                    top: 200,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(arenaStatsTextOp);
+            canvas.bringToFront(arenaStatsTextOp);
+
+
+            var arenaStatsPointsOp = new fabric.Group([
+                new fabric.Text(String("?"), {
+                    // left: 200,
+                    top: 0,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String("?"), {
+                    // left: 200,
+                    top: 30,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String("?"), {
+                    // left: 200,
+                    top: 50,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String("?"), {
+                    // left: 200,
+                    top: 70,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String("?"), {
+                    // left: 200,
+                    top: 90,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text(String("?"), {
+                    // left: 200,
+                    top: 110,
+                    fill: '#fff',
+                    fontSize: 15,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                })
+                ], {
+                    name: 'arenaStatsPointsOp',
+                    left: canvas.width / 2+ 180,
+                    top: 222,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(arenaStatsPointsOp);
+            canvas.bringToFront(arenaStatsPointsOp);
+
         }
 
     };
@@ -1079,6 +1392,7 @@ window.onload = function () {
     function closeButton() {
         hideEqControls();
         hideShopControls();
+        hideArenaControls()
         canvas.sendToBack(canvas.getItemByName('inArena'));
         canvas.sendToBack(canvas.getItemByName('inTavern'));
         canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
@@ -1086,10 +1400,10 @@ window.onload = function () {
         canvas.sendToBack(canvas.getItemByName('inStickman'));
         canvas.sendToBack(canvas.getItemByName('findOpButton'));
         canvas.sendToBack(canvas.getItemByName('exit'));
-        if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
         removeStats();
         removeEq();
         removeTavern();
+        removeArena();
 
     }
     function removeStats() {
@@ -1131,6 +1445,15 @@ window.onload = function () {
         if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
 
     }
+    function removeArena() {
+        if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
+        if (canvas.getItemByName('arenaCoinText')) { canvas.remove(canvas.getItemByName('arenaCoinText')); }
+        if (canvas.getItemByName('arenaStatsText')) { canvas.remove(canvas.getItemByName('arenaStatsText')); }
+        if (canvas.getItemByName('arenaStatsPoints')) { canvas.remove(canvas.getItemByName('arenaStatsPoints')); }
+        if (canvas.getItemByName('arenaStatsTextOp')) { canvas.remove(canvas.getItemByName('arenaStatsTextOp')); }
+        if (canvas.getItemByName('arenaStatsPointsOp')) { canvas.remove(canvas.getItemByName('arenaStatsPointsOp')); }
+
+    }
 
     function hideEqControls() {
         helmetDrop.style.visibility = 'hidden';
@@ -1140,6 +1463,9 @@ window.onload = function () {
     function hideShopControls() {
         buyDrop.style.visibility = 'hidden';
         sellDrop.style.visibility = 'hidden';
+    }
+    function hideArenaControls() {
+        arenaDrop.style.visibility = 'hidden';
     }
 
 
