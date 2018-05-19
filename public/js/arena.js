@@ -53,7 +53,7 @@ socket.on('notYourTurn', function () {
     alert('Aktualnie trwa tura przeciwnika!')
 })
 
-socket.on('attack', function (attacker, attacked) {
+socket.on('attack', function (attackType, attacker, attacked) {
     var attackerIndex = getCharacterIndex(attacker.login)
     characters[attackerIndex] = attacker
     
@@ -63,42 +63,10 @@ socket.on('attack', function (attacker, attacked) {
     refreshBars()
 })
 
-socket.on('miss', function (character) {
+socket.on('miss', function (missType, character) {
     var index = getCharacterIndex(character.login)
     characters[index] = character
 
-    refreshBars(index)
-})
-
-socket.on('swiftAttack', function (attacker, attacked) {
-    var attackerIndex = getCharacterIndex(attacker.login)
-    characters[attackerIndex] = attacker
-    
-    var attackedIndex = getCharacterIndex(attacked.login)
-    characters[attackedIndex] = attacked
-
-    refreshBars()
-})
-
-socket.on('swiftMiss', function (character) {
-    var index = getCharacterIndex(character.login)
-    characters[index] = character
-    refreshBars(index)
-})
-
-socket.on('powerfulAttack', function (attacker, attacked) {
-    var attackerIndex = getCharacterIndex(attacker.login)
-    characters[attackerIndex] = attacker
-    
-    var attackedIndex = getCharacterIndex(attacked.login)
-    characters[attackedIndex] = attacked
-
-    refreshBars()
-})
-
-socket.on('powerfulMiss', function (character) {
-    var index = getCharacterIndex(character.login)
-    characters[index] = character
     refreshBars(index)
 })
 
@@ -475,19 +443,21 @@ function showArena() {
         if (e.target != null && canvas.localization == 'arena') {
             switch (e.target.name) {
                 case 'weapon1':
-                    socket.emit('attack')
+                    socket.emit('action', 'attack')
                     break;
+
                 case 'weapon2':
-                    socket.emit('swiftAttack')
-
+                    socket.emit('action', 'swiftAttack')
                     break;
+
                 case 'weapon3':
-                    socket.emit('powerfulAttack')
+                    socket.emit('action', 'powerfulAttack')
+                    break;
 
-                    break;
                 case 'zzz':
-                    socket.emit('rest')
+                    socket.emit('action', 'rest')
                     break;
+                    
                 case 'exitArena':
                     socket.emit('exitArena')
                     clearInterval(arenaTimer);

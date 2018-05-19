@@ -12,7 +12,7 @@ var duels = new Map()
 var scheduledMatchMaking = null
 
 function getSearchers() {
-    return players.filter(x => x.started > 0)
+    return players.filter(x => x.started != 0)
 }
 
 function updateActive() {
@@ -54,8 +54,8 @@ async function matchMake() {
         duels.set(player.player.login, duel)
         duels.set(matched.player.login, duel)
 
-        players[getPlayerIndex(player.player.login)].started = -1;
-        players[getPlayerIndex(matched.player.login)].started = -1;
+        players[getPlayerIndex(player.player.login)].started = 0;
+        players[getPlayerIndex(matched.player.login)].started = 0;
 
         copied.splice(0, 1)
         copied.splice(i, 1)
@@ -176,10 +176,8 @@ function handleUserAction(login, socket, action) {
         if(isEnoughEnergy(action, character.stats.energy)) {
             character.stats.energy -= attackCost
             if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('miss', character)
+                io.to(room).emit('miss', 'normal', character)
             } else {
-                
-                
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = character.stats.damageMin
                 + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin)) 
@@ -193,7 +191,7 @@ function handleUserAction(login, socket, action) {
                     opponent.stats.armor -= damage
                 }
 
-                io.to(room).emit('attack', character, opponent)
+                io.to(room).emit('attack', 'normal', character, opponent)
             }
         } else {
             socket.emit('noEnoughEnergy')
@@ -207,7 +205,7 @@ function handleUserAction(login, socket, action) {
             character.stats.energy -= swiftAttackCost
 
             if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('swiftMiss', character)
+                io.to(room).emit('miss', 'swift', character)
             } else {
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = Math.round((character.stats.damageMin
@@ -221,7 +219,7 @@ function handleUserAction(login, socket, action) {
                 } else {
                     opponent.stats.armor -= damage
                 }
-                io.to(room).emit('swiftAttack', character, opponent)
+                io.to(room).emit('attack', 'swift', character, opponent)
             }
         } else {
             socket.emit('noEnoughEnergy')
@@ -234,7 +232,7 @@ function handleUserAction(login, socket, action) {
         if(isEnoughEnergy(action, character.stats.energy)) {
             character.stats.energy -= powerfulAttackCost
             if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('powerfulMiss', character)
+                io.to(room).emit('miss', 'powerful', character)
             } else {
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = Math.round((character.stats.damageMin
@@ -249,7 +247,7 @@ function handleUserAction(login, socket, action) {
                     opponent.stats.armor -= damage
                 }
 
-                io.to(room).emit('powerfulAttack', character, opponent)
+                io.to(room).emit('attack', 'powerful', character, opponent)
             }
         } else {
             socket.emit('noEnoughEnergy')
@@ -398,20 +396,8 @@ module.exports = {
                 updateActive()
             })
 
-            socket.on('attack', function () {
-                handleUserAction(player.login, socket, 'attack')
-            })
-
-            socket.on('swiftAttack', function () {
-                handleUserAction(player.login, socket, 'swiftAttack')
-            })
-
-            socket.on('powerfulAttack', function () {
-                handleUserAction(player.login, socket, 'powerfulAttack')
-            })
-
-            socket.on('rest', function () {
-                handleUserAction(player.login, socket, 'rest')
+            socket.on('action', function (actionType) {
+                handleUserAction(player.login, socket, actionType)
             })
 
             socket.on('disconnect', function () {
