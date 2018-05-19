@@ -342,8 +342,15 @@ window.onload = function () {
                     refreshChar();
                     break;
                 case 'findOpButton':
-                    socket.emit('findGame')
-                    inArenaButtonText_cancel()
+                    if(inArenaButtonText == "Znajdź przeciwnika") {
+                        var e = document.getElementById("arenaGold");
+                        var bid = e.options[e.selectedIndex].value;
+                        socket.emit('findGame', bid)
+                        inArenaButtonText_cancel()
+                    } else {
+                        socket.emit('cancelFind')
+                        inArenaButtonText_canceled()
+                    }
                     break;
                 case 'tradeButton':
                     //TODO Finalize transaction by Pan Minta
@@ -360,6 +367,13 @@ window.onload = function () {
             canvas.renderAll();
         }
     });
+
+    socket.on('notEnoughGold', function () {
+        //TODO change it to message bar or smf
+        inArenaButtonText_canceled()
+        alert('Brak wystarczającej ilości złota!')
+    })
+
     function loadElements() {
         fabric.loadSVGFromURL('svg/Background.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);

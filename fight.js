@@ -8,6 +8,7 @@ const powerfulAttackCost = 10
 
 var players = []
 var duels = new Map()
+var bids = new Map()
 
 var scheduledMatchMaking = null
 
@@ -143,7 +144,19 @@ function handleNewDuels(newDuels) {
 
         element.player1.socket.emit('gameFound', ch1, ch2)
         element.player2.socket.emit('gameFound', ch2, ch1)
+
+        modifyUserGold(element.player1.player, -1 * bids.get(element.player1.player.login))
+        modifyUserGold(element.player2.player, -1 * bids.get(element.player2.player.login))        
     })
+}
+
+function modifyUserGold(player, gold) {
+    player.character.gold += parseInt(gold)
+
+    player.save((function (err) {
+        if (err)
+            log.error(err)
+    }))    
 }
 
 function isUserTurn(login) {
@@ -307,14 +320,18 @@ function getPlayerIndex(login) {
 }
 
 function handlePrizes(winner, loser) {
-    //TODO handle gold prize, add "bids" in duels, handle lvlup, 
+    //TODO send prizes to front
     var winnerProfile = players[getPlayerIndex(winner)]
     var loserProfile = players[getPlayerIndex(loser)]
 
     var exp = getRndInteger(6, 10)
 
-    addExpToUser(winnerProfile, Math.round(exp * 1.3))
-    addExpToUser(loserProfile, Math.round(exp * 0.7))
+    addExpToUser(winnerProfile.player, Math.round(exp * 1.3))
+    addExpToUser(loserProfile.player, Math.round(exp * 0.7))
+
+    modifyUserGold(winnerProfile.player, 2 * bids.get(winner))
+    bids.delete(winner)
+    bids.delete(loser)
 
     duels.delete(winner)
     duels.delete(loser)
@@ -327,14 +344,15 @@ function handlePrizes(winner, loser) {
     })
 }
 
-function addExp(profile, exp) {
+function addExpToUser(player, exp) {
     player.character.exp += exp
     if(player.character.exp >= (100 + (player.character.lvl - 1) * 50)) {
         player.character.lvl += 1
+        player.character.stats.free += 5
         player.character.exp -= (100 + (player.character.lvl - 1) * 50)
     }
 
-    profile.player.save((function (err) {
+    player.save((function (err) {
         if (err)
             log.error(err)
     }))
@@ -365,7 +383,6 @@ module.exports = {
 
         io.on('connection', (socket) => {
             var player = socket.request.user
-            player.character.exp
             var index = getPlayerIndex(player.login)
             if (index != -1) {
                 socket.emit("errorMessage", "Gracz jest już połączony")
@@ -382,14 +399,20 @@ module.exports = {
                 "duels": duels.length
             })
 
-            socket.on('findGame', function () {
-                var index = getPlayerIndex(player.login)
-                players[index].started = Date.now()
-                updateActive()
-                matchMakingTrigger(0)
+            socket.on('findGame', function (userBid) {
+                if(player.character.gold < userBid) {
+                    socket.emit('notEnoughGold')
+                } else {
+                    var index = getPlayerIndex(player.login)
+                    bids.set(player.login, userBid)
+                    players[index].started = Date.now()
+                    updateActive()
+                    matchMakingTrigger(0)
+                }
             })
 
             socket.on('cancelFind', function () {
+                bids.delete(player.login)
                 var index = getPlayerIndex(player.login)
                 players[index].started = 0
                 updateActive()
@@ -405,6 +428,7 @@ module.exports = {
                     var opp = d.characters.get(player.login).opponent
                     handlePrizes(opp, player.login)
                 }
+                bids.delete(player.login)
                 var index = getPlayerIndex(player.login)
                 if (index == -1) return
                 players.splice(index, 1)
