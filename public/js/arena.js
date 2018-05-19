@@ -29,7 +29,8 @@ function refreshBars() {
     removeRightBars().then(refRightBars).then(formatBars);
 }
 
-socket.on('endDuel', function (winner, prize) {
+socket.on('endDuel', function (prize) {
+    console.log('End of duel')
     //TODO prizes, change view etc
     // characters = []
 })

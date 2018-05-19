@@ -187,7 +187,7 @@ function handleUserAction(login, socket, action) {
                 
                 var hparmAfterHit = hparm - damage
                 if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp -= damage
+                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - damage
                     opponent.stats.armor = 0
                 } else {
                     opponent.stats.armor -= damage
@@ -216,7 +216,7 @@ function handleUserAction(login, socket, action) {
                 
                 var hparmAfterHit = hparm - damage
                 if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp -= damage
+                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - damage
                     opponent.stats.armor = 0
                 } else {
                     opponent.stats.armor -= damage
@@ -243,7 +243,7 @@ function handleUserAction(login, socket, action) {
                 
                 var hparmAfterHit = hparm - damage
                 if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp -= damage
+                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - damage
                     opponent.stats.armor = 0
                 } else {
                     opponent.stats.armor -= damage
@@ -271,7 +271,11 @@ function handleUserAction(login, socket, action) {
         return
         break
     }
-    duel.turn = duel.characters.get(login).opponent
+    if(duel.characters.get(character.opponent).stats.hp < 1) {
+        handlePrizes(character.login, character.opponent)
+    } else {
+        duel.turn = duel.characters.get(login).opponent
+    }
 }
 
 function hitLanded(hitChance) {
@@ -304,6 +308,44 @@ function getPlayerIndex(login) {
     return players.findIndex((element => { return element.player.login == login }))
 }
 
+function handlePrizes(winner, loser) {
+    //TODO handle gold prize, add "bids" in duels, handle lvlup, 
+    var winnerProfile = players[getPlayerIndex(winner)]
+    var loserProfile = players[getPlayerIndex(loser)]
+
+    var exp = getRndInteger(6, 10)
+
+    addExpToUser(winnerProfile, Math.round(exp * 1.3))
+    addExpToUser(loserProfile, Math.round(exp * 0.7))
+
+    duels.delete(winner)
+    duels.delete(loser)
+
+    winnerProfile.socket.emit("endDuel", {
+        
+    })
+    loserProfile.socket.emit('endDuel', {
+
+    })
+}
+
+function addExp(profile, exp) {
+    player.character.exp += exp
+    if(player.character.exp >= (100 + (player.character.lvl - 1) * 50)) {
+        player.character.lvl += 1
+        player.character.exp -= (100 + (player.character.lvl - 1) * 50)
+    }
+
+    profile.player.save((function (err) {
+        if (err)
+            log.error(err)
+    }))
+}
+
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min) ) + min;
+}
+
 module.exports = {
 
     activeGameBlock: (req, res, next) => {
@@ -326,6 +368,7 @@ module.exports = {
 
         io.on('connection', (socket) => {
             var player = socket.request.user
+            player.character.exp
             var index = getPlayerIndex(player.login)
             if (index != -1) {
                 socket.emit("errorMessage", "Gracz jest już połączony")
@@ -375,9 +418,7 @@ module.exports = {
                 if(duels.get(player.login) != undefined) {
                     var d = duels.get(player.login)
                     var opp = d.characters.get(player.login).opponent
-                    io.to(d.id).emit('endDuel', opp)
-                    duels.delete(player.login)
-                    duels.delete(opp)
+                    handlePrizes(opp, player.login)
                 }
                 var index = getPlayerIndex(player.login)
                 if (index == -1) return
