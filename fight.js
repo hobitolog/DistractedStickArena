@@ -232,7 +232,7 @@ function handleUserAction(login, socket, action) {
         case 'powerfulAttack':
         var opponent = duel.characters.get(character.opponent)
         if(isEnoughEnergy(action, character.stats.energy)) {
-            character.stats.energy -= swiftAttackCost
+            character.stats.energy -= powerfulAttackCost
             if(!hitLanded(character.stats.hitChance)) {
                 io.to(room).emit('powerfulMiss', character)
             } else {

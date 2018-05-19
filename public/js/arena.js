@@ -7,7 +7,7 @@ var characters = []
 
 function getCharacterIndex(login) {
     if(characters) {
-        if(characters[0].nick == login) {
+        if(characters[0].login == login) {
             return 0;
         } else {
             return 1;
@@ -35,10 +35,8 @@ socket.on('endDuel', function (winner, prize) {
 })
 
 socket.on('gameFound', function (us, opp) {
-    console.log('Odebrane gameFound')
     characters[0] = us
     characters[1] = opp
-    console.log(characters)
     showArena()
 })
 
@@ -52,49 +50,56 @@ socket.on('incorrectAction', function () {
 
 socket.on('attack', function (attacker, attacked) {
     var attackerIndex = getCharacterIndex(attacker.login)
-    characters[attackedIndex] = attacker
+    characters[attackerIndex] = attacker
     
     var attackedIndex = getCharacterIndex(attacked.login)
-    characters[attacked] = attacked
+    characters[attackedIndex] = attacked
 
     refreshBars()
 })
 
 socket.on('miss', function (character) {
     var index = getCharacterIndex(character.login)
-    character[index] = character
+    characters[index] = character
+
     refreshBars(index)
 })
 
 socket.on('swiftAttack', function (attacker, attacked) {
     var attackerIndex = getCharacterIndex(attacker.login)
-    characters[attackedIndex] = attacker
+    characters[attackerIndex] = attacker
     
     var attackedIndex = getCharacterIndex(attacked.login)
-    characters[attacked] = attacked
+    characters[attackedIndex] = attacked
 
     refreshBars()
 })
 
 socket.on('swiftMiss', function (character) {
     var index = getCharacterIndex(character.login)
-    character[index] = character
+    characters[index] = character
     refreshBars(index)
 })
 
 socket.on('powerfulAttack', function (attacker, attacked) {
     var attackerIndex = getCharacterIndex(attacker.login)
-    characters[attackedIndex] = attacker
+    characters[attackerIndex] = attacker
     
     var attackedIndex = getCharacterIndex(attacked.login)
-    characters[attacked] = attacked
+    characters[attackedIndex] = attacked
 
     refreshBars()
 })
 
 socket.on('powerfulMiss', function (character) {
     var index = getCharacterIndex(character.login)
-    character[index] = character
+    characters[index] = character
+    refreshBars(index)
+})
+
+socket.on('rest', function(character) {
+    var index = getCharacterIndex(character.login)
+    characters[index] = character
     refreshBars(index)
 })
 
