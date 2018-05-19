@@ -265,12 +265,11 @@ window.onload = function () {
                 case 'arena':
                     hideEqControls()
                     hideShopControls()
-                    reqStat()
                     canvas.getItemByName('inArena').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inArena'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
-                    refreshChar();
-                    loadInArena();
+                    reqStat().then(refreshChar).then(loadInArena)
+
                     //open arena
                     break;
                 case 'tavern':
@@ -342,7 +341,7 @@ window.onload = function () {
                     refreshChar();
                     break;
                 case 'findOpButton':
-                    if(inArenaButtonText == "Znajdź przeciwnika") {
+                    if (inArenaButtonText == "Znajdź przeciwnika") {
                         var e = document.getElementById("arenaGold");
                         var bid = e.options[e.selectedIndex].value;
                         socket.emit('findGame', bid)
@@ -682,7 +681,7 @@ window.onload = function () {
                     textAlign: 'right',
                     originX: 'right'
                 })
-                ], {
+            ], {
                     name: 'arenaStatsPoints',
                     left: canvas.width / 2 - 65,
                     top: 222,
@@ -696,7 +695,7 @@ window.onload = function () {
 
             var arenaStatsTextOp = new fabric.Group([
                 new fabric.Text('Godny przeciwnik', {
-                     left: 20,
+                    left: 20,
                     top: 0,
                     fill: '#fff',
                     fontSize: 18,
@@ -824,9 +823,9 @@ window.onload = function () {
                     textAlign: 'right',
                     originX: 'right'
                 })
-                ], {
+            ], {
                     name: 'arenaStatsPointsOp',
-                    left: canvas.width / 2+ 180,
+                    left: canvas.width / 2 + 180,
                     top: 222,
                     opacity: 1,
                     selectable: false
@@ -1485,7 +1484,7 @@ window.onload = function () {
 
 }
 
-function inArenaButtonText_cancel(){
+function inArenaButtonText_cancel() {
     inArenaButtonText = "anuluj";
     if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
 
@@ -1514,7 +1513,7 @@ function inArenaButtonText_cancel(){
     canvas.bringToFront(findOpButton);
 
 }
-function inArenaButtonText_canceled(){
+function inArenaButtonText_canceled() {
     inArenaButtonText = "Znajdź przeciwnika";
     if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
 
@@ -1543,7 +1542,23 @@ function inArenaButtonText_canceled(){
     canvas.bringToFront(findOpButton);
 
 }
-function inArenaButtonText_fight(){
-    inArenaButtonText = "Znajdź przeciwnika";   
+function inArenaButtonText_fight() {
+    inArenaButtonText = "Znajdź przeciwnika";
+    var helmetDrop = document.getElementById('helmet');
+    var armorDrop = document.getElementById('armor');
+    var weaponDrop = document.getElementById('weapon');
+    var buyDrop = document.getElementById('buy');
+    var sellDrop = document.getElementById('sell');
+    var blacksmithDrop = document.getElementById('blacksmith');
+    var arenaDrop = document.getElementById('arenaGold');
+
+    helmetDrop.style.visibility = 'hidden';
+    armorDrop.style.visibility = 'hidden';
+    weaponDrop.style.visibility = 'hidden';
+    buyDrop.style.visibility = 'hidden';
+    sellDrop.style.visibility = 'hidden';
+    blacksmithDrop.style.visibility = 'hidden';
+    arenaDrop.style.visibility = 'hidden';
+    
 
 }
