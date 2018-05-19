@@ -48,6 +48,10 @@ socket.on('incorrectAction', function () {
     alert('Niepoprawna akcja!')
 })
 
+socket.on('notYourTurn', function () {
+    alert('Aktualnie trwa tura przeciwnika!')
+})
+
 socket.on('attack', function (attacker, attacked) {
     var attackerIndex = getCharacterIndex(attacker.login)
     characters[attackerIndex] = attacker
