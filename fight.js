@@ -349,12 +349,11 @@ module.exports = {
     activeGameBlock: (req, res, next) => {
 
         var username = req.user.login
-        var index = getSearchers.findIndex((element => { return element.player.login == username }))
+        var index = getSearchers().findIndex((element => { return element.player.login == username }))
         if (index != -1)
             return res.json({ "error": "Niedozwolone podczas szukania gry" })
 
-        index = duels.findIndex((element) => { return element.player1.login == username || element.player2.login == username })
-        if (index != -1)
+        if (duels.get(req.user.login))
             return res.json({ "error": "Niedozwolone podczas gry w toku" })
 
         return next()
