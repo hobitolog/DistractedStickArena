@@ -6,8 +6,8 @@ var opponent
 var characters = []
 
 function getCharacterIndex(login) {
-    if(characters) {
-        if(characters[0].login == login) {
+    if (characters) {
+        if (characters[0].login == login) {
             return 0;
         } else {
             return 1;
@@ -17,7 +17,7 @@ function getCharacterIndex(login) {
 }
 
 function refreshBars(characterIndex) {
-    if(characterIndex == 0) {
+    if (characterIndex == 0) {
         removeLeftBars().then(refLeftBars).then(formatBars);
     } else {
         removeRightBars().then(refRightBars).then(formatBars);
@@ -39,6 +39,7 @@ socket.on('gameFound', function (us, opp) {
     characters[0] = us
     characters[1] = opp
     showArena()
+    inArenaButtonText_fight()
 })
 
 socket.on('noEnoughEnergy', function () {
@@ -56,7 +57,7 @@ socket.on('notYourTurn', function () {
 socket.on('attack', function (attackType, attacker, attacked) {
     var attackerIndex = getCharacterIndex(attacker.login)
     characters[attackerIndex] = attacker
-    
+
     var attackedIndex = getCharacterIndex(attacked.login)
     characters[attackedIndex] = attacked
 
@@ -70,7 +71,7 @@ socket.on('miss', function (missType, character) {
     refreshBars(index)
 })
 
-socket.on('rest', function(character) {
+socket.on('rest', function (character) {
     var index = getCharacterIndex(character.login)
     characters[index] = character
     refreshBars(index)
@@ -101,6 +102,7 @@ function showArena() {
                 case 'zzz':
                     mouseOverZzz();
                     break;
+
 
 
             }
@@ -182,6 +184,18 @@ function showArena() {
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'zzz';
+            obj.on('added', function () {
+            });
+            canvas.add(obj);
+
+        });
+        fabric.loadSVGFromURL('svg/arena/flag.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(0.3);
+            obj.set({ left: 650, top: 440 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'flag';
             obj.on('added', function () {
             });
             canvas.add(obj);
@@ -277,6 +291,7 @@ function showArena() {
                 canvas.bringToFront(canvas.getItemByName('zzz'))
                 canvas.bringToFront(canvas.getItemByName('stickman'))
                 canvas.bringToFront(canvas.getItemByName('opponent'))
+                canvas.bringToFront(canvas.getItemByName('flag'))
                 formatBars();
             });
             canvas.add(obj);
@@ -457,7 +472,13 @@ function showArena() {
                 case 'zzz':
                     socket.emit('action', 'rest')
                     break;
-                    
+
+                case 'flag':
+                    socket.emit('surrender')
+                    clearInterval(arenaTimer);
+                    location.reload()
+                    break;
+
                 case 'exitArena':
                     socket.emit('exitArena')
                     clearInterval(arenaTimer);
@@ -472,7 +493,18 @@ function showArena() {
 
 function refLeftBars() {
     return new Promise(function (resolve, reject) {
-
+        var nickL = new fabric.Text(String(characters[0].login), {
+            left: 175,
+            top: 12,
+            selectable: false,
+            scalable: false,
+            name: 'nickL',
+            fill: 'black',
+            fontSize: 15,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(nickL);
         var hpL = new fabric.Rect({
             top: 27,
             left: 24,
@@ -554,6 +586,19 @@ function refLeftBars() {
 }
 function refRightBars() {
     return new Promise(function (resolve, reject) {
+        var nickP = new fabric.Text(String(characters[1].login), {
+            left: 555,
+            top: 12,
+            selectable: false,
+            scalable: false,
+            name: 'nickP',
+            fill: 'black',
+            fontSize: 15,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(nickP);
+
         var hpP = new fabric.Rect({
             top: 27,
             left: 404,
@@ -637,6 +682,8 @@ function refRightBars() {
 
 
 function formatBars() {
+    canvas.bringToFront(canvas.getItemByName('nickL'))
+    canvas.bringToFront(canvas.getItemByName('nickP'))
     canvas.bringToFront(canvas.getItemByName('hpL'))
     canvas.bringToFront(canvas.getItemByName('hpLText'))
     canvas.bringToFront(canvas.getItemByName('hpP'))
@@ -658,6 +705,7 @@ function formatBars() {
 }
 function removeLeftBars() {
     return new Promise(function (resolve, reject) {
+        canvas.remove(canvas.getItemByName('nickL'))
         canvas.remove(canvas.getItemByName('hpL'))
         canvas.remove(canvas.getItemByName('hpLText'))
         canvas.remove(canvas.getItemByName('arL'))
@@ -669,6 +717,7 @@ function removeLeftBars() {
 }
 function removeRightBars() {
     return new Promise(function (resolve, reject) {
+        canvas.remove(canvas.getItemByName('nickP'))
         canvas.remove(canvas.getItemByName('hpP'))
         canvas.remove(canvas.getItemByName('hpPText'))
         canvas.remove(canvas.getItemByName('arP'))
