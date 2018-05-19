@@ -18,15 +18,15 @@ function getCharacterIndex(login) {
 
 function refreshBars(characterIndex) {
     if(characterIndex == 0) {
-        refLeftBars()
+        removeLeftBars().then(refLeftBars).then(formatBars);
     } else {
-        refRightBars()
+        removeRightBars().then(refRightBars).then(formatBars);
     }
 }
 
 function refreshBars() {
-    refLeftBars()
-    refRightBars()
+    removeLeftBars().then(refLeftBars).then(formatBars);
+    removeRightBars().then(refRightBars).then(formatBars);
 }
 
 socket.on('endDuel', function (winner, prize) {
@@ -142,26 +142,7 @@ function showArena() {
     });
 
     function load() {
-        fabric.loadSVGFromURL('svg/arena/arenaBG.svg', function (objects, options) {
-            var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(1.2);
-            obj.set({ left: canvas.width / 2, top: 140 });
-            obj.selectable = false;
-            obj.scalable = false;
-            obj.name = 'bg';
-            obj.on('added', function () {
-                canvas.bringToFront(canvas.getItemByName('menu'))
-                canvas.bringToFront(canvas.getItemByName('weapon3'))
-                canvas.bringToFront(canvas.getItemByName('weapon2'))
-                canvas.bringToFront(canvas.getItemByName('weapon1'))
-                canvas.bringToFront(canvas.getItemByName('zzz'))
-                canvas.bringToFront(canvas.getItemByName('stickman'))
-                canvas.bringToFront(canvas.getItemByName('opponent'))
-                formatBars();
-            });
-            canvas.add(obj);
 
-        });
 
         var menu = new fabric.Rect({
             top: 436,
@@ -303,7 +284,26 @@ function showArena() {
         refLeftBars();
         refRightBars();
 
+        fabric.loadSVGFromURL('svg/arena/arenaBG.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(1.2);
+            obj.set({ left: canvas.width / 2, top: 140 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'bg';
+            obj.on('added', function () {
+                canvas.bringToFront(canvas.getItemByName('menu'))
+                canvas.bringToFront(canvas.getItemByName('weapon3'))
+                canvas.bringToFront(canvas.getItemByName('weapon2'))
+                canvas.bringToFront(canvas.getItemByName('weapon1'))
+                canvas.bringToFront(canvas.getItemByName('zzz'))
+                canvas.bringToFront(canvas.getItemByName('stickman'))
+                canvas.bringToFront(canvas.getItemByName('opponent'))
+                formatBars();
+            });
+            canvas.add(obj);
 
+        });
 
 
         canvas.renderAll();
@@ -459,212 +459,7 @@ function showArena() {
         canvas.add(skillText);
         canvas.bringToFront(skillText);
     }
-    function refLeftBars() {
-        return new Promise(function (resolve, reject) {
 
-            var hpL = new fabric.Rect({
-                top: 27,
-                left: 24,
-                width: (characters[0].stats.hp * 293) / characters[0].stats.hpMax,//max 293
-                height: 13,
-                selectable: false,
-                originX: 'left',
-                scalable: false,
-                name: 'hpL',
-                fill: 'red',
-            });
-            canvas.add(hpL);
-
-            var hpLText = new fabric.Text(String(characters[0].stats.hp + '/' + characters[0].stats.hpMax), {
-                left: 175,
-                top: 27,
-                selectable: false,
-                scalable: false,
-                name: 'hpLText',
-                fill: 'black',
-                fontSize: 10,
-                fontFamily: 'Comic Sans',
-                textAlign: 'center',
-            });
-            canvas.add(hpLText);
-
-            var arL = new fabric.Rect({
-                top: 47,
-                left: 24,
-                width: (characters[0].stats.armor * 293) / characters[0].stats.armorMax,//max 293
-                height: 13,
-                selectable: false,
-                originX: 'left',
-                scalable: false,
-                name: 'arL',
-                fill: 'grey',
-            });
-            canvas.add(arL);
-
-            var arLText = new fabric.Text(String(characters[0].stats.armor + '/' + characters[0].stats.armorMax), {
-                left: 175,
-                top: 47,
-                selectable: false,
-                scalable: false,
-                name: 'arLText',
-                fill: 'black',
-                fontSize: 10,
-                fontFamily: 'Comic Sans',
-                textAlign: 'center',
-            });
-            canvas.add(arLText);
-            var enL = new fabric.Rect({
-                top: 72,
-                left: 24,
-                width: (characters[0].stats.energy * 293) / characters[0].stats.energyMax,//max 293
-                height: 13,
-                selectable: false,
-                originX: 'left',
-                scalable: false,
-                name: 'enL',
-                fill: 'khaki',
-            });
-            canvas.add(enL);
-
-            var enLText = new fabric.Text(String(characters[0].stats.energy + '/' + characters[0].stats.energyMax), {
-                left: 175,
-                top: 72,
-                selectable: false,
-                scalable: false,
-                name: 'enLText',
-                fill: 'black',
-                fontSize: 10,
-                fontFamily: 'Comic Sans',
-                textAlign: 'center',
-            });
-            canvas.add(enLText);
-
-        });
-    }
-    function refRightBars() {
-        return new Promise(function (resolve, reject) {
-            var hpP = new fabric.Rect({
-                top: 27,
-                left: 404,
-                width: (characters[1].stats.hp * 293) / characters[1].stats.hpMax,//max 293
-                height: 13,
-                selectable: false,
-                originX: 'left',
-                scalable: false,
-                name: 'hpP',
-                fill: 'red',
-            });
-            canvas.add(hpP);
-
-            var hpPText = new fabric.Text(String(characters[1].stats.hp + '/' + characters[1].stats.hpMax), {
-                left: 555,
-                top: 27,
-                selectable: false,
-                scalable: false,
-                name: 'hpPText',
-                fill: 'black',
-                fontSize: 10,
-                fontFamily: 'Comic Sans',
-                textAlign: 'center',
-            });
-            canvas.add(hpPText);
-
-            var arP = new fabric.Rect({
-                top: 47,
-                left: 404,
-                width: (characters[1].stats.armor * 293) / characters[1].stats.armorMax,//max 293
-                height: 13,
-                selectable: false,
-                originX: 'left',
-                scalable: false,
-                name: 'arP',
-                fill: 'grey',
-            });
-            canvas.add(arP);
-
-            var arPText = new fabric.Text(String(characters[1].stats.armor + '/' + characters[1].stats.armorMax), {
-                left: 555,
-                top: 47,
-                selectable: false,
-                scalable: false,
-                name: 'arPText',
-                fill: 'black',
-                fontSize: 10,
-                fontFamily: 'Comic Sans',
-                textAlign: 'center',
-            });
-            canvas.add(arPText);
-            var enP = new fabric.Rect({
-                top: 72,
-                left: 404,
-                width: (characters[1].stats.energy * 293) / characters[1].stats.energyMax,//max 293
-                height: 13,
-                selectable: false,
-                originX: 'left',
-                scalable: false,
-                name: 'enP',
-                fill: 'khaki',
-            });
-            canvas.add(enP);
-
-            var enPText = new fabric.Text(String(characters[1].stats.energy + '/' + characters[1].stats.energyMax), {
-                left: 555,
-                top: 72,
-                selectable: false,
-                scalable: false,
-                name: 'enPText',
-                fill: 'black',
-                fontSize: 10,
-                fontFamily: 'Comic Sans',
-                textAlign: 'center',
-            });
-            canvas.add(enPText);
-            resolve();
-        });
-
-    }
-    function formatBars() {
-        canvas.bringToFront(canvas.getItemByName('hpL'))
-        canvas.bringToFront(canvas.getItemByName('hpLText'))
-        canvas.bringToFront(canvas.getItemByName('hpP'))
-        canvas.bringToFront(canvas.getItemByName('hpPText'))
-        canvas.bringToFront(canvas.getItemByName('HealthBarL'))
-        canvas.bringToFront(canvas.getItemByName('HealthBarP'))
-        canvas.bringToFront(canvas.getItemByName('arL'))
-        canvas.bringToFront(canvas.getItemByName('arLText'))
-        canvas.bringToFront(canvas.getItemByName('arP'))
-        canvas.bringToFront(canvas.getItemByName('arPText'))
-        canvas.bringToFront(canvas.getItemByName('ArmorBarL'))
-        canvas.bringToFront(canvas.getItemByName('ArmorBarP'))
-        canvas.bringToFront(canvas.getItemByName('enL'))
-        canvas.bringToFront(canvas.getItemByName('enLText'))
-        canvas.bringToFront(canvas.getItemByName('enP'))
-        canvas.bringToFront(canvas.getItemByName('enPText'))
-        canvas.bringToFront(canvas.getItemByName('EnergyBarL'))
-        canvas.bringToFront(canvas.getItemByName('EnergyBarP'))
-    }
-    function removeLeftBars() {
-        return new Promise(function (resolve, reject) {
-            canvas.remove(canvas.getItemByName('hpL'))
-            canvas.remove(canvas.getItemByName('hpLText'))
-            canvas.remove(canvas.getItemByName('arL'))
-            canvas.remove(canvas.getItemByName('arLText'))
-            canvas.remove(canvas.getItemByName('enL'))
-            canvas.remove(canvas.getItemByName('enLText'))
-            resolve();
-        });
-    }
-    function removeRightBars() {
-        return new Promise(function (resolve, reject) {
-            canvas.remove(canvas.getItemByName('hpP'))
-            canvas.remove(canvas.getItemByName('hpPText'))
-            canvas.remove(canvas.getItemByName('arP'))
-            canvas.remove(canvas.getItemByName('arPText'))
-            canvas.remove(canvas.getItemByName('enP'))
-            canvas.remove(canvas.getItemByName('enPText'))
-            resolve();
-        });
-    }
 
     canvas.on('mouse:down', function (e) {
         if (e.target != null && canvas.localization == 'arena') {
@@ -693,4 +488,213 @@ function showArena() {
         }
     });
 
+}
+
+function refLeftBars() {
+    return new Promise(function (resolve, reject) {
+
+        var hpL = new fabric.Rect({
+            top: 27,
+            left: 24,
+            width: (characters[0].stats.hp * 293) / characters[0].stats.hpMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'hpL',
+            fill: 'red',
+        });
+        canvas.add(hpL);
+
+        var hpLText = new fabric.Text(String(characters[0].stats.hp + '/' + characters[0].stats.hpMax), {
+            left: 175,
+            top: 27,
+            selectable: false,
+            scalable: false,
+            name: 'hpLText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(hpLText);
+
+        var arL = new fabric.Rect({
+            top: 47,
+            left: 24,
+            width: (characters[0].stats.armor * 293) / characters[0].stats.armorMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'arL',
+            fill: 'grey',
+        });
+        canvas.add(arL);
+
+        var arLText = new fabric.Text(String(characters[0].stats.armor + '/' + characters[0].stats.armorMax), {
+            left: 175,
+            top: 47,
+            selectable: false,
+            scalable: false,
+            name: 'arLText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(arLText);
+        var enL = new fabric.Rect({
+            top: 72,
+            left: 24,
+            width: (characters[0].stats.energy * 293) / characters[0].stats.energyMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'enL',
+            fill: 'khaki',
+        });
+        canvas.add(enL);
+
+        var enLText = new fabric.Text(String(characters[0].stats.energy + '/' + characters[0].stats.energyMax), {
+            left: 175,
+            top: 72,
+            selectable: false,
+            scalable: false,
+            name: 'enLText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(enLText);
+
+    });
+}
+function refRightBars() {
+    return new Promise(function (resolve, reject) {
+        var hpP = new fabric.Rect({
+            top: 27,
+            left: 404,
+            width: (characters[1].stats.hp * 293) / characters[1].stats.hpMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'hpP',
+            fill: 'red',
+        });
+        canvas.add(hpP);
+
+        var hpPText = new fabric.Text(String(characters[1].stats.hp + '/' + characters[1].stats.hpMax), {
+            left: 555,
+            top: 27,
+            selectable: false,
+            scalable: false,
+            name: 'hpPText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(hpPText);
+
+        var arP = new fabric.Rect({
+            top: 47,
+            left: 404,
+            width: (characters[1].stats.armor * 293) / characters[1].stats.armorMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'arP',
+            fill: 'grey',
+        });
+        canvas.add(arP);
+
+        var arPText = new fabric.Text(String(characters[1].stats.armor + '/' + characters[1].stats.armorMax), {
+            left: 555,
+            top: 47,
+            selectable: false,
+            scalable: false,
+            name: 'arPText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(arPText);
+        var enP = new fabric.Rect({
+            top: 72,
+            left: 404,
+            width: (characters[1].stats.energy * 293) / characters[1].stats.energyMax,//max 293
+            height: 13,
+            selectable: false,
+            originX: 'left',
+            scalable: false,
+            name: 'enP',
+            fill: 'khaki',
+        });
+        canvas.add(enP);
+
+        var enPText = new fabric.Text(String(characters[1].stats.energy + '/' + characters[1].stats.energyMax), {
+            left: 555,
+            top: 72,
+            selectable: false,
+            scalable: false,
+            name: 'enPText',
+            fill: 'black',
+            fontSize: 10,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        });
+        canvas.add(enPText);
+        resolve();
+    });
+
+}
+
+
+function formatBars() {
+    canvas.bringToFront(canvas.getItemByName('hpL'))
+    canvas.bringToFront(canvas.getItemByName('hpLText'))
+    canvas.bringToFront(canvas.getItemByName('hpP'))
+    canvas.bringToFront(canvas.getItemByName('hpPText'))
+    canvas.bringToFront(canvas.getItemByName('HealthBarL'))
+    canvas.bringToFront(canvas.getItemByName('HealthBarP'))
+    canvas.bringToFront(canvas.getItemByName('arL'))
+    canvas.bringToFront(canvas.getItemByName('arLText'))
+    canvas.bringToFront(canvas.getItemByName('arP'))
+    canvas.bringToFront(canvas.getItemByName('arPText'))
+    canvas.bringToFront(canvas.getItemByName('ArmorBarL'))
+    canvas.bringToFront(canvas.getItemByName('ArmorBarP'))
+    canvas.bringToFront(canvas.getItemByName('enL'))
+    canvas.bringToFront(canvas.getItemByName('enLText'))
+    canvas.bringToFront(canvas.getItemByName('enP'))
+    canvas.bringToFront(canvas.getItemByName('enPText'))
+    canvas.bringToFront(canvas.getItemByName('EnergyBarL'))
+    canvas.bringToFront(canvas.getItemByName('EnergyBarP'))
+}
+function removeLeftBars() {
+    return new Promise(function (resolve, reject) {
+        canvas.remove(canvas.getItemByName('hpL'))
+        canvas.remove(canvas.getItemByName('hpLText'))
+        canvas.remove(canvas.getItemByName('arL'))
+        canvas.remove(canvas.getItemByName('arLText'))
+        canvas.remove(canvas.getItemByName('enL'))
+        canvas.remove(canvas.getItemByName('enLText'))
+        resolve();
+    });
+}
+function removeRightBars() {
+    return new Promise(function (resolve, reject) {
+        canvas.remove(canvas.getItemByName('hpP'))
+        canvas.remove(canvas.getItemByName('hpPText'))
+        canvas.remove(canvas.getItemByName('arP'))
+        canvas.remove(canvas.getItemByName('arPText'))
+        canvas.remove(canvas.getItemByName('enP'))
+        canvas.remove(canvas.getItemByName('enPText'))
+        resolve();
+    });
 }
