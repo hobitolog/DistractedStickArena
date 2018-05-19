@@ -343,7 +343,7 @@ window.onload = function () {
                     break;
                 case 'findOpButton':
                     socket.emit('findGame')
-                    //TODO change button label
+                    inArenaButtonText_cancel()
                     break;
                 case 'tradeButton':
                     //TODO Finalize transaction by Pan Minta
