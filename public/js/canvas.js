@@ -1827,7 +1827,7 @@ window.onload = function () {
 
     }
 
-    function loadInStatue(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10){
+    function loadInStatue(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10){
         if (!canvas.getItemByName('rankingTitle')) {
             var rankingTitle = new fabric.Text(String("Najlepsi gracze"), {
                 left: canvas.width / 2,
@@ -1842,136 +1842,280 @@ window.onload = function () {
                 originX: 'center',
             });
             canvas.add(rankingTitle);
-            var ranking1 = new fabric.Text("1. "+String(t1), {
+            var nr = new fabric.Text("1. \n2. \n3. \n4. \n5. \n6. \n7. \n8. \n9. \n10. ", {
+                left: canvas.width / 4 -22,
+                top: 170,
+                selectable: false,
+                scalable: false,
+                name: 'nr',
+                fill: '#000',
+                fontSize: 16,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+                originY:'top'
+            });
+            canvas.add(nr);
+            var ranking1 = new fabric.Text(String(t1), {
                 left: canvas.width / 4,
                 top: 180,
                 selectable: false,
                 scalable: false,
                 name: 'ranking1',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking1);
-            var ranking2 = new fabric.Text("2. "+String(t2), {
+            var ranking2 = new fabric.Text(String(t2), {
                 left: canvas.width / 4,
-                top: 200,
+                top: 201,
                 selectable: false,
                 scalable: false,
                 name: 'ranking2',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking2);
-            var ranking3 = new fabric.Text("3. "+String(t3), {
+            var ranking3 = new fabric.Text(String(t3), {
                 left: canvas.width / 4,
-                top: 220,
+                top: 221,
                 selectable: false,
                 scalable: false,
                 name: 'ranking3',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking3);
-            var ranking4 = new fabric.Text("4. "+String(t4), {
+            var ranking4 = new fabric.Text(String(t4), {
                 left: canvas.width / 4,
-                top: 240,
+                top: 241,
                 selectable: false,
                 scalable: false,
                 name: 'ranking4',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking4);
-            var ranking5 = new fabric.Text("5. "+String(t5), {
+            var ranking5 = new fabric.Text(String(t5), {
                 left: canvas.width / 4,
-                top: 260,
+                top: 261,
                 selectable: false,
                 scalable: false,
                 name: 'ranking5',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking5);
-            var ranking6 = new fabric.Text("6. "+String(t6), {
+            var ranking6 = new fabric.Text(String(t6), {
                 left: canvas.width / 4,
-                top: 280,
+                top: 283,
                 selectable: false,
                 scalable: false,
                 name: 'ranking6',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking6);
-            var ranking7 = new fabric.Text("7. "+String(t7), {
+            var ranking7 = new fabric.Text(String(t7), {
                 left: canvas.width / 4,
-                top: 300,
+                top: 305,
                 selectable: false,
                 scalable: false,
                 name: 'ranking7',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking7);
-            var ranking8 = new fabric.Text("8. "+String(t8), {
+            var ranking8 = new fabric.Text(String(t8), {
                 left: canvas.width / 4,
-                top: 320,
+                top: 326,
                 selectable: false,
                 scalable: false,
                 name: 'ranking8',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking8);
-            var ranking9 = new fabric.Text("9. "+String(t9), {
+            var ranking9 = new fabric.Text(String(t9), {
                 left: canvas.width / 4,
-                top: 340,
+                top: 347,
                 selectable: false,
                 scalable: false,
                 name: 'ranking9',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking9);
-            var ranking10 = new fabric.Text("10."+String(t10), {
+            var ranking10 = new fabric.Text(String(t10), {
                 left: canvas.width / 4,
-                top: 360,
+                top: 367,
                 selectable: false,
                 scalable: false,
                 name: 'ranking10',
                 fill: '#000',
-                fontSize: 15,
+                fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
             });
             canvas.add(ranking10);
+            var rankingPoints1 = new fabric.Text(String(p1), {
+                left: canvas.width / 2+150,
+                top: 180,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints1',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints1);
+            var rankingPoints2 = new fabric.Text(String(p2), {
+                left: canvas.width /2+150,
+                top: 201,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints2',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints2);
+            var rankingPoints3 = new fabric.Text(String(p3), {
+                left: canvas.width / 2+150,
+                top: 221,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints3',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints3);
+            var rankingPoints4 = new fabric.Text(String(p4), {
+                left: canvas.width / 2+150,
+                top: 241,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints4',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints4);
+            var rankingPoints5 = new fabric.Text(String(p5), {
+                left: canvas.width / 2+150,
+                top: 261,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints5',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints5);
+            var rankingPoints6 = new fabric.Text(String(p6), {
+                left: canvas.width / 2+150,
+                top: 283,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints6',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints6);
+            var rankingPoints7 = new fabric.Text(String(p7), {
+                left: canvas.width / 2+150,
+                top: 305,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints7',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints7);
+            var rankingPoints8 = new fabric.Text(String(p8), {
+                left: canvas.width / 2+150,
+                top: 326,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints8',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints8);
+            var rankingPoints9 = new fabric.Text(String(p9), {
+                left: canvas.width / 2+150,
+                top: 347,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints9',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints9);
+            var rankingPoints10 = new fabric.Text(String(p10), {
+                left: canvas.width / 2+150,
+                top: 367,
+                selectable: false,
+                scalable: false,
+                name: 'rankingPoints10',
+                fill: '#000',
+                fontSize: 20,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(rankingPoints10);
             
         }
         canvas.bringToFront(rankingTitle);
@@ -2075,6 +2219,7 @@ window.onload = function () {
     }
     function removeStatue() {
         if (canvas.getItemByName('rankingTitle')) { canvas.remove(canvas.getItemByName('rankingTitle')); }
+        if (canvas.getItemByName('nr')) { canvas.remove(canvas.getItemByName('nr')); }
         if (canvas.getItemByName('ranking1')) { canvas.remove(canvas.getItemByName('ranking1')); }
         if (canvas.getItemByName('ranking2')) { canvas.remove(canvas.getItemByName('ranking2')); }
         if (canvas.getItemByName('ranking3')) { canvas.remove(canvas.getItemByName('ranking3')); }
@@ -2085,6 +2230,16 @@ window.onload = function () {
         if (canvas.getItemByName('ranking8')) { canvas.remove(canvas.getItemByName('ranking8')); }
         if (canvas.getItemByName('ranking9')) { canvas.remove(canvas.getItemByName('ranking9')); }
         if (canvas.getItemByName('ranking10')) { canvas.remove(canvas.getItemByName('ranking10')); }
+        if (canvas.getItemByName('rankingPoints1')) { canvas.remove(canvas.getItemByName('rankingPoints1')); }
+        if (canvas.getItemByName('rankingPoints2')) { canvas.remove(canvas.getItemByName('rankingPoints2')); }
+        if (canvas.getItemByName('rankingPoints3')) { canvas.remove(canvas.getItemByName('rankingPoints3')); }
+        if (canvas.getItemByName('rankingPoints4')) { canvas.remove(canvas.getItemByName('rankingPoints4')); }
+        if (canvas.getItemByName('rankingPoints5')) { canvas.remove(canvas.getItemByName('rankingPoints5')); }
+        if (canvas.getItemByName('rankingPoints6')) { canvas.remove(canvas.getItemByName('rankingPoints6')); }
+        if (canvas.getItemByName('rankingPoints7')) { canvas.remove(canvas.getItemByName('rankingPoints7')); }
+        if (canvas.getItemByName('rankingPoints8')) { canvas.remove(canvas.getItemByName('rankingPoints8')); }
+        if (canvas.getItemByName('rankingPoints9')) { canvas.remove(canvas.getItemByName('rankingPoints9')); }
+        if (canvas.getItemByName('rankingPoints10')) { canvas.remove(canvas.getItemByName('rankingPoints10')); }
 
     }
 
