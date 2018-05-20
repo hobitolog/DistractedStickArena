@@ -201,7 +201,8 @@ function showArena() {
             canvas.add(obj);
 
         });
-        fabric.loadSVGFromURL('svg/Stickman.svg', function (objects, options) {
+        sticks.initialize()
+        /*fabric.loadSVGFromURL('svg/Stickman.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(2);
             obj.set({ left: 330, top: 300 });
@@ -218,7 +219,7 @@ function showArena() {
             obj.scalable = false;
             obj.name = 'opponent';
             canvas.add(obj);
-        });
+        });*/
         fabric.loadSVGFromURL('svg/arena/HealthBar.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.38);
@@ -276,7 +277,8 @@ function showArena() {
         refLeftBars();
         refRightBars();
 
-        fabric.loadSVGFromURL('svg/arena/arenaBG.svg', function (objects, options) {
+        //TODO background
+        fabric.loadSVGFromURL('https://upload.wikimedia.org/wikipedia/en/thumb/9/98/Blank_button.svg/1124px-Blank_button.svg.png', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(1.2);
             obj.set({ left: canvas.width / 2, top: 140 });
@@ -375,7 +377,6 @@ function showArena() {
 
             });
             canvas.add(obj);
-
         });
         var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 0.7) + ' - ' + Math.round(characters[0].stats.damageMax * 0.7) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 1.3) + '%' + '\nkoszt:\t' + 20), {
             left: 85,
