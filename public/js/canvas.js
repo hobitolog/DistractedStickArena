@@ -343,7 +343,7 @@ window.onload = function () {
                     refreshChar();
                     break;
                 case 'findOpButton':
-                    if (inArenaButtonText == "Znajdź przeciwnika") {
+                    if (inArenaButtonText === "Znajdź przeciwnika") {
                         var e = document.getElementById("arenaGold");
                         var bid = e.options[e.selectedIndex].value;
                         socket.emit('findGame', bid)
@@ -354,7 +354,14 @@ window.onload = function () {
                     }
                     break;
                 case 'tradeButton':
-                    //TODO Finalize transaction by Pan Minta
+                console.log(canvas.getItemByName('tradeButton').option)
+                    if(canvas.getItemByName('tradeButton').option === 'SPRZEDAJ') {
+                        var itemToSell = document.getElementById('sell').value
+                        sellItem(itemToSell)
+                    } else {
+                        var itemToBuy = document.getElementById('buy').value
+                        buyItem(itemToBuy)
+                    }
                     break;
                 case 'exit':
                     closeButton();
@@ -1178,6 +1185,7 @@ window.onload = function () {
                     xmlhttp.response.backpack.forEach((element, index) => {
                         var option = document.createElement("option");
                         option.text = element.name;
+                        option.value = element.itemId
                         option.addEventListener("click", function () {
                             getAndLoadShopItem(element.itemId, "SELL")
                         })
@@ -1203,12 +1211,11 @@ window.onload = function () {
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    console.log('jest odpowiedz')
                     clearBuyList()
-                    console.log(xmlhttp.response)
                     xmlhttp.response.forEach((element, index) => {
                         var option = document.createElement("option");
                         option.text = element.name;
+                        option.value = element.itemId
                         option.addEventListener("click", function () {
                             getAndLoadShopItem(element.itemId, "BUY")
                         })
@@ -1218,12 +1225,15 @@ window.onload = function () {
                     var option = document.createElement("option");
                     option.text = "Pusto!";
                     buyDrop.add(option);
-                    }
-                    resolve();
+                } else {
+                    var buyList = document.getElementById('buy')
+                    buyList.selectedIndex = 0
+                    getAndLoadShopItem(buyList.options[0].value , "BUY")
+                }
+                resolve();
                 }
             }
             xmlhttp.send();
-            console.log('wyslalo')
         })
     }
 
@@ -1237,6 +1247,11 @@ window.onload = function () {
     }
 
     function getAndLoadShopItem(itemId, operation) {
+        if(operation === "SELL") {
+            document.getElementById('buy').selectedIndex = -1
+        } else {
+            document.getElementById('sell').selectedIndex = -1
+        }
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.open("GET", "getVariant?itemId=" + itemId, true);
@@ -1246,15 +1261,15 @@ window.onload = function () {
                     var variant = xmlhttp.response
                         switch(variant.type) {
                             case 'weapon':
-                            loadShopItemStats(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation == "SELL" ? 0.75 : 1), (operation == "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
 
                             case 'armor':
-                            loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation == "SELL" ? 0.75 : 1), (operation == "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
 
                             case 'helmet':
-                            loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation == "SELL" ? 0.75 : 1), (operation == "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
                         }
                     resolve();
@@ -1262,6 +1277,49 @@ window.onload = function () {
             }
             xmlhttp.send();
         })
+    }
+
+    function sellItem(itemId) {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest()
+            xmlhttp.open("POST", "sellItem", true)
+            xmlhttp.setRequestHeader("Content-Type", "application/json")
+            xmlhttp.responseType = "json"
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    if (xmlhttp.response.error) {
+                        alert(xmlhttp.response.error);
+                    }
+                    else {
+                        loadSellItemList()
+                        resolve()
+                    }
+                }
+            }
+            xmlhttp.send(JSON.stringify({"itemId": itemId}))
+        });
+    }
+
+    function buyItem(itemId) {
+        console.log(itemId)
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest()
+            xmlhttp.open("POST", "buyItem", true)
+            xmlhttp.setRequestHeader("Content-Type", "application/json")
+            xmlhttp.responseType = "json"
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    if (xmlhttp.response.error) {
+                        alert(xmlhttp.response.error);
+                    }
+                    else {
+                        loadSellItemList()
+                        resolve();
+                    }
+                }
+            }
+            xmlhttp.send(JSON.stringify({ "itemId": itemId }))
+        });
     }
 
     function loadInTavern() {
@@ -1313,8 +1371,6 @@ window.onload = function () {
 
     }
     function loadShopItemStats(selectedName, selectedStat1, selectedStat2, selectedStat3, selectedStat4, selectedValue, selectedButtonOption, itemPath) {
-        // loadShopItemStats("Item name", "atk min 2", "atk max 24", "type weapon", " ", "23", "KUP",'svg/weapon.svg' )
-
         fabric.loadSVGFromURL(itemPath, function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.4);
@@ -1413,6 +1469,7 @@ window.onload = function () {
                 selectable: false
 
             });
+        tradeButton.option = selectedButtonOption
         canvas.add(tradeButton);
         canvas.sendToBack(tradeButton);
 
