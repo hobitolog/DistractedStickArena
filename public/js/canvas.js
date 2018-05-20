@@ -357,10 +357,10 @@ window.onload = function () {
                     console.log(canvas.getItemByName('tradeButton').option)
                     if (canvas.getItemByName('tradeButton').option === 'SPRZEDAJ') {
                         var itemToSell = document.getElementById('sell').value
-                        sellItem(itemToSell)
+                        sellItem(itemToSell).then(refreshChar)
                     } else {
                         var itemToBuy = document.getElementById('buy').value
-                        buyItem(itemToBuy)
+                        buyItem(itemToBuy).then(refreshChar)
                     }
                     break;
                 case 'exit':
