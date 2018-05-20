@@ -171,12 +171,12 @@ app.get('/logout', (req, res) => {
 
 // UWAGA - NIE DODAWAĆ NIC PO TYM
 app.use(function (req, res) {
-    res.status(404).send('404: Page not Found')
+    res.status(404).sendFile(path.join(__dirname, '/html', '404.html'))
 })
 
 app.use(function (err, req, res, next) {
     log.error(err)
-    res.status(500).send('500: Internal Server Error<br>Dlaczego zepsułeś nam stronę? ;_;')
+    res.status(500).sendFile(path.join(__dirname, '/html', '500.html'))
 })
 
 server.listen(80, () => {
