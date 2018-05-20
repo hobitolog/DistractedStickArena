@@ -43,15 +43,16 @@ socket.on('gameFound', function (us, opp) {
 })
 
 socket.on('noEnoughEnergy', function () {
-    alert('Za mało energii!')
+    arenaAlert('Za mało energii!')
 })
 
 socket.on('incorrectAction', function () {
-    alert('Niepoprawna akcja!')
+    arenaAlert('Niepoprawna akcja!')
+    
 })
 
 socket.on('notYourTurn', function () {
-    alert('Aktualnie trwa tura przeciwnika!')
+    arenaAlert('Aktualnie trwa tura przeciwnika!')
 })
 
 socket.on('attack', function (attackType, attacker, attacked) {
@@ -670,7 +671,7 @@ function refRightBars() {
             selectable: false,
             scalable: false,
             name: 'enPText',
-            fill: 'black',
+            fill: 'red',
             fontSize: 10,
             fontFamily: 'Comic Sans',
             textAlign: 'center',
@@ -706,25 +707,51 @@ function formatBars() {
 }
 function removeLeftBars() {
     return new Promise(function (resolve, reject) {
-        canvas.remove(canvas.getItemByName('nickL'))
-        canvas.remove(canvas.getItemByName('hpL'))
-        canvas.remove(canvas.getItemByName('hpLText'))
-        canvas.remove(canvas.getItemByName('arL'))
-        canvas.remove(canvas.getItemByName('arLText'))
-        canvas.remove(canvas.getItemByName('enL'))
-        canvas.remove(canvas.getItemByName('enLText'))
+        if (canvas.getItemByName('nickL')) { canvas.remove(canvas.getItemByName('nickL')) }
+        if (canvas.getItemByName('hpL')) { canvas.remove(canvas.getItemByName('hpL')) }
+        if (canvas.getItemByName('hpLText')) { canvas.remove(canvas.getItemByName('hpLText')) }
+        if (canvas.getItemByName('arL')) { canvas.remove(canvas.getItemByName('arL')) }
+        if (canvas.getItemByName('arLText')) { canvas.remove(canvas.getItemByName('arLText')) }
+        if (canvas.getItemByName('enL')) { canvas.remove(canvas.getItemByName('enL')) }
+        if (canvas.getItemByName('enLText')) { canvas.remove(canvas.getItemByName('enLText')) }
         resolve();
     });
 }
 function removeRightBars() {
     return new Promise(function (resolve, reject) {
-        canvas.remove(canvas.getItemByName('nickP'))
-        canvas.remove(canvas.getItemByName('hpP'))
-        canvas.remove(canvas.getItemByName('hpPText'))
-        canvas.remove(canvas.getItemByName('arP'))
-        canvas.remove(canvas.getItemByName('arPText'))
-        canvas.remove(canvas.getItemByName('enP'))
-        canvas.remove(canvas.getItemByName('enPText'))
+        if (canvas.getItemByName('nickP')) { canvas.remove(canvas.getItemByName('nickP')) }
+        if (canvas.getItemByName('hpP')) { canvas.remove(canvas.getItemByName('hpP')) }
+        if (canvas.getItemByName('hpPText')) { canvas.remove(canvas.getItemByName('hpPText')) }
+        if (canvas.getItemByName('arP')) { canvas.remove(canvas.getItemByName('arP')) }
+        if (canvas.getItemByName('arPText')) { canvas.remove(canvas.getItemByName('arPText')) }
+        if (canvas.getItemByName('enP')) { canvas.remove(canvas.getItemByName('enP')) }
+        if (canvas.getItemByName('enPText')) { canvas.remove(canvas.getItemByName('enPText')) }
         resolve();
     });
+}
+
+function arenaAlert(input) {
+    if (canvas.getItemByName('arenaAlert')) { canvas.remove(canvas.getItemByName('arenaAlert')) }
+
+    var arenaAlert = new fabric.Text(String(input), {
+        left: canvas.width / 2,
+        top: 120,
+        selectable: false,
+        scalable: false,
+        name: 'arenaAlert',
+        fill: '#000',
+        fontSize: 22,
+        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+        textAlign: 'center',
+        originX: 'center',
+    });
+    canvas.add(arenaAlert);
+    canvas.bringToFront(arenaAlert);
+
+    setTimeout(function () {
+        if (canvas.getItemByName('arenaAlert')) {
+            canvas.remove(canvas.getItemByName('arenaAlert'))
+        }
+    }, 3000)
+
 }
