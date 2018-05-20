@@ -1,9 +1,9 @@
 {
-    "version": 0,
+    "version": 2,
     "baseId": 400,
     "name": "Podkoszulek",
     "type": "armor",
-    "level": 1,
+    "level": -1,
     "image": "",
     "variants": [
         {
