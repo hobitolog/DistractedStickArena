@@ -17,6 +17,55 @@ module.exports = {
         })
     },
 
+    getCurrentVariants: function (...itemIds) {
+        return new Promise(function (resolve, reject) {
+            const variantIds = []
+            const baseIds = []
+
+            itemIds.forEach((itemId, index) => {
+                variantIds[index] = itemId % 100
+                baseIds[index] = itemId - variantIds[index]
+            })
+            Weapon.find({ 'baseId': { $in: baseIds } }, (err, weapons) => {
+                if (err) {
+                    reject(err)
+                    return
+                }
+                const toReturn = []
+
+                itemIds.forEach((itemId, index) => {
+                    const weapon = weapons.find((element => {
+                        return element.baseId == baseIds[index]
+                    }))
+                    const variant = weapon.variants.find(element => {
+                        return element.variantId == variantIds[index]
+                    })
+
+                    const toAdd = {
+                        "itemId": itemId,
+                        "level": weapon.level,
+                        "type": weapon.type,
+                    }
+
+                    toAdd.name = variant.name ? variant.name : weapon.name
+                    toAdd.image = variant.image ? variant.image : weapon.image
+                    if (toAdd.type == 'weapon') {
+                        toAdd.damageMin = variant.damageMin
+                        toAdd.damageMax = variant.damageMax
+                    } else {
+                        toAdd.armor = variant.armor
+                    }
+                    if (variant.upgradePrice) {
+                        toAdd.upgradePrice = variant.upgradePrice
+                    }
+                    toAdd.value = variant.value
+                    toReturn[index] = toAdd
+                })
+                resolve(toReturn)
+            })
+        })
+    },
+
     getCurrentVariant: function (itemId) {
         return new Promise(function (resolve, reject) {
             const variantId = itemId % 100

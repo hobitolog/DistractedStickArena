@@ -23,10 +23,14 @@ var MongoStore = require('connect-mongo')(expressSession)
 var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection })
 
 app.use(expressSession({
+    key: 'connect.sid',
     store: mongoStore,
     secret: config.sessionSecret,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: false
+    }
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -41,13 +45,24 @@ var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 io.use(passportSocketIo.authorize({
     cookieParser: cookieParser,
-    key: 'express.sid',
+    key: 'connect.sid',
     secret: config.sessionSecret,
     store: mongoStore,
+    success: onAuthorizeSuccess,
+    fail: onAuthorizeFail,  
 }))
 
+function onAuthorizeSuccess(data, accept){
+    accept();
+}
+  
+function onAuthorizeFail(data, message, error, accept){
+    console.log(message)
+    if(error)
+        accept(new Error(message));
+}
 api(app)
-//TODO fight.init(app, io)
+fight.init(app, io)
 
 app.get('/activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)
