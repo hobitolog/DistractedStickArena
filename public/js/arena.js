@@ -30,9 +30,7 @@ function refreshBars() {
 }
 
 socket.on('endDuel', function (prize) {
-    console.log('End of duel')
-    //TODO prizes, change view etc
-    // characters = []
+    showPrize(prize.exp, prize.gold)
 })
 
 socket.on('gameFound', function (us, opp) {

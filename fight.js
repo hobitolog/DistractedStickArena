@@ -145,6 +145,10 @@ function handleNewDuels(newDuels) {
         element.player1.socket.emit('gameFound', ch1, ch2)
         element.player2.socket.emit('gameFound', ch2, ch1)
 
+        setTimeout(function () {
+            io.to(element.id).emit('turn', element.turn)
+        }, 1000)
+
         modifyUserGold(element.player1.player, -1 * bids.get(element.player1.player.login))
         modifyUserGold(element.player2.player, -1 * bids.get(element.player2.player.login))        
     })
@@ -286,6 +290,7 @@ function handleUserAction(login, socket, action) {
         handlePrizes(character.login, character.opponent)
     } else {
         duel.turn = duel.characters.get(login).opponent
+        io.to(duel.id).emit('turn', duel.turn)
     }
 }
 
@@ -330,11 +335,6 @@ function handlePrizes(winner, loser) {
     addExpToUser(loserProfile.player, Math.round(exp * 0.7))
 
     modifyUserGold(winnerProfile.player, 2 * bids.get(winner))
-    bids.delete(winner)
-    bids.delete(loser)
-
-    duels.delete(winner)
-    duels.delete(loser)
 
     winnerProfile.socket.emit("endDuel", {
         exp: Math.round(exp * 1.3),
@@ -343,6 +343,13 @@ function handlePrizes(winner, loser) {
     loserProfile.socket.emit('endDuel', {
         exp: Math.round(exp * 0.7)
     })
+
+    bids.delete(winner)
+    bids.delete(loser)
+
+    duels.delete(winner)
+    duels.delete(loser)
+
 }
 
 function addExpToUser(player, exp) {
