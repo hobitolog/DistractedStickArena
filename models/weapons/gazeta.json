@@ -3,7 +3,7 @@
     "baseId": 500,
     "name": "Gazeta",
     "type": "helmet",
-    "level": 1,
+    "level": -1,
     "image": "",
     "variants": [
         {
