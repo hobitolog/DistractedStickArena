@@ -107,4 +107,27 @@ module.exports = {
             })
         })
     },
+
+    getShopItems: function (characterLvl) {
+        return new Promise(function (resolve, reject) {
+            const lowerBound = Math.floor((characterLvl - 1) / 5) * 5
+            const items = []
+
+            const ids = [lowerBound, lowerBound + 1, lowerBound + 2, lowerBound + 3, lowerBound + 4] 
+            Weapon.find({ 'level': { $in: ids } }, (err, weapons) => {
+                if(err) {
+                    reject(err)
+                    return
+                }
+                weapons.forEach((item, index) => {
+                    const toAdd = {
+                        "name": item.name,
+                        "itemId": item.baseId
+                    }
+                    items.push(toAdd)
+                })
+                resolve(items)
+            })
+        })
+    },
 }

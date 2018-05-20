@@ -66,6 +66,22 @@ module.exports = function (app) {
         }
     })
 
+    app.get('/getVariant', login.isLoggedIn, login.isActivated, (req, res) => {
+        itemFetcher.getCurrentVariant(req.query.itemId).then(item => {
+            res.json(item)
+        }).catch(err => {
+            log.error(err)
+        })
+    })
+
+    app.get('/getShopItems', login.isLoggedIn, login.isActivated, (req, res) => {
+        itemFetcher.getShopItems(req.user.character.level).then(items => {
+            res.json(items)
+        }).catch( err => {
+            log.error(err)
+        })
+    })
+
     app.get('/getBackpack', login.isLoggedIn, login.isActivated, (req, res) => {
 
         const response = []
@@ -139,4 +155,11 @@ module.exports = function (app) {
         }
     })
 
+    app.post('/sellItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+
+    })
+
+    app.post('/buyItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+        
+    })
 }
