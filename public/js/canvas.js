@@ -309,8 +309,7 @@ window.onload = function () {
                     canvas.getItemByName('inStatue').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStatue'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
-                    canvas.bringToFront(canvas.getItemByName('coinText'));
-
+                    loadInStatue()
                     //open statue
                     break;
                 case 'stickman':
@@ -1828,6 +1827,155 @@ window.onload = function () {
 
     }
 
+    function loadInStatue(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10){
+        if (!canvas.getItemByName('rankingTitle')) {
+            var rankingTitle = new fabric.Text(String("Najlepsi gracze"), {
+                left: canvas.width / 2,
+                top: 130,
+                selectable: false,
+                scalable: false,
+                name: 'rankingTitle',
+                fill: '#000',
+                fontSize: 30,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'center',
+                originX: 'center',
+            });
+            canvas.add(rankingTitle);
+            var ranking1 = new fabric.Text("1. "+String(t1), {
+                left: canvas.width / 4,
+                top: 180,
+                selectable: false,
+                scalable: false,
+                name: 'ranking1',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking1);
+            var ranking2 = new fabric.Text("2. "+String(t2), {
+                left: canvas.width / 4,
+                top: 200,
+                selectable: false,
+                scalable: false,
+                name: 'ranking2',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking2);
+            var ranking3 = new fabric.Text("3. "+String(t3), {
+                left: canvas.width / 4,
+                top: 220,
+                selectable: false,
+                scalable: false,
+                name: 'ranking3',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking3);
+            var ranking4 = new fabric.Text("4. "+String(t4), {
+                left: canvas.width / 4,
+                top: 240,
+                selectable: false,
+                scalable: false,
+                name: 'ranking4',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking4);
+            var ranking5 = new fabric.Text("5. "+String(t5), {
+                left: canvas.width / 4,
+                top: 260,
+                selectable: false,
+                scalable: false,
+                name: 'ranking5',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking5);
+            var ranking6 = new fabric.Text("6. "+String(t6), {
+                left: canvas.width / 4,
+                top: 280,
+                selectable: false,
+                scalable: false,
+                name: 'ranking6',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking6);
+            var ranking7 = new fabric.Text("7. "+String(t7), {
+                left: canvas.width / 4,
+                top: 300,
+                selectable: false,
+                scalable: false,
+                name: 'ranking7',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking7);
+            var ranking8 = new fabric.Text("8. "+String(t8), {
+                left: canvas.width / 4,
+                top: 320,
+                selectable: false,
+                scalable: false,
+                name: 'ranking8',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking8);
+            var ranking9 = new fabric.Text("9. "+String(t9), {
+                left: canvas.width / 4,
+                top: 340,
+                selectable: false,
+                scalable: false,
+                name: 'ranking9',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking9);
+            var ranking10 = new fabric.Text("10."+String(t10), {
+                left: canvas.width / 4,
+                top: 360,
+                selectable: false,
+                scalable: false,
+                name: 'ranking10',
+                fill: '#000',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'left',
+                originX: 'left',
+            });
+            canvas.add(ranking10);
+            
+        }
+        canvas.bringToFront(rankingTitle);
+    }
 
     function loadEq() {
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
@@ -1875,11 +2023,13 @@ window.onload = function () {
         weaponDrop.style.top = ((canvas.height / 2) - 450) + 'px';
         weaponDrop.style.visibility = 'visible';
     }
+
     function closeButton() {
         hideEqControls();
         hideShopControls();
         hideArenaControls()
         hideBlacksmithControls()
+        removeStatue() 
         canvas.sendToBack(canvas.getItemByName('inArena'));
         canvas.sendToBack(canvas.getItemByName('inTavern'));
         canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
@@ -1894,6 +2044,7 @@ window.onload = function () {
         removeBlacksmith();
 
     }
+
     function removeStats() {
         return new Promise(function (resolve, reject) {
             if (canvas.getItemByName('statsPoints')) { canvas.remove(canvas.getItemByName('statsPoints')); }
@@ -1912,14 +2063,31 @@ window.onload = function () {
             resolve();
         });
     }
+
     function removeEq() {
         if (canvas.getItemByName('EQhelmet')) { canvas.remove(canvas.getItemByName('EQhelmet')); }
         if (canvas.getItemByName('EQarmmor')) { canvas.remove(canvas.getItemByName('EQarmmor')); }
         if (canvas.getItemByName('EQweapon')) { canvas.remove(canvas.getItemByName('EQweapon')); }
     }
+
     function removeChar() {
         if (canvas.getItemByName('coinText')) { canvas.remove(canvas.getItemByName('coinText')); }
     }
+    function removeStatue() {
+        if (canvas.getItemByName('rankingTitle')) { canvas.remove(canvas.getItemByName('rankingTitle')); }
+        if (canvas.getItemByName('ranking1')) { canvas.remove(canvas.getItemByName('ranking1')); }
+        if (canvas.getItemByName('ranking2')) { canvas.remove(canvas.getItemByName('ranking2')); }
+        if (canvas.getItemByName('ranking3')) { canvas.remove(canvas.getItemByName('ranking3')); }
+        if (canvas.getItemByName('ranking4')) { canvas.remove(canvas.getItemByName('ranking4')); }
+        if (canvas.getItemByName('ranking5')) { canvas.remove(canvas.getItemByName('ranking5')); }
+        if (canvas.getItemByName('ranking6')) { canvas.remove(canvas.getItemByName('ranking6')); }
+        if (canvas.getItemByName('ranking7')) { canvas.remove(canvas.getItemByName('ranking7')); }
+        if (canvas.getItemByName('ranking8')) { canvas.remove(canvas.getItemByName('ranking8')); }
+        if (canvas.getItemByName('ranking9')) { canvas.remove(canvas.getItemByName('ranking9')); }
+        if (canvas.getItemByName('ranking10')) { canvas.remove(canvas.getItemByName('ranking10')); }
+
+    }
+
     function removeBlacksmith() {
         if (canvas.getItemByName('bsText')) { canvas.remove(canvas.getItemByName('bsText')); }
         if (canvas.getItemByName('bsButton')) { canvas.remove(canvas.getItemByName('bsButton')); }
@@ -1937,8 +2105,8 @@ window.onload = function () {
         if (canvas.getItemByName('stat3After')) { canvas.remove(canvas.getItemByName('stat3After')); }
         if (canvas.getItemByName('stat4After')) { canvas.remove(canvas.getItemByName('stat4After')); }
         if (canvas.getItemByName('itemValueAfter')) { canvas.remove(canvas.getItemByName('itemValueAfter')); }
-
     }
+
     function removeTavern() {
         if (canvas.getItemByName('itemName')) { canvas.remove(canvas.getItemByName('itemName')); }
         if (canvas.getItemByName('stat1')) { canvas.remove(canvas.getItemByName('stat1')); }
@@ -1951,6 +2119,7 @@ window.onload = function () {
         if (canvas.getItemByName('tradeBuy')) { canvas.remove(canvas.getItemByName('tradeBuy')); }
         if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
     }
+
     function removeArena() {
         if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
         if (canvas.getItemByName('arenaCoinText')) { canvas.remove(canvas.getItemByName('arenaCoinText')); }
@@ -1965,13 +2134,16 @@ window.onload = function () {
         armorDrop.style.visibility = 'hidden';
         weaponDrop.style.visibility = 'hidden';
     }
+
     function hideShopControls() {
         buyDrop.style.visibility = 'hidden';
         sellDrop.style.visibility = 'hidden';
     }
+
     function hideArenaControls() {
         arenaDrop.style.visibility = 'hidden';
     }
+
     function hideBlacksmithControls() {
         blacksmithDrop.style.visibility = 'hidden';
     }
