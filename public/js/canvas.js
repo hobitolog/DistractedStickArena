@@ -354,8 +354,8 @@ window.onload = function () {
                     }
                     break;
                 case 'tradeButton':
-                console.log(canvas.getItemByName('tradeButton').option)
-                    if(canvas.getItemByName('tradeButton').option === 'SPRZEDAJ') {
+                    console.log(canvas.getItemByName('tradeButton').option)
+                    if (canvas.getItemByName('tradeButton').option === 'SPRZEDAJ') {
                         var itemToSell = document.getElementById('sell').value
                         sellItem(itemToSell)
                     } else {
@@ -1190,11 +1190,11 @@ window.onload = function () {
                             getAndLoadShopItem(element.itemId, "SELL")
                         })
                         sellDrop.add(option);
-                })
-                if(sellDrop.length == 0) {
-                    var option = document.createElement("option");
-                    option.text = "Pusto!";
-                    sellDrop.add(option);
+                    })
+                    if (sellDrop.length == 0) {
+                        var option = document.createElement("option");
+                        option.text = "Pusto!";
+                        sellDrop.add(option);
                     }
                     resolve();
                 }
@@ -1220,17 +1220,17 @@ window.onload = function () {
                             getAndLoadShopItem(element.itemId, "BUY")
                         })
                         buyDrop.add(option);
-                })
-                if(buyDrop.length == 0) {
-                    var option = document.createElement("option");
-                    option.text = "Pusto!";
-                    buyDrop.add(option);
-                } else {
-                    var buyList = document.getElementById('buy')
-                    buyList.selectedIndex = 0
-                    getAndLoadShopItem(buyList.options[0].value , "BUY")
-                }
-                resolve();
+                    })
+                    if (buyDrop.length == 0) {
+                        var option = document.createElement("option");
+                        option.text = "Pusto!";
+                        buyDrop.add(option);
+                    } else {
+                        var buyList = document.getElementById('buy')
+                        buyList.selectedIndex = 0
+                        getAndLoadShopItem(buyList.options[0].value, "BUY")
+                    }
+                    resolve();
                 }
             }
             xmlhttp.send();
@@ -1247,7 +1247,7 @@ window.onload = function () {
     }
 
     function getAndLoadShopItem(itemId, operation) {
-        if(operation === "SELL") {
+        if (operation === "SELL") {
             document.getElementById('buy').selectedIndex = -1
         } else {
             document.getElementById('sell').selectedIndex = -1
@@ -1259,19 +1259,19 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     var variant = xmlhttp.response
-                        switch(variant.type) {
-                            case 'weapon':
+                    switch (variant.type) {
+                        case 'weapon':
                             loadShopItemStats(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
 
-                            case 'armor':
+                        case 'armor':
                             loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
 
-                            case 'helmet':
+                        case 'helmet':
                             loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
-                        }
+                    }
                     resolve();
                 }
             }
@@ -1296,7 +1296,7 @@ window.onload = function () {
                     }
                 }
             }
-            xmlhttp.send(JSON.stringify({"itemId": itemId}))
+            xmlhttp.send(JSON.stringify({ "itemId": itemId }))
         });
     }
 
@@ -1323,12 +1323,10 @@ window.onload = function () {
     }
 
     function loadInTavern() {
-        loadShopItemStats("Item name", "atk min 2", "atk max 24", "type weapon", " ", "23", "KUP", 'svg/weapon.svg')
-
         if (!canvas.getItemByName('tradeBuy')) {
 
             sellDrop.style.left = 130 + 'px';
-            sellDrop.style.top = -290 + 'px';
+            sellDrop.style.top = -330 + 'px';
             sellDrop.style.visibility = 'visible';
 
             buyDrop.style.left = -333 + 'px';
@@ -1371,149 +1369,161 @@ window.onload = function () {
 
     }
     function loadShopItemStats(selectedName, selectedStat1, selectedStat2, selectedStat3, selectedStat4, selectedValue, selectedButtonOption, itemPath) {
-        fabric.loadSVGFromURL(itemPath, function (objects, options) {
-            var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(0.4);
-            obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
-            obj.selectable = false;
-            obj.scalable = false;
-            obj.name = 'shopImg';
-            obj.on('added', function () {
+        if (canvas.getItemByName('itemName')) { canvas.remove(canvas.getItemByName('itemName')); }
+        if (canvas.getItemByName('stat1')) { canvas.remove(canvas.getItemByName('stat1')); }
+        if (canvas.getItemByName('stat2')) { canvas.remove(canvas.getItemByName('stat2')); }
+        if (canvas.getItemByName('stat3')) { canvas.remove(canvas.getItemByName('stat3')); }
+        if (canvas.getItemByName('stat4')) { canvas.remove(canvas.getItemByName('stat4')); }
+        if (canvas.getItemByName('tradeButton')) { canvas.remove(canvas.getItemByName('tradeButton')); }
+        if (canvas.getItemByName('itemValue')) { canvas.remove(canvas.getItemByName('itemValue')); }
+        if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
+
+
+            fabric.loadSVGFromURL(itemPath, function (objects, options) {
+                var obj = fabric.util.groupSVGElements(objects, options);
+                obj.scale(0.4);
+                obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'shopImg';
+                obj.on('added', function () {
+                });
+                canvas.add(obj);
+
             });
-            canvas.add(obj);
-
-        });
 
 
-        var itemName = new fabric.Text(String(selectedName), {
-            left: canvas.width / 2 + 150,
-            top: canvas.height / 2 - 90,
-            selectable: false,
-            scalable: false,
-            name: 'itemName',
-            fill: 'red',
-            fontSize: 30,
-            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-            textAlign: 'center',
-        });
-        canvas.add(itemName);
-        var stat1 = new fabric.Text(String(selectedStat1), {
-            left: canvas.width / 2 + 150,
-            top: canvas.height / 2 - 60,
-            selectable: false,
-            scalable: false,
-            name: 'stat1',
-            fill: 'red',
-            fontSize: 20,
-            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-            textAlign: 'center',
-        });
-        canvas.add(stat1);
-        var stat2 = new fabric.Text(String(selectedStat2), {
-            left: canvas.width / 2 + 150,
-            top: canvas.height / 2 - 40,
-            selectable: false,
-            scalable: false,
-            name: 'stat2',
-            fill: 'red',
-            fontSize: 20,
-            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-            textAlign: 'center',
-        });
-        canvas.add(stat2);
-        var stat3 = new fabric.Text(String(selectedStat3), {
-            left: canvas.width / 2 + 150,
-            top: canvas.height / 2 - 20,
-            selectable: false,
-            scalable: false,
-            name: 'stat3',
-            fill: 'red',
-            fontSize: 20,
-            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-            textAlign: 'center',
-        });
-        canvas.add(stat3);
-        var stat4 = new fabric.Text(String(selectedStat4), {
-            left: canvas.width / 2 + 150,
-            top: canvas.height / 2,
-            selectable: false,
-            scalable: false,
-            name: 'stat4',
-            fill: 'red',
-            fontSize: 20,
-            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-            textAlign: 'center',
-        });
-        canvas.add(stat4);
-
-
-
-        var tradeButton = new fabric.Group([new fabric.Rect({
-            width: 120,
-            height: 35,
-            fill: '#ccc',
-            name: 'inTavernButtonBG',
-            selectable: false
-        }),
-        new fabric.Text(String(selectedButtonOption), {
-            // left: 200,
-            // top: 100,
-            fill: '#000',
-            name: 'inTavernButtonText',
-            fontSize: 15
-        })], {
-                name: 'tradeButton',
+            var itemName = new fabric.Text(String(selectedName), {
                 left: canvas.width / 2 + 150,
-                top: 330,
-                opacity: 1,
-                selectable: false
-
+                top: canvas.height / 2 - 90,
+                selectable: false,
+                scalable: false,
+                name: 'itemName',
+                fill: 'red',
+                fontSize: 22,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'center',
             });
-        tradeButton.option = selectedButtonOption
-        canvas.add(tradeButton);
-        canvas.sendToBack(tradeButton);
+            canvas.add(itemName);
+            var stat1 = new fabric.Text(String(selectedStat1), {
+                left: canvas.width / 2 + 150,
+                top: canvas.height / 2 - 60,
+                selectable: false,
+                scalable: false,
+                name: 'stat1',
+                fill: '#000',
+                fontSize: 18,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'center',
+            });
+            canvas.add(stat1);
+            var stat2 = new fabric.Text(String(selectedStat2), {
+                left: canvas.width / 2 + 150,
+                top: canvas.height / 2 - 40,
+                selectable: false,
+                scalable: false,
+                name: 'stat2',
+                fill: '#000',
+                fontSize: 18,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'center',
+            });
+            canvas.add(stat2);
+            var stat3 = new fabric.Text(String(selectedStat3), {
+                left: canvas.width / 2 + 150,
+                top: canvas.height / 2 - 20,
+                selectable: false,
+                scalable: false,
+                name: 'stat3',
+                fill: '#000',
+                fontSize: 18,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'center',
+            });
+            canvas.add(stat3);
+            var stat4 = new fabric.Text(String(selectedStat4), {
+                left: canvas.width / 2 + 150,
+                top: canvas.height / 2,
+                selectable: false,
+                scalable: false,
+                name: 'stat4',
+                fill: '#000',
+                fontSize: 18,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'center',
+            });
+            canvas.add(stat4);
 
 
 
-        fabric.loadSVGFromURL('svg/coin.svg', function (objects, options) {
-            var coinShop = fabric.util.groupSVGElements(objects, options);
-            coinShop.scale(0.04);
-            // coinShop.set({ left: 0 , top: 30 })
-            coinShop.selectable = false;
-            coinShop.scalable = false;
-            coinShop.name = 'coinShop';
-
-
-            var itemValue = new fabric.Group([
-
-                new fabric.Text(String(selectedValue), {
-                    left: 40,
-                    // top: 100,
-                    fill: '#000',
-                    name: 'inTavernValueText',
-                    textAlign: 'left',
-                    fontSize: 25
-                }), coinShop], {
-                    name: 'itemValue',
+            var tradeButton = new fabric.Group([new fabric.Rect({
+                width: 120,
+                height: 35,
+                fill: '#ccc',
+                name: 'inTavernButtonBG',
+                selectable: false
+            }),
+            new fabric.Text(String(selectedButtonOption), {
+                // left: 200,
+                // top: 100,
+                fill: '#000',
+                name: 'inTavernButtonText',
+                fontSize: 15
+            })], {
+                    name: 'tradeButton',
                     left: canvas.width / 2 + 150,
-                    top: 290,
+                    top: 330,
                     opacity: 1,
                     selectable: false
 
                 });
-            canvas.add(itemValue);
-        })
-        canvas.bringToFront(canvas.getItemByName('shopImg'))
-        canvas.bringToFront(canvas.getItemByName('tradeButton'))
-        canvas.bringToFront(canvas.getItemByName('itemName'))
-        canvas.bringToFront(canvas.getItemByName('stat1'))
-        canvas.bringToFront(canvas.getItemByName('stat2'))
-        canvas.bringToFront(canvas.getItemByName('stat3'))
-        canvas.bringToFront(canvas.getItemByName('stat4'))
-        canvas.bringToFront(canvas.getItemByName('itemValue'))
+            tradeButton.option = selectedButtonOption
+            canvas.add(tradeButton);
+            canvas.sendToBack(tradeButton);
 
 
+
+            fabric.loadSVGFromURL('svg/coin.svg', function (objects, options) {
+                var coinShop = fabric.util.groupSVGElements(objects, options);
+                coinShop.scale(0.04);
+                // coinShop.set({ left: 0 , top: 30 })
+                coinShop.selectable = false;
+                coinShop.scalable = false;
+                coinShop.name = 'coinShop';
+
+
+                var itemValue = new fabric.Group([
+
+                    new fabric.Text(String(selectedValue), {
+                        left: 40,
+                        // top: 100,
+                        fill: '#000',
+                        name: 'inTavernValueText',
+                        textAlign: 'left',
+                        fontSize: 25
+                    }), coinShop], {
+                        name: 'itemValue',
+                        left: canvas.width / 2 + 150,
+                        top: 290,
+                        opacity: 1,
+                        selectable: false
+
+                    });
+                canvas.add(itemValue);
+            })
+            canvas.bringToFront(canvas.getItemByName('shopImg'))
+            canvas.bringToFront(canvas.getItemByName('tradeButton'))
+            canvas.bringToFront(canvas.getItemByName('itemName'))
+            canvas.bringToFront(canvas.getItemByName('stat1'))
+            canvas.bringToFront(canvas.getItemByName('stat2'))
+            canvas.bringToFront(canvas.getItemByName('stat3'))
+            canvas.bringToFront(canvas.getItemByName('stat4'))
+            canvas.bringToFront(canvas.getItemByName('itemValue'))
+
+
+        
     }
+
     function loadEq() {
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
             fabric.loadSVGFromURL('svg/Helmet.svg', function (objects, options) {
@@ -1717,6 +1727,6 @@ function inArenaButtonText_fight() {
     sellDrop.style.visibility = 'hidden';
     blacksmithDrop.style.visibility = 'hidden';
     arenaDrop.style.visibility = 'hidden';
-    
+
 
 }
