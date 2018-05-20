@@ -1261,15 +1261,15 @@ window.onload = function () {
                     var variant = xmlhttp.response
                     switch (variant.type) {
                         case 'weapon':
-                            loadShopItemStats(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
 
                         case 'armor':
-                            loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
 
                         case 'helmet':
-                            loadShopItemStats(variant.name, "def? ", "" + variant.damageMax, variant.type, "level " + variant.level, variant.value * (operation === "SELL" ? 0.75 : 1), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
                             break
                     }
                     resolve();
@@ -1291,6 +1291,9 @@ window.onload = function () {
                         alert(xmlhttp.response.error);
                     }
                     else {
+                        var buyList = document.getElementById('buy')
+                        buyList.selectedIndex = 0
+                        getAndLoadShopItem(buyList.options[0].value, "BUY")
                         loadSellItemList()
                         resolve()
                     }

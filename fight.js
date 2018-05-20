@@ -86,6 +86,7 @@ async function extractDuelCharacters (player1, player2) {
         login: player1.login,
         opponent: player2.login,
         lvl: player1.character.level,
+        weaponImage: p1Eq[2].image,
         stats: {
             damageMin: p1Eq[2].damageMin + Math.round(player1.character.stats.str * 0.5),
             damageMax: p1Eq[2].damageMax + Math.round(player1.character.stats.str * 0.6),
@@ -103,6 +104,7 @@ async function extractDuelCharacters (player1, player2) {
         login: player2.login,
         opponent: player1.login,
         lvl: player2.character.level,
+        weaponImage: p2Eq[2].image,
         stats: {
             damageMin: p2Eq[2].damageMin + Math.round(player2.character.stats.str * 0.5),
             damageMax: p2Eq[2].damageMax + Math.round(player2.character.stats.str * 0.6),

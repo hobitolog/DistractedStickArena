@@ -156,11 +156,11 @@ module.exports = function (app) {
     })
 
     app.post('/sellItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
-        var itemId = req.body.itemId
+        var itemId = parseInt(req.body.itemId)
         var backpack = req.user.character.backpack
 
-        var itemIndex = backpack.findIntex(element => {
-            return element == itemId
+        var itemIndex = backpack.findIndex(element => {
+            return element.itemId == itemId
         })
 
         if(itemIndex != -1) {
@@ -188,7 +188,7 @@ module.exports = function (app) {
             if(item) {
                 if(req.user.character.gold >= item.value) {
                     req.user.character.gold -= item.value
-                    req.user.character.backpack.push({ "itemId": item.itemId })
+                    req.user.character.backpack.push({ "itemId": parseInt(item.itemId) })
                     req.user.save(function (err) {
                         if (err)
                             log.error(err)
