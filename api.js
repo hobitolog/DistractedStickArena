@@ -156,10 +156,51 @@ module.exports = function (app) {
     })
 
     app.post('/sellItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+        var itemId = req.body.itemId
+        var backpack = req.user.character.backpack
 
+        var itemIndex = backpack.findIntex(element => {
+            return element == itemId
+        })
+
+        if(itemIndex != -1) {
+            itemFetcher.getCurrentVariant(itemId).then( item => {
+                req.user.character.gold += Math.round(item.value * 0.75)
+                req.user.character.backpack.splice(itemIndex, 1)
+                req.user.save(function (err) {
+                    if (err)
+                        log.error(err)
+                    var json = { "error": err ? "Błąd bazy danych" : null }
+                    res.send(json)
+                })
+            })
+        } else {
+            var json = { "error": "Brak przedmiotu w ekwipunku!" }
+            res.send(json)
+        }
     })
 
     app.post('/buyItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
-        
+        var itemId = req.body.itemId
+        var backpack = req.user.character.backpack
+
+        itemFetcher.getCurrentVariant(itemId).then( item => {
+            if(item) {
+                if(req.user.character.gold >= item.value) {
+                    req.user.character.gold -= item.value
+                    req.user.character.backpack.push({ "itemId": item.itemId })
+                    req.user.save(function (err) {
+                        if (err)
+                            log.error(err)
+                        var json = { "error": err ? "Błąd bazy danych" : null }
+                        res.send(json)
+                    })
+                }
+            } else {
+                var json = { "error" : "Brak przedmiotu o podanym id!" }
+                res.json(json)
+            }
+        })
+
     })
 }
