@@ -48,11 +48,15 @@ socket.on('noEnoughEnergy', function () {
 
 socket.on('incorrectAction', function () {
     arenaAlert('Niepoprawna akcja!')
-    
+
 })
 
 socket.on('notYourTurn', function () {
     arenaAlert('Aktualnie trwa tura przeciwnika!')
+})
+
+socket.on('turn', function (nick) {
+    arenaAlert('Ruch gracza ' + nick)
 })
 
 socket.on('attack', function (attackType, attacker, attacked) {
@@ -117,7 +121,6 @@ function showArena() {
             canvas.remove(canvas.getItemByName('overWeapon3'));
             canvas.remove(canvas.getItemByName('overZzz'));
             canvas.remove(canvas.getItemByName('skillText'));
-
 
         }
     });
@@ -481,9 +484,9 @@ function showArena() {
                     location.reload()
                     break;
 
-                case 'exitArena':
-                    socket.emit('exitArena')
+                case 'exitButton':
                     clearInterval(arenaTimer);
+                    location.reload()
 
 
             }
@@ -753,5 +756,218 @@ function arenaAlert(input) {
             canvas.remove(canvas.getItemByName('arenaAlert'))
         }
     }, 3000)
+
+}
+
+function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4) {
+    if (!canvas.getItemByName('prizePage')) {
+        fabric.loadSVGFromURL('svg/inArena.svg', function (objects, options) {
+            var obj = fabric.util.groupSVGElements(objects, options);
+            obj.scale(1);
+            obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
+            obj.selectable = false;
+            obj.scalable = false;
+            obj.name = 'prizePage';
+            obj.on('added', function () {
+                canvas.bringToFront(obj);
+
+                var exitButton = new fabric.Group([new fabric.Rect({
+                    width: 200,
+                    height: 40,
+                    fill: '#ccc',
+                    selectable: false
+                }),
+                new fabric.Text(String('Wyjdź'), {
+                    // left: 200,
+                    // top: 100,
+                    fill: '#000',
+                    fontSize: 18
+                })], {
+                        name: 'exitButton',
+                        left: canvas.width / 2,
+                        top: 360,
+                        opacity: 1,
+                        selectable: false
+
+                    });
+
+                canvas.add(exitButton);
+                canvas.bringToFront(exitButton);
+
+
+                if (gold) {
+                    var arenaTitlePrize = new fabric.Text(String("Wygrałeś!"), {
+                        left: canvas.width / 2,
+                        top: canvas.height / 2 - 120,
+                        selectable: false,
+                        scalable: false,
+                        name: 'arenaTitlePrize',
+                        fill: '#000',
+                        fontSize: 28,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                        originX: 'center',
+                    });
+                    canvas.add(arenaTitlePrize);
+                    canvas.bringToFront(arenaTitlePrize);
+                    var arenaExpPrize = new fabric.Text(String("Otrzymałeś " + exp + " punktów doświadczenia."), {
+                        left: canvas.width / 2,
+                        top: canvas.height / 2 - 70,
+                        selectable: false,
+                        scalable: false,
+                        name: 'arenaExpPrize',
+                        fill: '#000',
+                        fontSize: 20,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                        originX: 'center',
+                    });
+                    canvas.add(arenaExpPrize);
+                    canvas.bringToFront(arenaExpPrize);
+                    var arenaCoinPrize = new fabric.Text(String("Otrzymałeś " + gold + " sztuk złota."), {
+                        left: canvas.width / 2,
+                        top: canvas.height / 2 - 40,
+                        selectable: false,
+                        scalable: false,
+                        name: 'arenaCoinPrize',
+                        fill: '#000',
+                        fontSize: 20,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                        originX: 'center',
+                    });
+                    canvas.add(arenaCoinPrize);
+                    canvas.bringToFront(arenaCoinPrize);
+
+
+                    fabric.loadSVGFromURL(itemImgPath, function (objects, options) {
+                        var obj = fabric.util.groupSVGElements(objects, options);
+                        obj.scale(0.2);
+                        obj.set({ left: canvas.width / 2 - 100, top: canvas.height / 2 + 30 });
+                        obj.selectable = false;
+                        obj.scalable = false;
+                        obj.name = 'prizeImg';
+                        obj.on('added', function () {
+                        });
+                        canvas.add(obj);
+
+                    });
+
+
+
+                    var itemPrizeName = new fabric.Text('Otrzymałeś ' + String(itemName), {
+                        left: canvas.width / 2 + 70,
+                        top: canvas.height / 2 - 15,
+                        selectable: false,
+                        scalable: false,
+                        name: 'itemPrizeName',
+                        fill: '#000',
+                        fontSize: 20,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                    });
+                    canvas.add(itemPrizeName);
+                    var stat1 = new fabric.Text(String(Stat1), {
+                        left: canvas.width / 2 + 70,
+                        top: canvas.height / 2 + 15,
+                        selectable: false,
+                        scalable: false,
+                        name: 'stat1',
+                        fill: '#000',
+                        fontSize: 16,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                    });
+                    canvas.add(stat1);
+                    var stat2 = new fabric.Text(String(Stat2), {
+                        left: canvas.width / 2 + 70,
+                        top: canvas.height / 2 + 35,
+                        selectable: false,
+                        scalable: false,
+                        name: 'stat2',
+                        fill: '#000',
+                        fontSize: 16,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                    });
+                    canvas.add(stat2);
+                    var stat3 = new fabric.Text(String(Stat3), {
+                        left: canvas.width / 2 + 70,
+                        top: canvas.height / 2 + 55,
+                        selectable: false,
+                        scalable: false,
+                        name: 'stat3',
+                        fill: '#000',
+                        fontSize: 16,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                    });
+                    canvas.add(stat3);
+                    var stat4 = new fabric.Text(String(Stat4), {
+                        left: canvas.width / 2 + 70,
+                        top: canvas.height / 2 + 75,
+                        selectable: false,
+                        scalable: false,
+                        name: 'stat4',
+                        fill: '#000',
+                        fontSize: 16,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                    });
+                    canvas.add(stat4);
+
+
+
+
+
+
+
+
+
+                }
+                else {
+                    var arenaTitlePrize = new fabric.Text(String("Przegrałeś!"), {
+                        left: canvas.width / 2,
+                        top: canvas.height / 2 - 120,
+                        selectable: false,
+                        scalable: false,
+                        name: 'arenaTitlePrize',
+                        fill: '#000',
+                        fontSize: 28,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                        originX: 'center',
+                    });
+                    canvas.add(arenaTitlePrize);
+                    canvas.bringToFront(arenaTitlePrize);
+
+                    var arenaExpPrize = new fabric.Text(String("Otrzymałeś " + exp + " punktów doświadczenia."), {
+                        left: canvas.width / 2,
+                        top: canvas.height / 2 - 70,
+                        selectable: false,
+                        scalable: false,
+                        name: 'arenaExpPrize',
+                        fill: '#000',
+                        fontSize: 20,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'center',
+                        originX: 'center',
+                    });
+                    canvas.add(arenaExpPrize);
+                    canvas.bringToFront(arenaExpPrize);
+
+
+                }
+
+
+            });
+            canvas.add(obj);
+        });
+
+
+
+
+    }
+
 
 }
