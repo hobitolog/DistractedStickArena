@@ -5,7 +5,8 @@ var defaults = {
     sessionSecret: 'tududu',
     disableMail: true,
     mailConfig: null,
-    skipWeaponChanges: true
+    skipWeaponChanges: false,
+    enableActivityLog: false
 }
 
 /*

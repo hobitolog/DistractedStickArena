@@ -71,7 +71,7 @@ app.get('/activation', login.isLoggedIn, (req, res) => {
         res.sendFile(path.join(__dirname, '/html', 'activation.html'))
 })
 
-app.get('/activate', (req, res) => {
+app.get('/activate', log.logActivity, (req, res) => {
 
     var reqToken = req.query.token
     if (!reqToken) {
@@ -105,7 +105,7 @@ app.get('/addWeapon', (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'addWeapon.html'))
 })
 
-app.post('/addWeapon', (req, res) => {
+app.post('/addWeapon', log.logActivity, (req, res) => {
 
     var newWeapon = {
         "name": req.body.name,
@@ -128,7 +128,7 @@ app.get('/login', (req, res) => {
         res.sendFile(path.join(__dirname, '/html', 'login.html'))
 })
 
-app.post('/login', (req, res, next) => {
+app.post('/login', log.logActivity, (req, res, next) => {
     passport.authenticate('local-login', function (err, user, info) {
         if (err) return next(err)
 
@@ -146,7 +146,7 @@ app.post('/login', (req, res, next) => {
     })(req, res, next)
 })
 
-app.post('/register', (req, res, next) => {
+app.post('/register', log.logActivity, (req, res, next) => {
     passport.authenticate('local-register', function (err, user, info) {
         if (err) return next(err)
 
