@@ -337,10 +337,11 @@ function handlePrizes(winner, loser) {
     duels.delete(loser)
 
     winnerProfile.socket.emit("endDuel", {
-        
+        exp: Math.round(exp * 1.3),
+        gold: bids.get(winner) * 2
     })
     loserProfile.socket.emit('endDuel', {
-
+        exp: Math.round(exp * 0.7)
     })
 }
 
