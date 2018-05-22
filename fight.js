@@ -227,7 +227,7 @@ function handleUserAction(login, socket, action) {
             } else {
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = Math.round((character.stats.damageMin
-                + Math.random() * (character.stats.damageMax - character.stats.damageMin)) * 0.7)
+                + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin))) * 0.7)
                 
                 var hparmAfterHit = hparm - damage
                 if(hparmAfterHit < opponent.stats.hpMax) {
@@ -253,7 +253,7 @@ function handleUserAction(login, socket, action) {
             } else {
                 var hparm = opponent.stats.hp + opponent.stats.armor
                 var damage = Math.round((character.stats.damageMin
-                + Math.random() * (character.stats.damageMax - character.stats.damageMin)) * 1.3)
+                + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin))) * 1.3)
                 
                 var hparmAfterHit = hparm - damage
                 if(hparmAfterHit < opponent.stats.hpMax) {
