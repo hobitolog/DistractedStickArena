@@ -49,16 +49,16 @@ io.use(passportSocketIo.authorize({
     secret: config.sessionSecret,
     store: mongoStore,
     success: onAuthorizeSuccess,
-    fail: onAuthorizeFail,  
+    fail: onAuthorizeFail,
 }))
 
-function onAuthorizeSuccess(data, accept){
+function onAuthorizeSuccess(data, accept) {
     accept();
 }
-  
-function onAuthorizeFail(data, message, error, accept){
+
+function onAuthorizeFail(data, message, error, accept) {
     console.log(message)
-    if(error)
+    if (error)
         accept(new Error(message));
 }
 api(app)
@@ -98,6 +98,8 @@ app.get('/activate', log.logActivity, (req, res) => {
 })
 
 app.get('/', login.isLoggedIn, login.isActivated, (req, res) => {
+    if (!req.headers['user-agent'])
+        res.status(403).send("Access denied")
     res.sendFile(path.join(__dirname, '/html', 'main.html'))
 })
 
@@ -122,6 +124,9 @@ app.post('/addWeapon', log.logActivity, (req, res) => {
 })
 
 app.get('/login', (req, res) => {
+    if (!req.headers['user-agent'])
+        res.status(403).send("Access denied")
+
     if (req.isAuthenticated())
         res.redirect('../')
     else

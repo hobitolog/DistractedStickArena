@@ -39,7 +39,7 @@ module.exports = {
         var path = req.originalUrl
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         var method = req.method
-        var entry = time + "\t" + login + "\t" + ua + "\t" + method + "\t" + path + "\t" + ip + "\n"
+        var entry = time + "\t" + "\t" + method + "\t" + path + "\t" + login + "\t" + ip + "\t" + ua + "\n"
         stream.write(entry)
         if (next)
             next()

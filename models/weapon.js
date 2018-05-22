@@ -11,6 +11,8 @@ const weaponSchema = mongoose.Schema({
     "type": String,     // "helmet|armor|weapon"
     "level": Number,    // poziom sugerowany do sklepu
     "image": String,    // relatywny url do obrazka np. "items/buzdygan.png"
+                        // OBRAZEK DLA BRONI POWINIEN MIEĆ ROZMIAR 150x150 i rękojeść w okolicy pozycji 50, 125
+                        // + optymalnie broń powinna być lekko pochylona w prawo
     "variants": []
 })
 /*
