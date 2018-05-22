@@ -86,6 +86,8 @@ module.exports = function (app) {
 
         const response = []
         let count = req.user.character.backpack.length
+        if(count == 0)
+            res.send({ "backpack": [] })
         req.user.character.backpack.forEach(element => {
 
             itemFetcher.getCurrentVariant(element.itemId)

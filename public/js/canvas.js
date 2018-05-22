@@ -1200,8 +1200,9 @@ window.onload = function () {
                         sellDrop.add(option);
                     })
                     if (sellDrop.length == 0) {
-                        var option = document.createElement("option");
-                        option.text = "Pusto!";
+                        var option = document.createElement("option")
+                        option.text = "Pusto!"
+                        option.disabled = true
                         sellDrop.add(option);
                     }
                     resolve();
@@ -1269,15 +1270,15 @@ window.onload = function () {
                     var variant = xmlhttp.response
                     switch (variant.type) {
                         case 'weapon':
-                            loadShopItemStats(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), (variant.image ? variant.image : "svg/weapon.svg"))
                             break
 
                         case 'armor':
-                            loadShopItemStats(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), (variant.image ? variant.image : "svg/armor.svg"))
                             break
 
                         case 'helmet':
-                            loadShopItemStats(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), variant.image)
+                            loadShopItemStats(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", Math.round(variant.value * (operation === "SELL" ? 0.75 : 1)), (operation === "SELL" ? "SPRZEDAJ" : "KUP"), (variant.image ? variant.image : "svg/helmet.svg"))
                             break
                     }
                     resolve();
