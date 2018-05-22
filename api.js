@@ -111,7 +111,10 @@ module.exports = function (app) {
     })
 
     app.get('/getCharacterItems', login.isLoggedIn, login.isActivated, (req, res) => {
-        var ids = req.user.character.backpack.slice()
+        var ids = []
+        req.user.character.backpack.forEach((element,index)=>{
+            ids.push(element.itemId)
+        })
         ids.push(req.user.character.equipment.weapon.itemId)
         ids.push(req.user.character.equipment.helmet.itemId)
         ids.push(req.user.character.equipment.armor.itemId)

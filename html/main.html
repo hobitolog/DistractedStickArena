@@ -20,6 +20,40 @@
         .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
             background-color: #dc3545;
         }
+
+        .bs-select {
+            position: relative;
+            visibility: hidden;
+            width: 150px;
+            background-color: transparent;
+            overflow-y: overlay;
+            direction:rtl;
+            border: transparent;
+            color: #fff;
+            text-align: center;
+            padding-left: 15px;         
+            -webkit-appearance: none;  
+
+        }
+        .s-select {
+            position: relative;
+            visibility: hidden;
+            width: 150px;
+            background-color: transparent;
+            overflow-y: overlay;
+            direction:rtl;
+            border: transparent;
+            color: #fff;
+            text-align: center;
+            padding-left: 15px;  
+            -webkit-appearance: none;         
+
+        }
+
+
+  
+
+
     </style>
 
 </head>
@@ -55,13 +89,13 @@
             <select id="weapon" style="position: relative; visibility: hidden;width: 150px">
                 <option value="">Brak broni</option>
             </select>
-            <select size="4" id="buy" style="position: relative; visibility: hidden;width: 150px">
+            <select class="s-select" size="4" id="buy">
                 <option value="">Brak przedmiotów do kupna</option>
             </select>
-            <select size="4" id="sell" style="position: relative; visibility: hidden;width: 150px">
+            <select class="s-select" size="4" id="sell">
                 <option value="">Brak przedmiotów do sprzedaży</option>
             </select>
-            <select size="10" id="blacksmith" style="position: relative; visibility: hidden;width: 150px">
+            <select class="bs-select" size="10" id="blacksmith">
                 <option value="">Brak przedmiotów do ulepszenia</option>
             </select>
             <select id="arenaGold" style="position: relative; visibility: hidden;width: 70px">
