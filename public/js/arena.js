@@ -479,7 +479,6 @@ function showArena() {
                 case 'flag':
                     socket.emit('surrender')
                     clearInterval(arenaTimer);
-                    location.reload()
                     break;
 
                 case 'exitButton':
@@ -731,8 +730,12 @@ function removeRightBars() {
     });
 }
 
+var arenaAlertTimeout
+
 function arenaAlert(input) {
     if (canvas.getItemByName('arenaAlert')) { canvas.remove(canvas.getItemByName('arenaAlert')) }
+
+    clearTimeout(arenaAlertTimeout)
 
     var arenaAlert = new fabric.Text(String(input), {
         left: canvas.width / 2,
@@ -750,7 +753,7 @@ function arenaAlert(input) {
     canvas.bringToFront(arenaAlert);
     canvas.renderAll()
 
-    setTimeout(function () {
+    arenaAlertTimeout = setTimeout(function () {
         if (canvas.getItemByName('arenaAlert')) {
             canvas.remove(canvas.getItemByName('arenaAlert'))
             canvas.renderAll()
