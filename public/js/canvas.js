@@ -298,6 +298,7 @@ window.onload = function () {
                     canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
                     loadInBlacksmith();
+                    loadBlacksmithBag();
                     //open blacksmith
                     break;
                 case 'statue':
@@ -1246,6 +1247,41 @@ window.onload = function () {
         })
     }
 
+    function loadBlacksmithBag() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getCharacterItems", true);
+            // xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    clearBlacksmithBag()
+
+                    xmlhttp.response.items.forEach((element, index) => {
+                        var option = document.createElement("option");
+                        option.text = element.name;
+                        option.value = element.itemId
+                        // option.addEventListener("click", function () {
+                        //     getAndLoadShopItem(element.itemId, "SELL")
+                        // })
+                        blacksmithDrop.add(option);
+                    })
+                    if (blacksmithDrop.length == 0) {
+                        var option = document.createElement("option")
+                        option.text = "Pusto!"
+                        option.disabled = true
+                        blacksmithDrop.add(option);
+                    }
+                    resolve();
+                }
+            }
+            xmlhttp.send();
+        })
+    }
+
+    function clearBlacksmithBag() {
+        blacksmithDrop.innerHTML = ""
+    }
 
     function clearSellList() {
         sellDrop.innerHTML = ""
