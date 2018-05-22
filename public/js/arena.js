@@ -58,7 +58,14 @@ socket.on('turn', function (nick) {
 })
 
 socket.on('attack', function (attackType, attacker, attacked) {
+
     var attackerIndex = getCharacterIndex(attacker.login)
+    
+    if(attackerIndex == 0)
+        sticks.animateUserAttack()
+    else
+        sticks.animateEnemyAttack()
+
     characters[attackerIndex] = attacker
 
     var attackedIndex = getCharacterIndex(attacked.login)
@@ -204,24 +211,6 @@ function showArena() {
 
         });
         sticks.initialize()
-        /*fabric.loadSVGFromURL('svg/Stickman.svg', function (objects, options) {
-            var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(2);
-            obj.set({ left: 330, top: 300 });
-            obj.selectable = false;
-            obj.scalable = false;
-            obj.name = 'stickman';
-            canvas.add(obj);
-        });
-        fabric.loadSVGFromURL('svg/Stickman.svg', function (objects, options) {
-            var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(1.7);
-            obj.set({ left: 420, top: 280 });
-            obj.selectable = false;
-            obj.scalable = false;
-            obj.name = 'opponent';
-            canvas.add(obj);
-        });*/
         fabric.loadSVGFromURL('svg/arena/HealthBar.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0.38);
@@ -280,9 +269,9 @@ function showArena() {
         refRightBars();
 
         //TODO background
-        fabric.loadSVGFromURL('https://upload.wikimedia.org/wikipedia/en/thumb/9/98/Blank_button.svg/1124px-Blank_button.svg.png', function (objects, options) {
+        fabric.loadSVGFromURL('https://upload.wikimedia.org/wikipedia/commons/c/cf/Ubuntu_alternative_background.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(1.2);
+            obj.opacity = 0.5
             obj.set({ left: canvas.width / 2, top: 140 });
             obj.selectable = false;
             obj.scalable = false;
@@ -296,6 +285,7 @@ function showArena() {
                 canvas.bringToFront(canvas.getItemByName('stickman'))
                 canvas.bringToFront(canvas.getItemByName('opponent'))
                 canvas.bringToFront(canvas.getItemByName('flag'))
+                sticks.bringToFront()
                 formatBars();
             });
             canvas.add(obj);
