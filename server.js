@@ -22,6 +22,8 @@ var morgan = require('morgan')
 var MongoStore = require('connect-mongo')(expressSession)
 var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection })
 
+app.use(express.static(path.join(__dirname, '/public')))
+
 app.use(expressSession({
     key: 'connect.sid',
     store: mongoStore,
@@ -38,7 +40,6 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 login.init(passport)
 
-app.use(express.static(path.join(__dirname, '/public')))
 app.use(morgan('dev'))
 
 var server = require('http').createServer(app)
