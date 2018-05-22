@@ -203,7 +203,7 @@ function handleUserAction(login, socket, action) {
                 
                 var hparmAfterHit = hparm - damage
                 if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - damage
+                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
                     opponent.stats.armor = 0
                 } else {
                     opponent.stats.armor -= damage
@@ -231,7 +231,7 @@ function handleUserAction(login, socket, action) {
                 
                 var hparmAfterHit = hparm - damage
                 if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - damage
+                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
                     opponent.stats.armor = 0
                 } else {
                     opponent.stats.armor -= damage
@@ -257,7 +257,7 @@ function handleUserAction(login, socket, action) {
                 
                 var hparmAfterHit = hparm - damage
                 if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - damage
+                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
                     opponent.stats.armor = 0
                 } else {
                     opponent.stats.armor -= damage
