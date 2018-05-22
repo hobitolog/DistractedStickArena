@@ -2303,6 +2303,7 @@ window.onload = function () {
     function hideBlacksmithControls() {
         blacksmithDrop.style.visibility = 'hidden';
     }
+    //setTimeout(function(){ showArena() }, 1000)
 
 }
 

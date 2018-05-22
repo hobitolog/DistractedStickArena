@@ -289,7 +289,7 @@ function handleUserAction(login, socket, action) {
         handlePrizes(character.login, character.opponent)
     } else {
         duel.turn = duel.characters.get(login).opponent
-        io.to(duel.id).emit('turn', duel.turn)
+        //io.to(duel.id).emit('turn', duel.turn)
     }
 }
 

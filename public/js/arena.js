@@ -54,14 +54,14 @@ socket.on('notYourTurn', function () {
 })
 
 socket.on('turn', function (nick) {
-    arenaAlert('Ruch gracza ' + nick)
+    arenaAlert('Zaczyna gracz ' + nick)
 })
 
 socket.on('attack', function (attackType, attacker, attacked) {
 
     var attackerIndex = getCharacterIndex(attacker.login)
     
-    if(attackerIndex == 0)
+    if (attackerIndex == 0)
         sticks.animateUserAttack()
     else
         sticks.animateEnemyAttack()
@@ -69,21 +69,31 @@ socket.on('attack', function (attackType, attacker, attacked) {
     characters[attackerIndex] = attacker
 
     var attackedIndex = getCharacterIndex(attacked.login)
+    var armDiff = characters[attackedIndex].stats.armor - attacked.stats.armor
+    var hpDiff = characters[attackedIndex].stats.hp - attacked.stats.hp
+    sticks.animateDamageHint(hpDiff + armDiff)
     characters[attackedIndex] = attacked
-
     refreshBars()
 })
 
 socket.on('miss', function (missType, character) {
-    var index = getCharacterIndex(character.login)
-    characters[index] = character
 
+    var index = getCharacterIndex(character.login)
+
+    if (index == 0)
+        sticks.animateUserAttack()
+    else
+        sticks.animateEnemyAttack()
+    sticks.animateDamageHint()
+
+    characters[index] = character
     refreshBars(index)
 })
 
 socket.on('rest', function (character) {
     var index = getCharacterIndex(character.login)
     characters[index] = character
+    arenaAlert('Gracz ' + character.login + ' odpoczywa')
     refreshBars(index)
 })
 
@@ -738,10 +748,12 @@ function arenaAlert(input) {
     });
     canvas.add(arenaAlert);
     canvas.bringToFront(arenaAlert);
+    canvas.renderAll()
 
     setTimeout(function () {
         if (canvas.getItemByName('arenaAlert')) {
             canvas.remove(canvas.getItemByName('arenaAlert'))
+            canvas.renderAll()
         }
     }, 3000)
 

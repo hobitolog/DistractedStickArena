@@ -10,6 +10,7 @@ var sticks = {
         weaponUrl: "items/buzdygan.png",
         color: 'red'
     },
+    hitTip: {},
 
     setWeapons: function (user, enemy) {
         this.user.weaponUrl = user
@@ -87,8 +88,69 @@ var sticks = {
             obj.scalable = false
             sticks.enemy.slash = obj
         })
+
+        var polygonPoints = [
+            { x: 85, y: 0 },
+            { x: 110, y: 40 },
+            { x: 120, y: 30 },
+            { x: 122, y: 43 },
+            { x: 137, y: 45 },
+            { x: 180, y: 35 },
+            { x: 160, y: 60 },
+            { x: 220, y: 45 },
+            { x: 180, y: 80 },
+            { x: 210, y: 90 },
+            { x: 180, y: 105 },
+            { x: 190, y: 140 },
+            { x: 175, y: 135 },
+            { x: 190, y: 165 },
+            { x: 150, y: 140 },
+            { x: 150, y: 150 },
+            { x: 125, y: 140 },
+            { x: 107, y: 192 },
+            { x: 100, y: 140 },
+            { x: 75, y: 160 },
+            { x: 80, y: 140 },
+            { x: 60, y: 150 },
+            { x: 70, y: 130 },
+            { x: 0, y: 150 },
+            { x: 57, y: 105 },
+            { x: 35, y: 100 },
+            { x: 60, y: 90 },
+            { x: 30, y: 70 },
+            { x: 60, y: 70 },
+            { x: 45, y: 50 },
+            { x: 75, y: 60 },
+            { x: 70, y: 35 },
+            { x: 85, y: 45 }
+        ]
+        this.hitTip.polygon = new fabric.Polygon(polygonPoints, {
+            scaleX: 0.6,
+            scaleY: 0.6,
+            left: 350,
+            top: 130,
+            fill: 'red',
+            selectable: false,
+            objectCaching: false,
+        })
+        this.hitTip.polygonText = new fabric.Text(String("hit"), {
+            left: 350,
+            top: 130,
+            selectable: false,
+            scalable: false,
+            name: 'arenaAlert',
+            fill: 'white',
+            fontSize: 22,
+            fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+            textAlign: 'center',
+        });
+        //canvas.add(this.hitTip.polygon)
+        //canvas.add(this.hitTip.polygonText)
+
         addToCanvas(sticks.user)
         addToCanvas(sticks.enemy)
+        //this.hitTip.polygon.bringToFront()
+        //this.hitTip.polygonText.bringToFront()
     },
 
     bringToFront: function () {
@@ -123,7 +185,7 @@ var sticks = {
         this.enemy.weapon.angle = 90
         this.enemy.weapon.set({ left: 380, top: 275 })
         this.enemy.weapon.set('flipY', true)
-        this.enemy.weapon.set('flipX', false)        
+        this.enemy.weapon.set('flipX', false)
         this.enemy.weapon.bringToFront()
         canvas.renderAll()
         setTimeout(function () {
@@ -135,18 +197,28 @@ var sticks = {
             canvas.renderAll()
         }, 1000)
     },
-}
 
-function hit() {
-    setInterval(function(){
-        sticks.animateUserAttack()
-    }, 2000)
+    animateDamageHint(damage) {
+        if (damage) {
+            this.hitTip.polygonText.text = damage.toString()
+            this.hitTip.polygon.fill = 'red'
+        }
+        else {
+            this.hitTip.polygonText.text = "miss"
+            this.hitTip.polygon.fill = 'blue'
+        }
 
-    setTimeout(function(){
-        setInterval(function(){
-            sticks.animateEnemyAttack()
-        }, 2000)
-    }, 1000)
+        canvas.add(this.hitTip.polygon)
+        canvas.add(this.hitTip.polygonText)
+        this.hitTip.polygon.bringToFront()
+        this.hitTip.polygonText.bringToFront()
+        canvas.renderAll()
+        setTimeout(function () {
+            canvas.remove(sticks.hitTip.polygon)
+            canvas.remove(sticks.hitTip.polygonText)
+            canvas.renderAll()
+        }, 1000)
+    }
 }
 
 function addToCanvas(user) {
