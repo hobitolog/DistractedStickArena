@@ -267,6 +267,11 @@ window.onload = function () {
                     hideEqControls()
                     hideShopControls()
                     hideBlacksmithControls()
+                    removeTavern()
+                    removeStatue()
+                    removeStats();
+                    removeEq();
+                    removeBlacksmith()
                     canvas.getItemByName('inArena').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inArena'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
@@ -278,6 +283,11 @@ window.onload = function () {
                     hideEqControls()
                     hideArenaControls()
                     hideBlacksmithControls()
+                    removeArena()
+                    removeStats();
+                    removeEq();
+                    removeStatue()
+                    removeBlacksmith()
                     refreshChar();
                     canvas.getItemByName('inTavern').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inTavern'));
@@ -293,11 +303,17 @@ window.onload = function () {
                     hideEqControls()
                     hideShopControls()
                     hideArenaControls()
+                    removeTavern()
+                    removeStats();
+                    removeEq();
+                    removeArena()
+                    removeStatue()
                     refreshChar();
                     canvas.getItemByName('inBlacksmith').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inBlacksmith'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
                     loadInBlacksmith();
+                    loadBlacksmithBag();
                     //open blacksmith
                     break;
                 case 'statue':
@@ -305,6 +321,11 @@ window.onload = function () {
                     hideShopControls()
                     hideArenaControls()
                     hideBlacksmithControls()
+                    removeTavern()
+                    removeStats();
+                    removeEq();
+                    removeArena()
+                    removeBlacksmith()
                     refreshChar();
                     canvas.getItemByName('inStatue').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStatue'));
@@ -316,6 +337,10 @@ window.onload = function () {
                     hideShopControls()
                     hideArenaControls()
                     hideBlacksmithControls()
+                    removeTavern()
+                    removeStatue()
+                    removeBlacksmith()
+                    removeArena()
                     canvas.getItemByName('inStickman').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStickman'));
                     reqStat().then(loadStats);
@@ -507,8 +532,7 @@ window.onload = function () {
     }
     function loadBG(BGname) {
         if (!canvas.getItemByName(BGname)) {
-            fabric.loadSVGFromURL('svg/' + BGname + '.svg', function (objects, options) {
-                var obj = fabric.util.groupSVGElements(objects, options);
+            fabric.Image.fromURL('png/'+BGname+'.png', function (obj) {
                 obj.scale(1);
                 obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
                 obj.selectable = false;
@@ -517,7 +541,8 @@ window.onload = function () {
                 obj.opacity = 0;
                 canvas.add(obj);
                 canvas.sendToBack(obj);
-            });
+
+            })
         }
 
     };
@@ -549,7 +574,6 @@ window.onload = function () {
 
                 });
             canvas.add(findOpButton);
-            canvas.bringToFront(findOpButton);
 
             var arenaCoinText = new fabric.Text(String("Stawka: "), {
                 left: canvas.width / 2 - 80,
@@ -564,8 +588,6 @@ window.onload = function () {
                 originX: 'left',
             });
             canvas.add(arenaCoinText);
-            canvas.bringToFront(arenaCoinText);
-
 
 
             var arenaStatsText = new fabric.Group([
@@ -640,7 +662,6 @@ window.onload = function () {
 
                 });
             canvas.add(arenaStatsText);
-            canvas.bringToFront(arenaStatsText);
 
 
             var arenaStatsPoints = new fabric.Group([
@@ -707,7 +728,6 @@ window.onload = function () {
 
                 });
             canvas.add(arenaStatsPoints);
-            canvas.bringToFront(arenaStatsPoints);
 
 
             var arenaStatsTextOp = new fabric.Group([
@@ -782,7 +802,7 @@ window.onload = function () {
 
                 });
             canvas.add(arenaStatsTextOp);
-            canvas.bringToFront(arenaStatsTextOp);
+
 
 
             var arenaStatsPointsOp = new fabric.Group([
@@ -849,9 +869,22 @@ window.onload = function () {
 
                 });
             canvas.add(arenaStatsPointsOp);
-            canvas.bringToFront(arenaStatsPointsOp);
+
 
         }
+
+        canvas.bringToFront(canvas.getItemByName('findOpButton'));
+
+        canvas.bringToFront(canvas.getItemByName('arenaCoinText'));
+
+
+        canvas.bringToFront(canvas.getItemByName('arenaStatsText'));
+
+        canvas.bringToFront(canvas.getItemByName('arenaStatsPoints'));
+
+        canvas.bringToFront(canvas.getItemByName('arenaStatsTextOp'));
+        canvas.bringToFront(canvas.getItemByName('arenaStatsPointsOp'));
+
 
     };
     function loadCharMain() {
@@ -1246,6 +1279,41 @@ window.onload = function () {
         })
     }
 
+    function loadBlacksmithBag() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getCharacterItems", true);
+            // xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    clearBlacksmithBag()
+
+                    xmlhttp.response.items.forEach((element, index) => {
+                        var option = document.createElement("option");
+                        option.text = element.name;
+                        option.value = element.itemId
+                        // option.addEventListener("click", function () {
+                        //     getAndLoadShopItem(element.itemId, "SELL")
+                        // })
+                        blacksmithDrop.add(option);
+                    })
+                    if (blacksmithDrop.length == 0) {
+                        var option = document.createElement("option")
+                        option.text = "Pusto!"
+                        option.disabled = true
+                        blacksmithDrop.add(option);
+                    }
+                    resolve();
+                }
+            }
+            xmlhttp.send();
+        })
+    }
+
+    function clearBlacksmithBag() {
+        blacksmithDrop.innerHTML = ""
+    }
 
     function clearSellList() {
         sellDrop.innerHTML = ""
@@ -1371,13 +1439,9 @@ window.onload = function () {
                 textAlign: 'center',
             });
             canvas.add(tradeSell);
-
-
-            canvas.bringToFront(canvas.getItemByName('tradeBuy'))
-            canvas.bringToFront(canvas.getItemByName('tradeSell'))
-
-
         }
+        canvas.bringToFront(canvas.getItemByName('tradeBuy'))
+        canvas.bringToFront(canvas.getItemByName('tradeSell'))
 
     }
 
@@ -1385,14 +1449,18 @@ window.onload = function () {
         if (!canvas.getItemByName('bsText')) {
 
             blacksmithDrop.style.left = -20 + 'px';
-            blacksmithDrop.style.top = -430 + 'px';
+            blacksmithDrop.style.top = -430 + 'px';//-430
             blacksmithDrop.style.visibility = 'visible';
+        //     blacksmithDrop.style.backgroundColor = 'transparent'
+        //     blacksmithDrop.style.color = '#fff'
+        //     blacksmithDrop.style.overflowY = 'overlay'
+        //     blacksmithDrop.style.border = 'none'
 
 
 
 
             var bsText = new fabric.Text(String("Plecak"), {
-                left: canvas.width / 2 - 155,
+                left: canvas.width / 2 - 142,
                 top: canvas.height / 2 - 120,
                 selectable: false,
                 scalable: false,
@@ -1403,7 +1471,6 @@ window.onload = function () {
                 textAlign: 'center',
             });
             canvas.add(bsText);
-            canvas.bringToFront(bsText)
 
             var before = new fabric.Text(String("Przed"), {
                 left: canvas.width / 2,
@@ -1417,7 +1484,6 @@ window.onload = function () {
                 textAlign: 'center',
             });
             canvas.add(before);
-            canvas.bringToFront(before)
 
             var after = new fabric.Text(String("Po"), {
                 left: canvas.width / 2,
@@ -1431,7 +1497,6 @@ window.onload = function () {
                 textAlign: 'center',
             });
             canvas.add(after);
-            canvas.bringToFront(after)
 
 
             var bsButton = new fabric.Group([new fabric.Rect({
@@ -1454,12 +1519,14 @@ window.onload = function () {
 
                 });
             canvas.add(bsButton);
-            canvas.bringToFront(bsButton);
-
-
-
 
         }
+
+        canvas.bringToFront(canvas.getItemByName('bsText'))
+        canvas.bringToFront(canvas.getItemByName('before'))
+        canvas.bringToFront(canvas.getItemByName('after'))
+        canvas.bringToFront(canvas.getItemByName('bsButton'))
+
 
     }
 
@@ -1506,7 +1573,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat1',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 18,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1518,7 +1585,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat2',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 18,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1530,7 +1597,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat3',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 18,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1542,7 +1609,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat4',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 18,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1561,7 +1628,7 @@ window.onload = function () {
         new fabric.Text(String(selectedButtonOption), {
             // left: 200,
             // top: 100,
-            fill: '#000',
+            fill: '#fff',
             name: 'inTavernButtonText',
             fontSize: 15
         })], {
@@ -1592,7 +1659,7 @@ window.onload = function () {
                 new fabric.Text(String(selectedValue), {
                     left: 40,
                     // top: 100,
-                    fill: '#000',
+                    fill: '#fff',
                     name: 'inTavernValueText',
                     textAlign: 'left',
                     fontSize: 25
@@ -1660,7 +1727,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat1Before',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 15,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1672,7 +1739,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat2Before',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 15,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1684,7 +1751,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat3Before',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 15,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1696,7 +1763,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat4Before',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 15,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1747,7 +1814,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat1After',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 15,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1759,7 +1826,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat2After',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 15,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1771,7 +1838,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat3After',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 15,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1783,7 +1850,7 @@ window.onload = function () {
             selectable: false,
             scalable: false,
             name: 'stat4After',
-            fill: '#000',
+            fill: '#fff',
             fontSize: 15,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
@@ -1804,7 +1871,7 @@ window.onload = function () {
                 new fabric.Text(String(selectedValue), {
                     left: 40,
                     // top: 100,
-                    fill: '#000',
+                    fill: '#fff',
                     textAlign: 'left',
                     fontSize: 25
                 }), coinBS], {
@@ -1836,7 +1903,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'rankingTitle',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 30,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'center',
@@ -1849,7 +1916,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'nr',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 16,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1863,7 +1930,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking1',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1876,7 +1943,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking2',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1889,7 +1956,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking3',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1902,7 +1969,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking4',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1915,7 +1982,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking5',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1928,7 +1995,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking6',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1941,7 +2008,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking7',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1954,7 +2021,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking8',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1967,7 +2034,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking9',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1980,7 +2047,7 @@ window.onload = function () {
                 selectable: false,
                 scalable: false,
                 name: 'ranking10',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -1988,12 +2055,12 @@ window.onload = function () {
             });
             canvas.add(ranking10);
             var rankingPoints1 = new fabric.Text(String(p1), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 180,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints1',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2001,12 +2068,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints1);
             var rankingPoints2 = new fabric.Text(String(p2), {
-                left: canvas.width /2+150,
+                left: canvas.width /2+120,
                 top: 201,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints2',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2014,12 +2081,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints2);
             var rankingPoints3 = new fabric.Text(String(p3), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 221,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints3',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2027,12 +2094,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints3);
             var rankingPoints4 = new fabric.Text(String(p4), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 241,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints4',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2040,12 +2107,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints4);
             var rankingPoints5 = new fabric.Text(String(p5), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 261,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints5',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2053,12 +2120,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints5);
             var rankingPoints6 = new fabric.Text(String(p6), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 283,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints6',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2066,12 +2133,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints6);
             var rankingPoints7 = new fabric.Text(String(p7), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 305,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints7',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2079,12 +2146,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints7);
             var rankingPoints8 = new fabric.Text(String(p8), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 326,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints8',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2092,12 +2159,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints8);
             var rankingPoints9 = new fabric.Text(String(p9), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 347,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints9',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2105,12 +2172,12 @@ window.onload = function () {
             });
             canvas.add(rankingPoints9);
             var rankingPoints10 = new fabric.Text(String(p10), {
-                left: canvas.width / 2+150,
+                left: canvas.width / 2+120,
                 top: 367,
                 selectable: false,
                 scalable: false,
                 name: 'rankingPoints10',
-                fill: '#000',
+                fill: '#fff',
                 fontSize: 20,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
@@ -2180,7 +2247,6 @@ window.onload = function () {
         canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
         canvas.sendToBack(canvas.getItemByName('inStatue'));
         canvas.sendToBack(canvas.getItemByName('inStickman'));
-        canvas.sendToBack(canvas.getItemByName('findOpButton'));
         canvas.sendToBack(canvas.getItemByName('exit'));
         removeStats();
         removeEq();
@@ -2204,6 +2270,7 @@ window.onload = function () {
             if (canvas.getItemByName('heartText')) { canvas.remove(canvas.getItemByName('heartText')); }
             if (canvas.getItemByName('shieldText')) { canvas.remove(canvas.getItemByName('shieldText')); }
             if (canvas.getItemByName('energyText')) { canvas.remove(canvas.getItemByName('energyText')); }
+            canvas.sendToBack(canvas.getItemByName('inStickman'));
 
             resolve();
         });
@@ -2213,6 +2280,7 @@ window.onload = function () {
         if (canvas.getItemByName('EQhelmet')) { canvas.remove(canvas.getItemByName('EQhelmet')); }
         if (canvas.getItemByName('EQarmmor')) { canvas.remove(canvas.getItemByName('EQarmmor')); }
         if (canvas.getItemByName('EQweapon')) { canvas.remove(canvas.getItemByName('EQweapon')); }
+    
     }
 
     function removeChar() {
@@ -2241,6 +2309,7 @@ window.onload = function () {
         if (canvas.getItemByName('rankingPoints8')) { canvas.remove(canvas.getItemByName('rankingPoints8')); }
         if (canvas.getItemByName('rankingPoints9')) { canvas.remove(canvas.getItemByName('rankingPoints9')); }
         if (canvas.getItemByName('rankingPoints10')) { canvas.remove(canvas.getItemByName('rankingPoints10')); }
+        canvas.sendToBack(canvas.getItemByName('inStatue'));
 
     }
 
@@ -2261,6 +2330,8 @@ window.onload = function () {
         if (canvas.getItemByName('stat3After')) { canvas.remove(canvas.getItemByName('stat3After')); }
         if (canvas.getItemByName('stat4After')) { canvas.remove(canvas.getItemByName('stat4After')); }
         if (canvas.getItemByName('itemValueAfter')) { canvas.remove(canvas.getItemByName('itemValueAfter')); }
+        canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
+
     }
 
     function removeTavern() {
@@ -2274,6 +2345,8 @@ window.onload = function () {
         if (canvas.getItemByName('tradeSell')) { canvas.remove(canvas.getItemByName('tradeSell')); }
         if (canvas.getItemByName('tradeBuy')) { canvas.remove(canvas.getItemByName('tradeBuy')); }
         if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
+        canvas.sendToBack(canvas.getItemByName('inTavern'));
+
     }
 
     function removeArena() {
@@ -2283,6 +2356,8 @@ window.onload = function () {
         if (canvas.getItemByName('arenaStatsPoints')) { canvas.remove(canvas.getItemByName('arenaStatsPoints')); }
         if (canvas.getItemByName('arenaStatsTextOp')) { canvas.remove(canvas.getItemByName('arenaStatsTextOp')); }
         if (canvas.getItemByName('arenaStatsPointsOp')) { canvas.remove(canvas.getItemByName('arenaStatsPointsOp')); }
+        canvas.sendToBack(canvas.getItemByName('inArena'));
+
     }
 
     function hideEqControls() {

@@ -130,4 +130,46 @@ module.exports = {
             })
         })
     },
+
+    getItems: function (ids) {
+        return new Promise(function (resolve, reject) {
+            const toReturn = []
+ 
+            var baseIds = []
+            var toFind = []
+            ids.forEach((id, index) => {
+                var variantId = id % 100
+                var baseId = id - variantId
+                var baseVar = {
+                    "baseId": baseId,
+                    "variantId": variantId
+                }
+                toFind.push(baseVar)
+                baseIds.push(baseId)
+            })
+
+            Weapon.find({ 'baseId': { $in: baseIds } }, (err, items) => {
+                if(err) {
+                    reject(err)
+                    return
+                }
+
+                toFind.forEach((item, index) => {
+                    var full = items.find(element => {
+                        return item.baseId == element.baseId
+                    })
+
+                    var variant = full.variants.find(element => {
+                        return item.variantId == element.variantId
+                    })
+
+                    toReturn.push({
+                        "itemId": item.baseId + item.variantId,
+                        "name": variant.name ? variant.name : full.name
+                    })
+                })
+                resolve(toReturn)
+            })
+        })
+    },
 }

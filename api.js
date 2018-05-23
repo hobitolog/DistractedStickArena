@@ -110,6 +110,21 @@ module.exports = function (app) {
         }
     })
 
+    app.get('/getCharacterItems', login.isLoggedIn, login.isActivated, (req, res) => {
+        var ids = []
+        req.user.character.backpack.forEach((element,index)=>{
+            ids.push(element.itemId)
+        })
+        ids.push(req.user.character.equipment.weapon.itemId)
+        ids.push(req.user.character.equipment.helmet.itemId)
+        ids.push(req.user.character.equipment.armor.itemId)
+        itemFetcher.getItems(ids).then(items => {
+            res.json({ "items": items })
+        }).catch( err => {
+            log.error(err)
+        })
+    })
+
     app.post('/setWeapon', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
         //TODO
     })
@@ -203,6 +218,10 @@ module.exports = function (app) {
                 res.json(json)
             }
         })
+
+    })
+
+    app.post('/upgrade', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
 
     })
 }
