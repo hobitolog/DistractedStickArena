@@ -384,7 +384,6 @@ window.onload = function () {
                     }
                     break;
                 case 'tradeButton':
-                    console.log(canvas.getItemByName('tradeButton').option)
                     if (canvas.getItemByName('tradeButton').option === 'SPRZEDAJ') {
                         var itemToSell = document.getElementById('sell').value
                         sellItem(itemToSell).then(refreshChar)
@@ -394,7 +393,8 @@ window.onload = function () {
                     }
                     break;
                 case 'bsButton':
-               // .then(refreshChar)
+                    var itemToUpgrade = document.getElementById('blacksmith').value
+                    upgradeItem(itemToUpgrade).then(loadBlacksmithBag).then(refreshChar)
                     break;
                 case 'exit':
                     closeButton();
@@ -1279,6 +1279,76 @@ window.onload = function () {
         })
     }
 
+    function upgradeItem(itemId) {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest()
+            xmlhttp.open("POST", "upgradeItem", true)
+            xmlhttp.setRequestHeader("Content-Type", "application/json")
+            xmlhttp.responseType = "json"
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    if (xmlhttp.response.error) {
+                        alert(xmlhttp.response.error);
+                    }
+                    else {
+                        var buyList = document.getElementById('buy')
+                        buyList.selectedIndex = 0
+                        getAndLoadShopItem(buyList.options[0].value, "BUY")
+                        loadSellItemList()
+                        resolve()
+                    }
+                }
+            }
+            xmlhttp.send(JSON.stringify({ "itemId": itemId }))
+        });
+    }
+
+    function getAndLoadBlacksmithItem(id, before) {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getVariant?itemId=" + id, true);
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    if(!xmlhttp.response) {
+                        loadBsItemStatsAfter('Max lvl', '', '', '', '', 0)
+                        resolve()
+                        return
+                    }
+                    
+                    var variant = xmlhttp.response
+                    switch (variant.type) {
+                        case 'weapon':
+                        if(before) {
+                            loadBsItemStatsBefore(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.image ? variant.image : "svg/weapon.svg"))
+                        } else {
+                            loadBsItemStatsAfter(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.upgradePrice ? variant.upgradePrice : "-"))
+                        }
+                            break
+
+                        case 'armor':
+                        if(before) {
+                            loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/armor.svg"))
+                        } else {
+                            loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.upgradePrice ? variant.upgradePrice : "-"))
+                        }
+                            break
+
+                        case 'helmet':
+                        if(before) {
+                            loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/helmet.svg"))
+                        } else {
+                            loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.upgradePrice ? variant.upgradePrice : "-"))
+                        }
+                            break
+                    }
+                    resolve();
+                }
+            }
+            xmlhttp.send();
+        })
+    }
+
     function loadBlacksmithBag() {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
@@ -1293,9 +1363,11 @@ window.onload = function () {
                         var option = document.createElement("option");
                         option.text = element.name;
                         option.value = element.itemId
-                        // option.addEventListener("click", function () {
-                        //     getAndLoadShopItem(element.itemId, "SELL")
-                        // })
+                        option.addEventListener("click", function () {
+                            getAndLoadBlacksmithItem(element.itemId, true).then(() => {
+                                getAndLoadBlacksmithItem(element.itemId + 1, false)
+                            })
+                        })
                         blacksmithDrop.add(option);
                     })
                     if (blacksmithDrop.length == 0) {

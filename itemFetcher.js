@@ -68,8 +68,10 @@ module.exports = {
 
     getCurrentVariant: function (itemId) {
         return new Promise(function (resolve, reject) {
+            if(itemId == "")
+                reject("Niepoprawne itemId: " + itemId)
             const variantId = itemId % 100
-            const baseId = itemId - variantId
+            const baseId = parseInt(itemId) - variantId
             Weapon.findOne({ 'baseId': baseId }, (err, full) => {
                 if (err) {
                     reject(err)
@@ -84,6 +86,11 @@ module.exports = {
                     return element.variantId == variantId
                 })
 
+                if(!variant) {
+                    resolve()
+                    return
+                }
+                    
                 const toReturn = {
                     "itemId": itemId,
                     "level": full.level,

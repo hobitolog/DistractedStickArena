@@ -221,7 +221,68 @@ module.exports = function (app) {
 
     })
 
-    app.post('/upgrade', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+    app.post('/upgradeItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+        var itemId = parseInt(req.body.itemId)
+        var character = req.user.character
+        var slot
 
+        if(itemId == character.equipment.weapon.itemId) {
+            slot = 'weapon'
+        } else if(itemId == character.equipment.armor.itemId) {
+            slot = 'armor'
+        } else if(itemId == character.equipment.helmet.itemId) {
+            slot = 'helmet'
+        } else {
+            var itemIndex = character.backpack.findIndex(element => {
+                return element.itemId == itemId
+            })
+            if(itemIndex != -1)
+                slot = 'backpack'
+        }
+
+        if(!slot) {
+            var json = { "error" : "Nie posiadasz przedmiotu o podanym id!" }
+            res.json(json)
+        } else {
+            itemFetcher.getCurrentVariant(itemId).then( item => {
+                if(item && item.upgradePrice) {
+                    if(req.user.character.gold >= item.upgradePrice) {
+                        req.user.character.gold -= item.upgradePrice
+                        switch(slot) {
+                            case "helmet":
+                            character.equipment.helmet.itemId += 1
+                            break
+
+                            case "armor":
+                            character.equipment.armor.itemId += 1
+                            break
+
+                            case "weapon":
+                            character.equipment.weapon.itemId += 1
+                            break
+
+                            case "backpack":
+                            var itemIndex = character.backpack.findIndex(element => {
+                                return element.itemId == itemId
+                            })
+                            character.backpack[itemIndex].itemId += 1
+                            break
+                        }
+                        req.user.save(function (err) {
+                            console.log('bez bledu')
+                            if (err)
+                                log.error(err)
+                            console.log('mowie ze bez')
+                            console.log(req.user.character.backpack)
+                            var json = { "error": err ? "Błąd bazy danych" : null }
+                            res.send(json)
+                        })
+                    }
+                } else {
+                    var json = { "error" : "Przedmiot o podanym id nie istnieje!" }
+                    res.json(json)
+                }
+            })
+        }
     })
 }
