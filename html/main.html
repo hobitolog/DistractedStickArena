@@ -21,38 +21,77 @@
             background-color: #dc3545;
         }
 
+        .dropdown {
+            position: relative;
+            visibility: hidden;
+            width: 150px;
+            background-color: transparent;
+            border: transparent;
+            color: #fff;
+            text-align-last: right;            
+            outline: none;
+        }
+        .arena {
+            position: relative;
+            visibility: hidden;
+            width: 70px;
+            background-color: transparent;
+            border: transparent;
+            color: #fff;
+            text-align-last: right;            
+            outline: none;
+        }
+
+
         .bs-select {
             position: relative;
             visibility: hidden;
             width: 150px;
             background-color: transparent;
             overflow-y: overlay;
-            direction:rtl;
+            direction: rtl;
             border: transparent;
             color: #fff;
             text-align: center;
-            padding-left: 15px;         
-            -webkit-appearance: none;  
-
+            padding-left: 15px;
+            -webkit-appearance: none;
+            outline: none;
         }
+
+        
+
         .s-select {
             position: relative;
             visibility: hidden;
             width: 150px;
             background-color: transparent;
             overflow-y: overlay;
-            direction:rtl;
+            direction: rtl;
             border: transparent;
             color: #fff;
             text-align: center;
-            padding-left: 15px;  
-            -webkit-appearance: none;         
-
+            padding-left: 15px;
+            -webkit-appearance: none;
+            outline: none;
         }
 
+        select option:checked {
+            box-shadow:inset 50px 50px 10px 10px #f00;
+            border-radius:25px;
+            background-color: transparent;
+            cursor: pointer;
+            border: none;
+        }
 
-  
+        select option:hover {
+            padding-right: 5px;
+            cursor: pointer;
+            color: #EC6F66;
+        }
 
+        select::-webkit-scrollbar {
+            display: none;
+        }
 
     </style>
 
@@ -80,13 +119,13 @@
     <div class="container">
         <div class="mx-auto" style="width:720px; height:486px">
             <canvas id="c" width="720" height="486">Nie działa? Ojej, wracaj do mamusi!</canvas>
-            <select id="helmet" style="position: relative; visibility: hidden;width: 150px;">
+            <select class="dropdown" id="helmet" >
                 <option value="">Brak hełmu</option>
             </select>
-            <select id="armor" style="position: relative; visibility: hidden;width: 150px;">
+            <select class="dropdown" id="armor" >
                 <option value="">Brak pancerza</option>
             </select>
-            <select id="weapon" style="position: relative; visibility: hidden;width: 150px">
+            <select class="dropdown" id="weapon" >
                 <option value="">Brak broni</option>
             </select>
             <select class="s-select" size="4" id="buy">
@@ -98,7 +137,7 @@
             <select class="bs-select" size="10" id="blacksmith">
                 <option value="">Brak przedmiotów do ulepszenia</option>
             </select>
-            <select id="arenaGold" style="position: relative; visibility: hidden;width: 70px">
+            <select class="arena" id="arenaGold" width= "70">
                 <option value="20">20</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
