@@ -265,7 +265,9 @@ module.exports = function (app) {
                             var itemIndex = character.backpack.findIndex(element => {
                                 return element.itemId == itemId
                             })
-                            character.backpack[itemIndex].itemId += 1
+                            var old = character.backpack[itemIndex]
+                            old.itemId += 1
+                            character.backpack.set(itemIndex, old)
                             break
                         }
                         req.user.save(function (err) {
