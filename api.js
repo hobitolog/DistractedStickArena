@@ -54,28 +54,31 @@ module.exports = function (app) {
 
         const response = []
         let count = req.user.character.backpack.length
+
         if (count == 0)
             res.send({ "backpack": [] })
-        req.user.character.backpack.forEach(element => {
 
-            itemFetcher.getCurrentVariant(element.itemId)
-                .then(item => {
-                    response.push({
+        const ids = []
+        req.user.character.backpack.forEach(element => {
+            ids.push(element.itemId)
+        })
+
+        itemFetcher.getCurrentVariants(...ids)
+            .then(items => {
+
+                const backpack = []
+                items.forEach(element => {
+                    backpack.push({
                         "name": item.name,
                         "itemId": item.itemId
                     })
-                    ready()
-                }).catch(err => {
-                    log.error(err)
-                    ready()
                 })
-        })
-
-        function ready() {
-            count--
-            if (count == 0)
-                res.json({ "backpack": response })
-        }
+                res.json({
+                    "backpack": backpack
+                })
+            }).catch(err => {
+                log.error(err)
+            })
     })
 
     app.get('/getCharacterItems', login.isLoggedIn, login.isActivated, (req, res) => {
