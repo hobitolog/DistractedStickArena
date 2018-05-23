@@ -28,9 +28,10 @@
             background-color: transparent;
             border: transparent;
             color: #fff;
-            text-align-last: right;            
+            text-align-last: right;
             outline: none;
         }
+
         .arena {
             position: relative;
             visibility: hidden;
@@ -38,8 +39,15 @@
             background-color: transparent;
             border: transparent;
             color: #fff;
-            text-align-last: right;            
+            text-align-last: right;
             outline: none;
+        }
+
+        .arena option {
+            background-color: grey;
+        }
+        .arena option:checked {
+            color: black;
         }
 
 
@@ -58,7 +66,7 @@
             outline: none;
         }
 
-        
+
 
         .s-select {
             position: relative;
@@ -76,8 +84,8 @@
         }
 
         select option:checked {
-            box-shadow:inset 50px 50px 10px 10px #f00;
-            border-radius:25px;
+            box-shadow: inset 50px 50px 10px 10px #f00;
+            border-radius: 25px;
             background-color: transparent;
             cursor: pointer;
             border: none;
@@ -92,7 +100,6 @@
         select::-webkit-scrollbar {
             display: none;
         }
-
     </style>
 
 </head>
@@ -119,25 +126,25 @@
     <div class="container">
         <div class="mx-auto" style="width:720px; height:486px">
             <canvas id="c" width="720" height="486">Nie działa? Ojej, wracaj do mamusi!</canvas>
-            <select class="dropdown" id="helmet" >
+            <select class="dropdown" id="helmet">
                 <option value="">Brak hełmu</option>
             </select>
-            <select class="dropdown" id="armor" >
+            <select class="dropdown" id="armor">
                 <option value="">Brak pancerza</option>
             </select>
-            <select class="dropdown" id="weapon" >
+            <select class="dropdown" id="weapon">
                 <option value="">Brak broni</option>
             </select>
             <select class="s-select" size="4" id="buy">
-                <option value="">Brak przedmiotów do kupna</option>
+                <option value="">Brak</option>
             </select>
             <select class="s-select" size="4" id="sell">
-                <option value="">Brak przedmiotów do sprzedaży</option>
+                <option value="">Brak</option>
             </select>
             <select class="bs-select" size="10" id="blacksmith">
-                <option value="">Brak przedmiotów do ulepszenia</option>
+                <option value="">Brak</option>
             </select>
-            <select class="arena" id="arenaGold" width= "70">
+            <select class="arena" id="arenaGold" width="70">
                 <option value="20">20</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
