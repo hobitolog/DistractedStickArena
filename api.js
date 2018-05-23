@@ -21,49 +21,17 @@ module.exports = function (app) {
 
     app.get('/getEquipment', login.isLoggedIn, login.isActivated, (req, res) => {
         const eq = req.user.character.equipment
-        const response = {
-            "weapon": null,
-            "armor": null,
-            "helmet": null
-        }
-        let counter = 0
 
-        if (eq.weapon) {
-            itemFetcher.getCurrentVariant(eq.weapon.itemId)
-            .then(weapon => {
-                response.weapon = weapon
-                ready()
+        itemFetcher.getCurrentVariants(eq.weapon.itemId, eq.helmet.itemId, eq.armor.itemId)
+            .then(items => {
+                res.json({
+                    "weapon": items[0],
+                    "helmet": items[1],
+                    "armor": items[2]
+                })
             }).catch(err => {
                 log.error(err)
-                ready()
             })
-        }
-        if (eq.helmet) {
-            itemFetcher.getCurrentVariant(eq.helmet.itemId)
-            .then(helmet => {
-                response.helmet = helmet
-                ready()
-            }).catch(err => {
-                log.error(err)
-                ready()
-            })
-        }
-        if (eq.armor) {
-            itemFetcher.getCurrentVariant(eq.armor.itemId)
-            .then(armor => {
-                response.armor = armor
-                ready()
-            }).catch(err => {
-                log.error(err)
-                ready()
-            })
-        }
-
-        function ready() {
-            counter++
-            if (counter == 3)
-                res.json(req.user.character.equipment)
-        }
     })
 
     app.get('/getVariant', login.isLoggedIn, login.isActivated, (req, res) => {
@@ -77,7 +45,7 @@ module.exports = function (app) {
     app.get('/getShopItems', login.isLoggedIn, login.isActivated, (req, res) => {
         itemFetcher.getShopItems(req.user.character.level).then(items => {
             res.json(items)
-        }).catch( err => {
+        }).catch(err => {
             log.error(err)
         })
     })
@@ -86,21 +54,21 @@ module.exports = function (app) {
 
         const response = []
         let count = req.user.character.backpack.length
-        if(count == 0)
+        if (count == 0)
             res.send({ "backpack": [] })
         req.user.character.backpack.forEach(element => {
 
             itemFetcher.getCurrentVariant(element.itemId)
-            .then(item => {
-                response.push({
-                    "name": item.name,
-                    "itemId": item.itemId
+                .then(item => {
+                    response.push({
+                        "name": item.name,
+                        "itemId": item.itemId
+                    })
+                    ready()
+                }).catch(err => {
+                    log.error(err)
+                    ready()
                 })
-                ready()
-            }).catch(err => {
-                log.error(err)
-                ready()
-            })
         })
 
         function ready() {
@@ -112,7 +80,7 @@ module.exports = function (app) {
 
     app.get('/getCharacterItems', login.isLoggedIn, login.isActivated, (req, res) => {
         var ids = []
-        req.user.character.backpack.forEach((element,index)=>{
+        req.user.character.backpack.forEach((element, index) => {
             ids.push(element.itemId)
         })
         ids.push(req.user.character.equipment.weapon.itemId)
@@ -120,7 +88,7 @@ module.exports = function (app) {
         ids.push(req.user.character.equipment.armor.itemId)
         itemFetcher.getItems(ids).then(items => {
             res.json({ "items": items })
-        }).catch( err => {
+        }).catch(err => {
             log.error(err)
         })
     })
@@ -180,8 +148,8 @@ module.exports = function (app) {
             return element.itemId == itemId
         })
 
-        if(itemIndex != -1) {
-            itemFetcher.getCurrentVariant(itemId).then( item => {
+        if (itemIndex != -1) {
+            itemFetcher.getCurrentVariant(itemId).then(item => {
                 req.user.character.gold += Math.round(item.value * 0.75)
                 req.user.character.backpack.splice(itemIndex, 1)
                 req.user.save(function (err) {
@@ -201,9 +169,9 @@ module.exports = function (app) {
         var itemId = req.body.itemId
         var backpack = req.user.character.backpack
 
-        itemFetcher.getCurrentVariant(itemId).then( item => {
-            if(item) {
-                if(req.user.character.gold >= item.value) {
+        itemFetcher.getCurrentVariant(itemId).then(item => {
+            if (item) {
+                if (req.user.character.gold >= item.value) {
                     req.user.character.gold -= item.value
                     req.user.character.backpack.push({ "itemId": parseInt(item.itemId) })
                     req.user.save(function (err) {
@@ -214,7 +182,7 @@ module.exports = function (app) {
                     })
                 }
             } else {
-                var json = { "error" : "Brak przedmiotu o podanym id!" }
+                var json = { "error": "Brak przedmiotu o podanym id!" }
                 res.json(json)
             }
         })
@@ -226,49 +194,49 @@ module.exports = function (app) {
         var character = req.user.character
         var slot
 
-        if(itemId == character.equipment.weapon.itemId) {
+        if (itemId == character.equipment.weapon.itemId) {
             slot = 'weapon'
-        } else if(itemId == character.equipment.armor.itemId) {
+        } else if (itemId == character.equipment.armor.itemId) {
             slot = 'armor'
-        } else if(itemId == character.equipment.helmet.itemId) {
+        } else if (itemId == character.equipment.helmet.itemId) {
             slot = 'helmet'
         } else {
             var itemIndex = character.backpack.findIndex(element => {
                 return element.itemId == itemId
             })
-            if(itemIndex != -1)
+            if (itemIndex != -1)
                 slot = 'backpack'
         }
 
-        if(!slot) {
-            var json = { "error" : "Nie posiadasz przedmiotu o podanym id!" }
+        if (!slot) {
+            var json = { "error": "Nie posiadasz przedmiotu o podanym id!" }
             res.json(json)
         } else {
-            itemFetcher.getCurrentVariant(itemId).then( item => {
-                if(item && item.upgradePrice) {
-                    if(req.user.character.gold >= item.upgradePrice) {
+            itemFetcher.getCurrentVariant(itemId).then(item => {
+                if (item && item.upgradePrice) {
+                    if (req.user.character.gold >= item.upgradePrice) {
                         req.user.character.gold -= item.upgradePrice
-                        switch(slot) {
+                        switch (slot) {
                             case "helmet":
-                            character.equipment.helmet.itemId += 1
-                            break
+                                character.equipment.helmet.itemId += 1
+                                break
 
                             case "armor":
-                            character.equipment.armor.itemId += 1
-                            break
+                                character.equipment.armor.itemId += 1
+                                break
 
                             case "weapon":
-                            character.equipment.weapon.itemId += 1
-                            break
+                                character.equipment.weapon.itemId += 1
+                                break
 
                             case "backpack":
-                            var itemIndex = character.backpack.findIndex(element => {
-                                return element.itemId == itemId
-                            })
-                            var old = character.backpack[itemIndex]
-                            old.itemId += 1
-                            character.backpack.set(itemIndex, old)
-                            break
+                                var itemIndex = character.backpack.findIndex(element => {
+                                    return element.itemId == itemId
+                                })
+                                var old = character.backpack[itemIndex]
+                                old.itemId += 1
+                                character.backpack.set(itemIndex, old)
+                                break
                         }
                         req.user.save(function (err) {
                             console.log('bez bledu')
@@ -281,7 +249,7 @@ module.exports = function (app) {
                         })
                     }
                 } else {
-                    var json = { "error" : "Przedmiot o podanym id nie istnieje!" }
+                    var json = { "error": "Przedmiot o podanym id nie istnieje!" }
                     res.json(json)
                 }
             })
