@@ -67,7 +67,7 @@ module.exports = function (app) {
             .then(items => {
 
                 const backpack = []
-                items.forEach(element => {
+                items.forEach(item => {
                     backpack.push({
                         "name": item.name,
                         "itemId": item.itemId
