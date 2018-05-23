@@ -18,15 +18,15 @@ function getCharacterIndex(login) {
 
 function refreshBars(characterIndex) {
     if (characterIndex == 0) {
-        removeLeftBars().then(refLeftBars).then(formatBars);
+        animateLeftBars().then(formatBars)
     } else {
-        removeRightBars().then(refRightBars).then(formatBars);
+        animateRightBars().then(formatBars)
     }
 }
 
 function refreshBars() {
-    removeLeftBars().then(refLeftBars).then(formatBars);
-    removeRightBars().then(refRightBars).then(formatBars);
+    animateLeftBars().then(formatBars)
+    animateRightBars().then(formatBars)
 }
 
 socket.on('endDuel', function (prize) {
@@ -60,7 +60,7 @@ socket.on('turn', function (nick) {
 socket.on('attack', function (attackType, attacker, attacked) {
 
     var attackerIndex = getCharacterIndex(attacker.login)
-    
+
     if (attackerIndex == 0)
         sticks.animateUserAttack()
     else
@@ -101,8 +101,8 @@ function showArena() {
     canvas.clear();
     canvas.localization = 'arena';
     load();
-    removeLeftBars().then(refLeftBars).then(formatBars);
-    removeRightBars().then(refRightBars).then(formatBars);
+    removeLeftBars().then(createLeftBars).then(formatBars);
+    removeRightBars().then(createRightBars).then(formatBars);
 
 
     canvas.on('mouse:over', function (e) {
@@ -275,8 +275,6 @@ function showArena() {
             obj.name = 'EnergyBarP';
             canvas.add(obj);
         });
-        refLeftBars();
-        refRightBars();
 
         //TODO background
         fabric.loadSVGFromURL('https://upload.wikimedia.org/wikipedia/commons/c/cf/Ubuntu_alternative_background.svg', function (objects, options) {
@@ -493,7 +491,7 @@ function showArena() {
 
 }
 
-function refLeftBars() {
+function createLeftBars() {
     return new Promise(function (resolve, reject) {
         var nickL = new fabric.Text(String(characters[0].login), {
             left: 175,
@@ -586,7 +584,7 @@ function refLeftBars() {
 
     });
 }
-function refRightBars() {
+function createRightBars() {
     return new Promise(function (resolve, reject) {
         var nickP = new fabric.Text(String(characters[1].login), {
             left: 555,
@@ -679,7 +677,52 @@ function refRightBars() {
         canvas.add(enPText);
         resolve();
     });
+}
 
+var animDuration = 500
+
+function animateLeftBars() {
+    return new Promise(function (resolve, reject) {
+        canvas.getItemByName('hpL').animate('width', (characters[0].stats.hp * 293) / characters[0].stats.hpMax, {
+            duration: animDuration,
+            onChange: canvas.renderAll.bind(canvas)
+        })
+        canvas.getItemByName('hpLText').text = characters[0].stats.hp + '/' + characters[0].stats.hpMax
+        canvas.getItemByName('arL').animate('width', (characters[0].stats.armor * 293) / characters[0].stats.armorMax, {
+            duration: animDuration,
+            onChange: canvas.renderAll.bind(canvas)
+        })
+        canvas.getItemByName('arLText').text = characters[0].stats.armor + '/' + characters[0].stats.armorMax
+        canvas.getItemByName('enL').animate('width', (characters[0].stats.energy * 293) / characters[0].stats.energyMax, {
+            duration: animDuration,
+            onChange: canvas.renderAll.bind(canvas)
+        })
+        canvas.getItemByName('enLText').text = characters[0].stats.energy + '/' + characters[0].stats.energyMax
+
+        setTimeout(function () { resolve() }, animDuration)
+    })
+}
+
+function animateRightBars() {
+    return new Promise(function (resolve, reject) {
+        canvas.getItemByName('hpP').animate('width', (characters[1].stats.hp * 293) / characters[1].stats.hpMax, {
+            duration: animDuration,
+            onChange: canvas.renderAll.bind(canvas)
+        })
+        canvas.getItemByName('hpPText').text = characters[1].stats.hp + '/' + characters[1].stats.hpMax
+        canvas.getItemByName('arP').animate('width', (characters[1].stats.armor * 293) / characters[1].stats.armorMax, {
+            duration: animDuration,
+            onChange: canvas.renderAll.bind(canvas)
+        })
+        canvas.getItemByName('arPText').text = characters[1].stats.armor + '/' + characters[1].stats.armorMax
+        canvas.getItemByName('enP').animate('width', (characters[1].stats.energy * 293) / characters[1].stats.energyMax, {
+            duration: animDuration,
+            onChange: canvas.renderAll.bind(canvas)
+        })
+        canvas.getItemByName('enPText').text = characters[1].stats.energy + '/' + characters[1].stats.energyMax
+
+        setTimeout(function () { resolve() }, animDuration)
+    })
 }
 
 
