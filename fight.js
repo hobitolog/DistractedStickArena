@@ -353,10 +353,10 @@ function handlePrizes(winner, loser) {
 
 function addExpToUser(player, exp) {
     player.character.exp += exp
-    if(player.character.exp >= (100 + (player.character.lvl - 1) * 50)) {
-        player.character.lvl += 1
+    if(player.character.exp >= (100 + (player.character.level - 1) * 50)) {
+        player.character.exp -= (100 + (player.character.level - 1) * 50)
+        player.character.level += 1
         player.character.stats.free += 5
-        player.character.exp -= (100 + (player.character.lvl - 1) * 50)
     }
 
     player.save((function (err) {
