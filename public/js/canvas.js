@@ -1291,11 +1291,11 @@ window.onload = function () {
                         alert(xmlhttp.response.error);
                     }
                     else {
-                        var buyList = document.getElementById('buy')
-                        buyList.selectedIndex = 0
-                        getAndLoadShopItem(buyList.options[0].value, "BUY")
-                        loadSellItemList()
-                        resolve()
+                        loadBlacksmithBag().then(() => {
+                            var bsList = document.getElementById('blacksmith')
+                            bsList.selectedIndex = 0
+                            getAndLoadBlacksmithItem(bsList.options[0].value)
+                        })
                     }
                 }
             }
