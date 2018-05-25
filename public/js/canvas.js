@@ -549,7 +549,7 @@ window.onload = function () {
     function loadInArena() {
 
         arenaDrop.style.left = ((canvas.width / 2) - 300) + 'px';
-        arenaDrop.style.top = ((canvas.height / 2) - 710) + 'px';
+        arenaDrop.style.top = ((canvas.height / 2) - 680) + 'px';
         arenaDrop.style.visibility = 'visible';
         if (!canvas.getItemByName('findOpButton')) {
             var findOpButton = new fabric.Group([new fabric.Rect({
@@ -917,9 +917,9 @@ window.onload = function () {
     };
     function loadExp() {//required exp mechanism may be changed by Pan Kosakowski
         if (!canvas.getItemByName('expText')) {
-            var expText = new fabric.Text('Exp: ' + String(Gchar.exp) + '/' + String(Gchar.level * 100 * 2), {
-                left: canvas.width / 2 - 150,
-                top: 350,
+            var expText = new fabric.Text('PD: ' + String(Gchar.exp) + '/' + String(100 + (Gchar.level - 1) * 50), {
+                left: canvas.width / 2 - 80,
+                top: canvas.height / 2 - 80,
                 selectable: false,
                 scalable: false,
                 name: 'expText',
@@ -936,14 +936,14 @@ window.onload = function () {
     };
     function loadLvl() {
         if (!canvas.getItemByName('lvlText')) {
-            var lvlText = new fabric.Text('LvL: ' + String(Gchar.level), {
-                left: canvas.width / 2 - 240,
-                top: 350,
+            var lvlText = new fabric.Text('Poziom: ' + String(Gchar.level), {
+                left: canvas.width / 2 - 225,
+                top: canvas.height / 2 - 80,
                 selectable: false,
                 scalable: false,
                 name: 'lvlText',
                 fill: '#fff',
-                fontSize: 20,
+                fontSize: 16,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
@@ -955,9 +955,9 @@ window.onload = function () {
     };
     function loadHp() {
         if (!canvas.getItemByName('heartText')) {
-            var heartText = new fabric.Text("Health: " + String(Gchar.hp), {
-                left: canvas.width / 2 - 240,
-                top: 110,
+            var heartText = new fabric.Text("PŻ: " + String(Gchar.hp), {
+                left: canvas.width / 2 - 225,
+                top: canvas.height / 2 - 45,
                 selectable: false,
                 scalable: false,
                 name: 'heartText',
@@ -974,8 +974,8 @@ window.onload = function () {
     };
     function loadArmor() {
         if (!canvas.getItemByName('shieldText')) {
-            var shieldText = new fabric.Text("Armor: " + String(Gchar.armor), {
-                left: canvas.width / 2 - 85,
+            var shieldText = new fabric.Text("Pancerz: " + String(Gchar.armor), {
+                left: canvas.width / 2 + 65,
                 top: 110,
                 selectable: false,
                 scalable: false,
@@ -993,9 +993,9 @@ window.onload = function () {
     };
     function loadEnergy() {
         if (!canvas.getItemByName('energyText')) {
-            var energyText = new fabric.Text("Energy: " + String(Gchar.energy), {
-                left: canvas.width / 2 + 65,
-                top: 110,
+            var energyText = new fabric.Text("Energia: " + String(Gchar.energy), {
+                left: canvas.width / 2 - 80,
+                top: canvas.height / 2 - 45,
                 selectable: false,
                 scalable: false,
                 name: 'energyText',
@@ -1020,59 +1020,59 @@ window.onload = function () {
                     // left: 200,
                     top: 0,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text('Celność:', {
                     // left: 200,
-                    top: 30,
+                    top: 25,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text('Zręczność:', {
                     // left: 200,
-                    top: 60,
+                    top: 50,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text('Wytrzymałość:', {
                     // left: 200,
-                    top: 90,
+                    top: 75,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text('Witalność:', {
                     // left: 200,
-                    top: 120,
+                    top: 100,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text('Punkty rozwoju:', {
                     left: 20,
-                    top: 160,
+                    top: 135,
                     fill: '#fff',
-                    fontSize: 22,
+                    fontSize: 20,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 })], {
                     name: 'statsText',
-                    left: canvas.width / 2 - 165,
-                    top: 220,
+                    left: canvas.width / 2 - 140,
+                    top: 295,
                     opacity: 1,
                     selectable: false
 
@@ -1085,59 +1085,59 @@ window.onload = function () {
                     // left: 200,
                     top: 0,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text(String(Gstats.stats.att), {
                     // left: 200,
-                    top: 30,
+                    top: 25,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text(String(Gstats.stats.agi), {
                     // left: 200,
-                    top: 60,
+                    top: 50,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text(String(Gstats.stats.sta), {
                     // left: 200,
-                    top: 90,
+                    top: 75,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text(String(Gstats.stats.vit), {
                     // left: 200,
-                    top: 120,
+                    top: 100,
                     fill: '#fff',
-                    fontSize: 18,
+                    fontSize: 16,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
                 new fabric.Text(String(Gstats.stats.free), {
                     left: 20,
-                    top: 160,
+                    top: 135,
                     fill: '#fff',
-                    fontSize: 22,
+                    fontSize: 20,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 })], {
                     name: 'statsPoints',
-                    left: canvas.width / 2 - 65,
-                    top: 220,
+                    left: canvas.width / 2 - 40,
+                    top: 295,
                     opacity: 1,
                     selectable: false
 
@@ -1147,7 +1147,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 38, top: 138 });
+                    obj.set({ left: canvas.width / 2 - 13, top: 225 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addStr';
@@ -1156,7 +1156,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 38, top: 168 });
+                    obj.set({ left: canvas.width / 2 - 13, top: 250 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addAtt';
@@ -1165,7 +1165,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 38, top: 198 });
+                    obj.set({ left: canvas.width / 2 - 13, top: 275 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addAgi';
@@ -1174,7 +1174,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 38, top: 228 });
+                    obj.set({ left: canvas.width / 2 - 13, top: 300 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addSta';
@@ -1183,7 +1183,7 @@ window.onload = function () {
                 fabric.loadSVGFromURL('svg/plus.svg', function (objects, options) {
                     var obj = fabric.util.groupSVGElements(objects, options);
                     obj.scale(0.35);
-                    obj.set({ left: canvas.width / 2 - 38, top: 258 });
+                    obj.set({ left: canvas.width / 2 - 13, top: 325 });
                     obj.selectable = false;
                     obj.scalable = false;
                     obj.name = 'addVit';
@@ -1193,11 +1193,11 @@ window.onload = function () {
 
             }
         }
-        loadExp();
-        loadLvl();
-        loadHp();
-        loadArmor();
-        loadEnergy();
+        loadCharStickman();
+        canvas.bringToFront(canvas.getItemByName('inStickman'));
+        canvas.bringToFront(canvas.getItemByName('EQhelmet'));
+        canvas.bringToFront(canvas.getItemByName('EQarmmor'));
+        canvas.bringToFront(canvas.getItemByName('EQweapon'));
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
         canvas.bringToFront(canvas.getItemByName('expText'));
@@ -1489,7 +1489,7 @@ window.onload = function () {
 
             var tradeBuy = new fabric.Text(String("Kup"), {
                 left: canvas.width / 2 - 155,
-                top: canvas.height / 2 - 120,
+                top: canvas.height / 2 - 118,
                 selectable: false,
                 scalable: false,
                 name: 'tradeBuy',
@@ -1501,7 +1501,7 @@ window.onload = function () {
             canvas.add(tradeBuy);
             var tradeSell = new fabric.Text(String("Sprzedaj"), {
                 left: canvas.width / 2 - 155,
-                top: canvas.height / 2 + 30,
+                top: canvas.height / 2 + 10,
                 selectable: false,
                 scalable: false,
                 name: 'tradeSell',
@@ -1531,7 +1531,7 @@ window.onload = function () {
 
 
 
-            var bsText = new fabric.Text(String("Plecak"), {
+            var bsText = new fabric.Text(String("Ekwipunek"), {
                 left: canvas.width / 2 - 142,
                 top: canvas.height / 2 - 120,
                 selectable: false,
@@ -1615,7 +1615,7 @@ window.onload = function () {
         var isDefault = itemPath.endsWith("svg")
         fabric.Image.fromURL(itemPath, function (obj) {
             obj.set({ left: canvas.width / 2, top: canvas.height / 2 })
-            if(isDefault) {
+            if (isDefault) {
                 obj.scaleToWidth(150)
                 obj.scaleToHeight(150)
             }
@@ -1767,7 +1767,7 @@ window.onload = function () {
         var isDefault = itemPath.endsWith("svg")
         fabric.Image.fromURL(itemPath, function (obj) {
             obj.set({ left: canvas.width / 2 + 150, top: canvas.height / 2 - 50 })
-            if(isDefault) {
+            if (isDefault) {
                 obj.scaleToWidth(150)
                 obj.scaleToHeight(150)
             }
@@ -2261,8 +2261,9 @@ window.onload = function () {
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
             fabric.loadSVGFromURL('svg/Helmet.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
-                obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 - 90 })
+                obj.scaleToWidth(70)
+                obj.scaleToHeight(70)
+                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 90 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQhelmet';
@@ -2270,8 +2271,9 @@ window.onload = function () {
             });
             fabric.loadSVGFromURL('svg/armor.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
-                obj.scale(0.2);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 10 })
+                obj.scaleToWidth(70)
+                obj.scaleToHeight(70)
+                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 5 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQarmmor';
@@ -2279,8 +2281,9 @@ window.onload = function () {
             });
             fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
                 var obj = fabric.util.groupSVGElements(objects, options);
-                obj.scale(0.3);
-                obj.set({ left: canvas.width / 2 + 20, top: canvas.height / 2 + 110 })
+                obj.scaleToWidth(70)
+                obj.scaleToHeight(70)
+                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 + 80 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQweapon';
@@ -2291,16 +2294,16 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('EQarmmor'));
         canvas.bringToFront(canvas.getItemByName('EQweapon'));
 
-        helmetDrop.style.left = ((canvas.width / 2) + 85) + 'px';//200
-        helmetDrop.style.top = ((canvas.height / 2) - 650) + 'px';//580
+        helmetDrop.style.left = ((canvas.width / 2)) + 'px';//200
+        helmetDrop.style.top = ((canvas.height / 2) - 660) + 'px';//580
         helmetDrop.style.visibility = 'visible';
 
-        armorDrop.style.left = ((canvas.width / 2) + -70) + 'px';//50
-        armorDrop.style.top = ((canvas.height / 2) - 550) + 'px';
+        armorDrop.style.left = ((canvas.width / 2) - 155) + 'px';//50
+        armorDrop.style.top = ((canvas.height / 2) - 575) + 'px';
         armorDrop.style.visibility = 'visible';
 
-        weaponDrop.style.left = ((canvas.width / 2) - 225) + 'px';
-        weaponDrop.style.top = ((canvas.height / 2) - 450) + 'px';
+        weaponDrop.style.left = ((canvas.width / 2) - 310) + 'px';
+        weaponDrop.style.top = ((canvas.height / 2) - 490) + 'px';
         weaponDrop.style.visibility = 'visible';
     }
 
