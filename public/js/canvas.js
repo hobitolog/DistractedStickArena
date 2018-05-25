@@ -532,7 +532,7 @@ window.onload = function () {
     }
     function loadBG(BGname) {
         if (!canvas.getItemByName(BGname)) {
-            fabric.Image.fromURL('png/'+BGname+'.png', function (obj) {
+            fabric.Image.fromURL('png/' + BGname + '.png', function (obj) {
                 obj.scale(1);
                 obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
                 obj.selectable = false;
@@ -555,14 +555,14 @@ window.onload = function () {
             var findOpButton = new fabric.Group([new fabric.Rect({
                 width: 200,
                 height: 40,
-                fill: '#ccc',
+                fill: '#f00',
                 name: 'inArenaButtonBG',
                 selectable: false
             }),
             new fabric.Text(String(inArenaButtonText), {
                 // left: 200,
                 // top: 100,
-                fill: '#000',
+                fill: '#fff',
                 name: 'inArenaButtonText',
                 fontSize: 18
             })], {
@@ -1310,36 +1310,36 @@ window.onload = function () {
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    if(!xmlhttp.response) {
+                    if (!xmlhttp.response) {
                         loadBsItemStatsAfter('Max lvl', '', '', '', '', 0)
                         resolve()
                         return
                     }
-                    
+
                     var variant = xmlhttp.response
                     switch (variant.type) {
                         case 'weapon':
-                        if(before) {
-                            loadBsItemStatsBefore(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.image ? variant.image : "svg/weapon.svg"))
-                        } else {
-                            loadBsItemStatsAfter(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.upgradePrice ? variant.upgradePrice : "-"))
-                        }
+                            if (before) {
+                                loadBsItemStatsBefore(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.image ? variant.image : "svg/weapon.svg"))
+                            } else {
+                                loadBsItemStatsAfter(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.upgradePrice ? variant.upgradePrice : "-"))
+                            }
                             break
 
                         case 'armor':
-                        if(before) {
-                            loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/armor.svg"))
-                        } else {
-                            loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.upgradePrice ? variant.upgradePrice : "-"))
-                        }
+                            if (before) {
+                                loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/armor.svg"))
+                            } else {
+                                loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.upgradePrice ? variant.upgradePrice : "-"))
+                            }
                             break
 
                         case 'helmet':
-                        if(before) {
-                            loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/helmet.svg"))
-                        } else {
-                            loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.upgradePrice ? variant.upgradePrice : "-"))
-                        }
+                            if (before) {
+                                loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/helmet.svg"))
+                            } else {
+                                loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.upgradePrice ? variant.upgradePrice : "-"))
+                            }
                             break
                     }
                     resolve();
@@ -1523,10 +1523,10 @@ window.onload = function () {
             blacksmithDrop.style.left = -20 + 'px';
             blacksmithDrop.style.top = -430 + 'px';//-430
             blacksmithDrop.style.visibility = 'visible';
-        //     blacksmithDrop.style.backgroundColor = 'transparent'
-        //     blacksmithDrop.style.color = '#fff'
-        //     blacksmithDrop.style.overflowY = 'overlay'
-        //     blacksmithDrop.style.border = 'none'
+            //     blacksmithDrop.style.backgroundColor = 'transparent'
+            //     blacksmithDrop.style.color = '#fff'
+            //     blacksmithDrop.style.overflowY = 'overlay'
+            //     blacksmithDrop.style.border = 'none'
 
 
 
@@ -1574,14 +1574,14 @@ window.onload = function () {
             var bsButton = new fabric.Group([new fabric.Rect({
                 width: 120,
                 height: 35,
-                fill: '#ccc',
+                fill: '#f00',
                 selectable: false
             }),
             new fabric.Text(String("Przekuj"), {
                 // left: 200,
                 // top: 100,
-                fill: '#000',
-                fontSize: 15
+                fill: '#fff',
+                fontSize: 16
             })], {
                     name: 'bsButton',
                     left: canvas.width / 2 + 150,
@@ -1612,20 +1612,18 @@ window.onload = function () {
         if (canvas.getItemByName('itemValue')) { canvas.remove(canvas.getItemByName('itemValue')); }
         if (canvas.getItemByName('shopImg')) { canvas.remove(canvas.getItemByName('shopImg')); }
 
-
-        fabric.loadSVGFromURL(itemPath, function (objects, options) {
-            var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(0.4);
-            obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
-            obj.selectable = false;
-            obj.scalable = false;
+        var isDefault = itemPath.endsWith("svg")
+        fabric.Image.fromURL(itemPath, function (obj) {
+            obj.set({ left: canvas.width / 2, top: canvas.height / 2 })
+            if(isDefault) {
+                obj.scaleToWidth(150)
+                obj.scaleToHeight(150)
+            }
+            obj.selectable = false
+            obj.scalable = false
             obj.name = 'shopImg';
-            obj.on('added', function () {
-            });
-            canvas.add(obj);
-
-        });
-
+            canvas.add(obj)
+        })
 
         var itemName = new fabric.Text(String(selectedName), {
             left: canvas.width / 2 + 150,
@@ -1693,7 +1691,7 @@ window.onload = function () {
         var tradeButton = new fabric.Group([new fabric.Rect({
             width: 120,
             height: 35,
-            fill: '#ccc',
+            fill: '#f00',
             name: 'inTavernButtonBG',
             selectable: false
         }),
@@ -1766,20 +1764,18 @@ window.onload = function () {
         if (canvas.getItemByName('stat4Before')) { canvas.remove(canvas.getItemByName('stat4Before')); }
         if (canvas.getItemByName('bsImgBefore')) { canvas.remove(canvas.getItemByName('bsImgBefore')); }
 
-
-        fabric.loadSVGFromURL(itemPath, function (objects, options) {
-            var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(0.2);
-            obj.set({ left: canvas.width / 2 + 150, top: canvas.height / 2 - 30 });
-            obj.selectable = false;
-            obj.scalable = false;
+        var isDefault = itemPath.endsWith("svg")
+        fabric.Image.fromURL(itemPath, function (obj) {
+            obj.set({ left: canvas.width / 2 + 150, top: canvas.height / 2 - 50 })
+            if(isDefault) {
+                obj.scaleToWidth(150)
+                obj.scaleToHeight(150)
+            }
+            obj.selectable = false
+            obj.scalable = false
             obj.name = 'bsImgBefore';
-            obj.on('added', function () {
-            });
-            canvas.add(obj);
-
-        });
-
+            canvas.add(obj)
+        })
 
         var itemNameBefore = new fabric.Text(String(selectedName), {
             left: canvas.width / 2,
@@ -1967,7 +1963,7 @@ window.onload = function () {
 
     }
 
-    function loadInStatue(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10){
+    function loadInStatue(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) {
         if (!canvas.getItemByName('rankingTitle')) {
             var rankingTitle = new fabric.Text(String("Najlepsi gracze"), {
                 left: canvas.width / 2,
@@ -1983,7 +1979,7 @@ window.onload = function () {
             });
             canvas.add(rankingTitle);
             var nr = new fabric.Text("1. \n2. \n3. \n4. \n5. \n6. \n7. \n8. \n9. \n10. ", {
-                left: canvas.width / 4 -22,
+                left: canvas.width / 4 - 22,
                 top: 170,
                 selectable: false,
                 scalable: false,
@@ -1993,7 +1989,7 @@ window.onload = function () {
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
-                originY:'top'
+                originY: 'top'
             });
             canvas.add(nr);
             var ranking1 = new fabric.Text(String(t1), {
@@ -2127,7 +2123,7 @@ window.onload = function () {
             });
             canvas.add(ranking10);
             var rankingPoints1 = new fabric.Text(String(p1), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 180,
                 selectable: false,
                 scalable: false,
@@ -2140,7 +2136,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints1);
             var rankingPoints2 = new fabric.Text(String(p2), {
-                left: canvas.width /2+120,
+                left: canvas.width / 2 + 120,
                 top: 201,
                 selectable: false,
                 scalable: false,
@@ -2153,7 +2149,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints2);
             var rankingPoints3 = new fabric.Text(String(p3), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 221,
                 selectable: false,
                 scalable: false,
@@ -2166,7 +2162,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints3);
             var rankingPoints4 = new fabric.Text(String(p4), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 241,
                 selectable: false,
                 scalable: false,
@@ -2179,7 +2175,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints4);
             var rankingPoints5 = new fabric.Text(String(p5), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 261,
                 selectable: false,
                 scalable: false,
@@ -2192,7 +2188,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints5);
             var rankingPoints6 = new fabric.Text(String(p6), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 283,
                 selectable: false,
                 scalable: false,
@@ -2205,7 +2201,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints6);
             var rankingPoints7 = new fabric.Text(String(p7), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 305,
                 selectable: false,
                 scalable: false,
@@ -2218,7 +2214,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints7);
             var rankingPoints8 = new fabric.Text(String(p8), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 326,
                 selectable: false,
                 scalable: false,
@@ -2231,7 +2227,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints8);
             var rankingPoints9 = new fabric.Text(String(p9), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 347,
                 selectable: false,
                 scalable: false,
@@ -2244,7 +2240,7 @@ window.onload = function () {
             });
             canvas.add(rankingPoints9);
             var rankingPoints10 = new fabric.Text(String(p10), {
-                left: canvas.width / 2+120,
+                left: canvas.width / 2 + 120,
                 top: 367,
                 selectable: false,
                 scalable: false,
@@ -2256,7 +2252,7 @@ window.onload = function () {
                 originX: 'left',
             });
             canvas.add(rankingPoints10);
-            
+
         }
         canvas.bringToFront(rankingTitle);
     }
@@ -2313,7 +2309,7 @@ window.onload = function () {
         hideShopControls();
         hideArenaControls()
         hideBlacksmithControls()
-        removeStatue() 
+        removeStatue()
         canvas.sendToBack(canvas.getItemByName('inArena'));
         canvas.sendToBack(canvas.getItemByName('inTavern'));
         canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
@@ -2352,7 +2348,7 @@ window.onload = function () {
         if (canvas.getItemByName('EQhelmet')) { canvas.remove(canvas.getItemByName('EQhelmet')); }
         if (canvas.getItemByName('EQarmmor')) { canvas.remove(canvas.getItemByName('EQarmmor')); }
         if (canvas.getItemByName('EQweapon')) { canvas.remove(canvas.getItemByName('EQweapon')); }
-    
+
     }
 
     function removeChar() {
@@ -2450,25 +2446,24 @@ window.onload = function () {
     function hideBlacksmithControls() {
         blacksmithDrop.style.visibility = 'hidden';
     }
-    //setTimeout(function(){ showArena() }, 1000)
 
 }
 
 function inArenaButtonText_cancel() {
-    inArenaButtonText = "anuluj";
+    inArenaButtonText = "Anuluj szukanie";
     if (canvas.getItemByName('findOpButton')) { canvas.remove(canvas.getItemByName('findOpButton')); }
 
     var findOpButton = new fabric.Group([new fabric.Rect({
         width: 200,
         height: 40,
-        fill: '#ccc',
+        fill: '#f00',
         name: 'inArenaButtonBG',
         selectable: false
     }),
     new fabric.Text(String(inArenaButtonText), {
         // left: 200,
         // top: 100,
-        fill: '#000',
+        fill: '#fff',
         name: 'inArenaButtonText',
         fontSize: 18
     })], {
@@ -2490,14 +2485,14 @@ function inArenaButtonText_canceled() {
     var findOpButton = new fabric.Group([new fabric.Rect({
         width: 200,
         height: 40,
-        fill: '#ccc',
+        fill: '#f00',
         name: 'inArenaButtonBG',
         selectable: false
     }),
     new fabric.Text(String(inArenaButtonText), {
         // left: 200,
         // top: 100,
-        fill: '#000',
+        fill: '#fff',
         name: 'inArenaButtonText',
         fontSize: 18
     })], {

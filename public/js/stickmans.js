@@ -13,8 +13,10 @@ var sticks = {
     hitTip: {},
 
     setWeapons: function (user, enemy) {
-        this.user.weaponUrl = user
-        this.enemy.weaponUrl = enemy
+        if(user)
+            this.user.weaponUrl = user
+        if(enemy)
+            this.enemy.weaponUrl = enemy
     },
 
     setColors: function (user, enemy) {
@@ -144,13 +146,9 @@ var sticks = {
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
-        //canvas.add(this.hitTip.polygon)
-        //canvas.add(this.hitTip.polygonText)
 
         addToCanvas(sticks.user)
         addToCanvas(sticks.enemy)
-        //this.hitTip.polygon.bringToFront()
-        //this.hitTip.polygonText.bringToFront()
     },
 
     bringToFront: function () {

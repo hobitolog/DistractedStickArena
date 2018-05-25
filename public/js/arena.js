@@ -36,6 +36,8 @@ socket.on('endDuel', function (prize) {
 socket.on('gameFound', function (us, opp) {
     characters[0] = us
     characters[1] = opp
+    sticks.setColors('black', 'black')
+    sticks.setWeapons(us.weaponImage, opp.weaponImage)
     showArena()
     inArenaButtonText_fight()
 })
@@ -664,7 +666,6 @@ function animateRightBars() {
 
 var arenaTimer
 function resetTimer() {
-    console.log("reset timer")
     var turnTime = 60
     clearInterval(arenaTimer)
     arenaTimer = setInterval(function () {
