@@ -54,7 +54,19 @@ socket.on('notYourTurn', function () {
 })
 
 socket.on('turn', function (nick) {
-    arenaAlert('Zaczyna gracz ' + nick)
+    if (nick == characters[0].login) {
+        canvas.getItemByName('weapon1').scale(0.5, 0.5)
+        canvas.getItemByName('weapon2').scale(0.5, 0.5)
+        canvas.getItemByName('weapon3').scale(0.5, 0.5)
+        canvas.getItemByName('zzz').scale(0.3, 0.3)        
+    }
+    else {
+        canvas.getItemByName('weapon1').scale(0, 0)
+        canvas.getItemByName('weapon2').scale(0, 0)
+        canvas.getItemByName('weapon3').scale(0, 0)
+        canvas.getItemByName('zzz').scale(0, 0)        
+    }
+    canvas.renderAll()
 })
 
 socket.on('attack', function (attackType, attacker, attacked) {
@@ -158,9 +170,9 @@ function showArena() {
         });
         canvas.add(menu);
 
-        fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/weaponYellow.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(0.3);
+            obj.scale(0);
             obj.set({ left: 40, top: 440 });
             obj.selectable = false;
             obj.scalable = false;
@@ -168,9 +180,9 @@ function showArena() {
             canvas.add(obj);
 
         });
-        fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/weaponWhite.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(0.3);
+            obj.scale(0);
             obj.set({ left: 120, top: 440 });
             obj.selectable = false;
             obj.scalable = false;
@@ -180,9 +192,9 @@ function showArena() {
             canvas.add(obj);
 
         });
-        fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
+        fabric.loadSVGFromURL('svg/weaponRed.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(0.3);
+            obj.scale(0);
             obj.set({ left: 200, top: 440 });
             obj.selectable = false;
             obj.scalable = false;
@@ -194,7 +206,7 @@ function showArena() {
         });
         fabric.loadSVGFromURL('svg/arena/zzz.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(0.3);
+            obj.scale(0);
             obj.set({ left: 290, top: 460 });
             obj.selectable = false;
             obj.scalable = false;
@@ -472,6 +484,22 @@ function showArena() {
 
 }
 
+function createBarText(name, text, left, top) {
+    var barText = new fabric.Text(String(text), {
+        "left": left,
+        "top": top,
+        "selectable": false,
+        "scalable": false,
+        "name": name,
+        "fill": 'black',
+        "fontSize": 12,
+        "fontFamily": '"Comic Sans MS", "Comic Sans", cursive',
+        "fontWeight": 'bold',
+        "textAlign": 'center',
+    })
+    canvas.add(barText)
+}
+
 function createLeftBars() {
     return new Promise(function (resolve, reject) {
         var nickL = new fabric.Text(String(characters[0].login), {
@@ -481,8 +509,7 @@ function createLeftBars() {
             scalable: false,
             name: 'nickL',
             fill: 'black',
-            fontSize: 15,
-            fontFamily: 'Comic Sans',
+            fontSize: 16,
             textAlign: 'center',
         });
         canvas.add(nickL);
@@ -498,19 +525,7 @@ function createLeftBars() {
             fill: 'red',
         });
         canvas.add(hpL);
-
-        var hpLText = new fabric.Text(String(characters[0].stats.hp + '/' + characters[0].stats.hpMax), {
-            left: 175,
-            top: 27,
-            selectable: false,
-            scalable: false,
-            name: 'hpLText',
-            fill: 'black',
-            fontSize: 10,
-            fontFamily: 'Comic Sans',
-            textAlign: 'center',
-        });
-        canvas.add(hpLText);
+        createBarText('hpLText', characters[0].stats.hp + '/' + characters[0].stats.hpMax, 175, 28)
 
         var arL = new fabric.Rect({
             top: 47,
@@ -524,19 +539,8 @@ function createLeftBars() {
             fill: 'grey',
         });
         canvas.add(arL);
+        createBarText('arLText', characters[0].stats.armor + '/' + characters[0].stats.armorMax, 175, 48)
 
-        var arLText = new fabric.Text(String(characters[0].stats.armor + '/' + characters[0].stats.armorMax), {
-            left: 175,
-            top: 47,
-            selectable: false,
-            scalable: false,
-            name: 'arLText',
-            fill: 'black',
-            fontSize: 10,
-            fontFamily: 'Comic Sans',
-            textAlign: 'center',
-        });
-        canvas.add(arLText);
         var enL = new fabric.Rect({
             top: 72,
             left: 24,
@@ -549,20 +553,7 @@ function createLeftBars() {
             fill: 'khaki',
         });
         canvas.add(enL);
-
-        var enLText = new fabric.Text(String(characters[0].stats.energy + '/' + characters[0].stats.energyMax), {
-            left: 175,
-            top: 72,
-            selectable: false,
-            scalable: false,
-            name: 'enLText',
-            fill: 'black',
-            fontSize: 10,
-            fontFamily: 'Comic Sans',
-            textAlign: 'center',
-        });
-        canvas.add(enLText);
-
+        createBarText('enLText', characters[0].stats.energy + '/' + characters[0].stats.energyMax, 175, 73)
     });
 }
 function createRightBars() {
@@ -574,8 +565,7 @@ function createRightBars() {
             scalable: false,
             name: 'nickP',
             fill: 'black',
-            fontSize: 15,
-            fontFamily: 'Comic Sans',
+            fontSize: 16,
             textAlign: 'center',
         });
         canvas.add(nickP);
@@ -592,19 +582,7 @@ function createRightBars() {
             fill: 'red',
         });
         canvas.add(hpP);
-
-        var hpPText = new fabric.Text(String(characters[1].stats.hp + '/' + characters[1].stats.hpMax), {
-            left: 555,
-            top: 27,
-            selectable: false,
-            scalable: false,
-            name: 'hpPText',
-            fill: 'black',
-            fontSize: 10,
-            fontFamily: 'Comic Sans',
-            textAlign: 'center',
-        });
-        canvas.add(hpPText);
+        createBarText('hpPText', characters[1].stats.hp + '/' + characters[1].stats.hpMax, 555, 28)
 
         var arP = new fabric.Rect({
             top: 47,
@@ -618,19 +596,8 @@ function createRightBars() {
             fill: 'grey',
         });
         canvas.add(arP);
+        createBarText('arPText', characters[1].stats.armor + '/' + characters[1].stats.armorMax, 555, 48)
 
-        var arPText = new fabric.Text(String(characters[1].stats.armor + '/' + characters[1].stats.armorMax), {
-            left: 555,
-            top: 47,
-            selectable: false,
-            scalable: false,
-            name: 'arPText',
-            fill: 'black',
-            fontSize: 10,
-            fontFamily: 'Comic Sans',
-            textAlign: 'center',
-        });
-        canvas.add(arPText);
         var enP = new fabric.Rect({
             top: 72,
             left: 404,
@@ -644,18 +611,7 @@ function createRightBars() {
         });
         canvas.add(enP);
 
-        var enPText = new fabric.Text(String(characters[1].stats.energy + '/' + characters[1].stats.energyMax), {
-            left: 555,
-            top: 72,
-            selectable: false,
-            scalable: false,
-            name: 'enPText',
-            fill: 'red',
-            fontSize: 10,
-            fontFamily: 'Comic Sans',
-            textAlign: 'center',
-        });
-        canvas.add(enPText);
+        createBarText('enPText', characters[1].stats.energy + '/' + characters[1].stats.energyMax, 555, 73)
         resolve();
     });
 }
