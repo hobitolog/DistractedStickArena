@@ -29,7 +29,7 @@ function refreshBars() {
 }
 
 socket.on('endDuel', function (prize) {
-    resetTimer()
+    clearInterval(arenaTimer)
     showPrize(prize.exp, prize.gold)
 })
 
