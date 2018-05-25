@@ -7,7 +7,7 @@ module.exports = function (app) {
 
     app.get('/getCharacter', login.isLoggedIn, login.isActivated, (req, res) => {
         var json = {
-            "login": req.user.character.login,
+            "login": req.user.login,
             "level": req.user.character.level,
             "exp": req.user.character.exp,
             "gold": req.user.character.gold,

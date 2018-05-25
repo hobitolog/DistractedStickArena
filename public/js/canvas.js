@@ -89,6 +89,7 @@ window.onload = function () {
     };
 
     var Gchar = {
+        login: 'Stickman',
         level: 1,
         exp: 0,
         gold: 0,
@@ -204,6 +205,7 @@ window.onload = function () {
                     Gchar.exp = xmlhttp.response.exp;
                     Gchar.gold = xmlhttp.response.gold;
                     Gchar.ranking = xmlhttp.response.ranking;
+                    Gchar.login = xmlhttp.response.login;
 
                     resolve();
                 }
@@ -591,7 +593,7 @@ window.onload = function () {
 
 
             var arenaStatsText = new fabric.Group([
-                new fabric.Text('Nick', {
+                new fabric.Text(String(Gchar.login), {
                     // left: 200,
                     top: 0,
                     fill: '#fff',
@@ -891,6 +893,7 @@ window.onload = function () {
         loadGold();
     };
     function loadCharStickman() {
+        loadNick();
         loadLvl();
         loadExp();
         loadHp();
@@ -915,7 +918,7 @@ window.onload = function () {
             canvas.bringToFront(coinText);
         }
     };
-    function loadExp() {//required exp mechanism may be changed by Pan Kosakowski
+    function loadExp() {
         if (!canvas.getItemByName('expText')) {
             var expText = new fabric.Text('PD: ' + String(Gchar.exp) + '/' + String(100 + (Gchar.level - 1) * 50), {
                 left: canvas.width / 2 - 80,
@@ -932,6 +935,25 @@ window.onload = function () {
             canvas.add(expText);
         }
         canvas.bringToFront(expText);
+
+    };
+    function loadNick() {
+        if (!canvas.getItemByName('nickText')) {
+            var nickText = new fabric.Text(String(Gchar.login), {
+                left: canvas.width / 2 - 150,
+                top: canvas.height / 2 - 120,
+                selectable: false,
+                scalable: false,
+                name: 'nickText',
+                fill: 'red',
+                fontSize: 15,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'center',
+                originX: 'center',
+            });
+            canvas.add(nickText);
+        }
+        canvas.bringToFront(nickText);
 
     };
     function loadLvl() {
@@ -1200,6 +1222,7 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('EQweapon'));
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
+        canvas.bringToFront(canvas.getItemByName('nickText'));
         canvas.bringToFront(canvas.getItemByName('expText'));
         canvas.bringToFront(canvas.getItemByName('lvlText'));
         canvas.bringToFront(canvas.getItemByName('heartText'));
@@ -2329,6 +2352,7 @@ window.onload = function () {
 
     function removeStats() {
         return new Promise(function (resolve, reject) {
+            if (canvas.getItemByName('nickText')) { canvas.remove(canvas.getItemByName('nickText')); }
             if (canvas.getItemByName('statsPoints')) { canvas.remove(canvas.getItemByName('statsPoints')); }
             if (canvas.getItemByName('statsText')) { canvas.remove(canvas.getItemByName('statsText')); }
             if (canvas.getItemByName('addStr')) { canvas.remove(canvas.getItemByName('addStr')); }
