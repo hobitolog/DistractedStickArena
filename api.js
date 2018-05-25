@@ -7,6 +7,7 @@ module.exports = function (app) {
 
     app.get('/getCharacter', login.isLoggedIn, login.isActivated, (req, res) => {
         var json = {
+            "login": req.user.character.login,
             "level": req.user.character.level,
             "exp": req.user.character.exp,
             "gold": req.user.character.gold,
@@ -96,16 +97,38 @@ module.exports = function (app) {
         })
     })
 
-    app.post('/setWeapon', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
-        //TODO
-    })
+    app.post('/setEquipment', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
+        var itemId = req.body.itemId
+        var backpack = req.user.character.backpack
+        var equipment = req.user.character.equipment
 
-    app.post('/setArmor', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
-        //TODO
-    })
+        var itemIndex = backpack.findIndex(element => {
+            return element.itemId == itemId
+        })
 
-    app.post('/setHelmet', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
-        //TODO
+        if (itemIndex == -1) {
+            var json = { "error": "Brak przedmiotu w ekwipunku" }
+            return res.send(json)
+        }
+
+        itemFetcher.getCurrentVariant(itemId).then(item => {
+            backpack.push({
+                "itemId": equipment[item.type].itemId
+            })
+            equipment[item.type] = {
+                "itemId": itemId
+            }
+            backpack.splice(itemIndex, 1)
+            req.user.markModified("character.backpack")            
+            req.user.markModified("character.equipment")
+
+            req.user.save(function (err) {
+                if (err)
+                    log.error(err)
+                var json = { "error": err ? "Błąd bazy danych" : null }
+                res.send(json)
+            })
+        })
     })
 
     app.post('/spendPoints', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
@@ -259,3 +282,16 @@ module.exports = function (app) {
         }
     })
 }
+/*
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.open("POST", "setEquipment", true);
+xmlhttp.setRequestHeader("Content-Type", "application/json");
+xmlhttp.responseType = "json";
+xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        console.log(xmlhttp.response);
+    }
+};
+var json = JSON.stringify({"itemId": 200})
+xmlhttp.send(json)
+*/
