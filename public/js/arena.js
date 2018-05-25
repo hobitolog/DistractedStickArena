@@ -1,4 +1,3 @@
-var arenaTimer;
 var socket = io()
 var user
 var opponent
@@ -30,6 +29,7 @@ function refreshBars() {
 }
 
 socket.on('endDuel', function (prize) {
+    resetTimer()
     showPrize(prize.exp, prize.gold)
 })
 
@@ -73,6 +73,7 @@ socket.on('attack', function (attackType, attacker, attacked) {
     var hpDiff = characters[attackedIndex].stats.hp - attacked.stats.hp
     sticks.animateDamageHint(hpDiff + armDiff)
     characters[attackedIndex] = attacked
+    resetTimer()
     refreshBars()
 })
 
@@ -87,6 +88,7 @@ socket.on('miss', function (missType, character) {
     sticks.animateDamageHint()
 
     characters[index] = character
+    resetTimer()
     refreshBars(index)
 })
 
@@ -94,6 +96,7 @@ socket.on('rest', function (character) {
     var index = getCharacterIndex(character.login)
     characters[index] = character
     arenaAlert('Gracz ' + character.login + ' odpoczywa')
+    resetTimer()
     refreshBars(index)
 })
 
@@ -122,9 +125,6 @@ function showArena() {
                 case 'zzz':
                     mouseOverZzz();
                     break;
-
-
-
             }
             canvas.renderAll();
         }
@@ -165,10 +165,6 @@ function showArena() {
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'weapon1';
-            obj.on('added', function () {
-                timer(60)
-                canvas.bringToFront(canvas.getItemByName('timer'))
-            });
             canvas.add(obj);
 
         });
@@ -293,43 +289,31 @@ function showArena() {
                 canvas.bringToFront(canvas.getItemByName('stickman'))
                 canvas.bringToFront(canvas.getItemByName('opponent'))
                 canvas.bringToFront(canvas.getItemByName('flag'))
+                canvas.bringToFront(canvas.getItemByName('timer'))
                 sticks.bringToFront()
-                formatBars();
+                formatBars()
             });
             canvas.add(obj);
-
         });
 
-
+        createTimer()
         canvas.renderAll();
     }
 
-    function timer(time) {
-
-
-        arenaTimer = setInterval(function () {
-            time = time - 1;
-
-            canvas.remove(canvas.getItemByName('timer'))
-            var timer = new fabric.Text(String(time), {
-                left: canvas.width / 2,
-                top: 45,
-                selectable: false,
-                scalable: false,
-                name: 'timer',
-                fill: 'red',
-                fontSize: 50,
-                fontFamily: 'Comic Sans',
-                textAlign: 'center',
-            });
-            canvas.add(timer);
-            canvas.renderAll();
-            if (time <= 0) {
-                clearInterval(arenaTimer);
-                //TODO  END ROUND
-            }
-        }, 1000);
-
+    function createTimer() {
+        var timer = new fabric.Text(String(60), {
+            left: canvas.width / 2,
+            top: 45,
+            selectable: false,
+            scalable: false,
+            name: 'timer',
+            fill: 'red',
+            fontSize: 50,
+            fontFamily: 'Comic Sans',
+            textAlign: 'center',
+        })
+        canvas.add(timer)
+        resetTimer()
     }
 
     function mouseOverWeapon1() {
@@ -347,7 +331,7 @@ function showArena() {
             canvas.add(obj);
         });
 
-        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + characters[0].stats.damageMin + ' - ' + characters[0].stats.damageMax + '\nszansa:\t' + characters[0].stats.hitChance + '%' + '\nkoszt:\t' + 30), {
+        var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + characters[0].stats.damageMin + ' - ' + characters[0].stats.damageMax + '\nszansa:\t' + characters[0].stats.hitChance + '%' + '\nkoszt:\t' + 8), {
             left: 10,
             top: 355,
             selectable: false,
@@ -378,7 +362,7 @@ function showArena() {
             });
             canvas.add(obj);
         });
-        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 0.7) + ' - ' + Math.round(characters[0].stats.damageMax * 0.7) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 1.3) + '%' + '\nkoszt:\t' + 20), {
+        var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 0.7) + ' - ' + Math.round(characters[0].stats.damageMax * 0.7) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 1.3) + '%' + '\nkoszt:\t' + 6), {
             left: 85,
             top: 355,
             selectable: false,
@@ -409,7 +393,7 @@ function showArena() {
             canvas.add(obj);
 
         });
-        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 1.3) + ' - ' + Math.round(characters[0].stats.damageMax * 1.3) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 0.7) + '%' + '\nkoszt:\t' + 60), {
+        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 1.3) + ' - ' + Math.round(characters[0].stats.damageMax * 1.3) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 0.7) + '%' + '\nkoszt:\t' + 10), {
             left: 172,
             top: 355,
             selectable: false,
@@ -438,7 +422,7 @@ function showArena() {
             });
             canvas.add(obj);
         });
-        var skillText = new fabric.Text(String('Odpocznij \n\nRegen:\t' + 35 + '%'), {
+        var skillText = new fabric.Text(String('Odpocznij \n\nRegen:\t' + 20 + '%'), {
             left: 260,
             top: 355,
             selectable: false,
@@ -475,15 +459,12 @@ function showArena() {
                     break;
 
                 case 'flag':
+                    resetTimer()
                     socket.emit('surrender')
-                    clearInterval(arenaTimer);
                     break;
 
                 case 'exitButton':
-                    clearInterval(arenaTimer);
                     location.reload()
-
-
             }
             canvas.renderAll();
         }
@@ -725,6 +706,20 @@ function animateRightBars() {
     })
 }
 
+var arenaTimer
+function resetTimer() {
+    console.log("reset timer")
+    var turnTime = 60
+    clearInterval(arenaTimer)
+    arenaTimer = setInterval(function () {
+        turnTime -= 1
+        canvas.getItemByName('timer').text = turnTime.toString()
+        canvas.renderAll()
+        if (turnTime <= 0) {
+            clearInterval(arenaTimer)
+        }
+    }, 1000)
+}
 
 function formatBars() {
     canvas.bringToFront(canvas.getItemByName('nickL'))
