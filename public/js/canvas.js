@@ -58,7 +58,7 @@ window.onload = function () {
                 level: 1,
                 type: "helmet",
                 name: "BuzdyganArmorianu",
-                image: "items/buzdygan.png",
+                image: "svg/Helmet.svg",
                 armor: 0,
                 upgradePrice: 70,
                 value: 50
@@ -68,7 +68,7 @@ window.onload = function () {
                 level: 1,
                 type: "armor",
                 name: "BuzdyganArmorianu",
-                image: "items/buzdygan.png",
+                image: "svg/armor.svg",
                 armor: 0,
                 upgradePrice: 70,
                 value: 50
@@ -78,7 +78,7 @@ window.onload = function () {
                 level: 1,
                 type: "weapon",
                 name: "Pięści",
-                image: "",
+                image: "svg/weapon.svg",
                 damageMin: 1,
                 damageMax: 2,
                 upgradePrice: 0,
@@ -173,9 +173,6 @@ window.onload = function () {
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    console.log(xmlhttp.response);
-                }
-                else {
                     resolve();
                 }
             };
@@ -209,8 +206,11 @@ window.onload = function () {
         });
     }
     function refreshChar() {
-        removeChar();
-        reqCharacter().then(loadCharMain);
+        return new Promise(function (resolve, reject) {
+            removeChar();
+            reqCharacter().then(loadCharMain);
+            resolve();
+        })
     }
 
 
@@ -249,6 +249,7 @@ window.onload = function () {
                 e.target.scale(2);
                 canvas.renderAll();
             }
+            console.log(e.target.name)
         }
     });
     canvas.on('mouse:out', function (e) {
@@ -340,15 +341,10 @@ window.onload = function () {
                     removeArena()
                     canvas.getItemByName('inStickman').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStickman'));
-                    reqStat().then(loadStats);
-                    loadEq();
-                    reqCharacter().then(loadCharStickman);
-                    refreshChar();
-                    //TODO
                     reqEq().then(loadEqList).then(loadBackpackList)
+                    reqStat().then(loadStats);
+                    refreshChar()
 
-                    //reqBp().then
-                    //open stickman
                     break;
                 case 'addStr':
                     updateStat("str", 1).then(refreshStat);
@@ -895,6 +891,7 @@ window.onload = function () {
         loadHp();
         loadArmor();
         loadEnergy();
+        loadEq();
     };
     function loadGold() {
         if (!canvas.getItemByName('coinText')) {
@@ -1214,7 +1211,7 @@ window.onload = function () {
         loadCharStickman();
         canvas.bringToFront(canvas.getItemByName('inStickman'));
         canvas.bringToFront(canvas.getItemByName('EQhelmet'));
-        canvas.bringToFront(canvas.getItemByName('EQarmmor'));
+        canvas.bringToFront(canvas.getItemByName('EQarmor'));
         canvas.bringToFront(canvas.getItemByName('EQweapon'));
         canvas.bringToFront(canvas.getItemByName('statsText'));
         canvas.bringToFront(canvas.getItemByName('statsPoints'));
@@ -1278,31 +1275,26 @@ window.onload = function () {
                         option.text = element.name;
                         option.value = element.itemId
                         option.style.color = "#fff"
-                        switch(element.type)
-                        {
+                        switch (element.type) {
                             case 'helmet':
-                            helmetDrop.addEventListener('change', function () {
-                                updateEq(helmetDrop.value)
-                                console.log("Click")
-                            })
-                            helmetDrop.add(option);
-                            break;
+                                helmetDrop.add(option);
+                                break;
                             case 'armor':
-                            armorDrop.addEventListener('change', function () {
-                                updateEq(armorDrop.value)
-                            })
-
-                            armorDrop.add(option);
-                            break;
+                                armorDrop.add(option);
+                                break;
                             case 'weapon':
-                            weaponDrop.addEventListener('change', function () {
-                                updateEq(weaponDrop.value)
-                            })
-
-                            weaponDrop.add(option);
-                            break;
+                                weaponDrop.add(option);
+                                break;
                         }
-                        
+                    })
+                    helmetDrop.addEventListener('change', function () {
+                        updateEq(helmetDrop.value).then(loadCharStickman)
+                    })
+                    armorDrop.addEventListener('change', function () {
+                        updateEq(armorDrop.value).then(loadCharStickman)
+                    })
+                    weaponDrop.addEventListener('change', function () {
+                        updateEq(weaponDrop.value).then(loadCharStickman)
                     })
                     resolve();
                 }
@@ -2365,8 +2357,7 @@ window.onload = function () {
 
     function loadEq() {
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
-            fabric.loadSVGFromURL('svg/Helmet.svg', function (objects, options) {
-                var obj = fabric.util.groupSVGElements(objects, options);
+            fabric.Image.fromURL(Geq.equipment.helmet.image, function (obj) {
                 obj.scaleToWidth(70)
                 obj.scaleToHeight(70)
                 obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 90 })
@@ -2375,18 +2366,47 @@ window.onload = function () {
                 obj.name = 'EQhelmet';
                 canvas.add(obj);
             });
-            fabric.loadSVGFromURL('svg/armor.svg', function (objects, options) {
-                var obj = fabric.util.groupSVGElements(objects, options);
+            fabric.Image.fromURL(Geq.equipment.armor.image, function (obj) {
                 obj.scaleToWidth(70)
                 obj.scaleToHeight(70)
                 obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 5 })
                 obj.selectable = false;
                 obj.scalable = false;
-                obj.name = 'EQarmmor';
+                obj.name = 'EQarmor';
                 canvas.add(obj);
             });
-            fabric.loadSVGFromURL('svg/weapon.svg', function (objects, options) {
-                var obj = fabric.util.groupSVGElements(objects, options);
+            fabric.Image.fromURL(Geq.equipment.weapon.image, function (obj) {
+                obj.scaleToWidth(70)
+                obj.scaleToHeight(70)
+                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 + 80 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQweapon';
+                canvas.add(obj);
+            });
+        }
+        else {
+            removeEq()
+
+            fabric.Image.fromURL(Geq.equipment.helmet.image, function (obj) {
+                obj.scaleToWidth(70)
+                obj.scaleToHeight(70)
+                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 90 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQhelmet';
+                canvas.add(obj);
+            });
+            fabric.Image.fromURL(Geq.equipment.armor.image, function (obj) {
+                obj.scaleToWidth(70)
+                obj.scaleToHeight(70)
+                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 5 })
+                obj.selectable = false;
+                obj.scalable = false;
+                obj.name = 'EQarmor';
+                canvas.add(obj);
+            });
+            fabric.Image.fromURL(Geq.equipment.weapon.image, function (obj) {
                 obj.scaleToWidth(70)
                 obj.scaleToHeight(70)
                 obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 + 80 })
@@ -2397,7 +2417,7 @@ window.onload = function () {
             });
         }
         canvas.bringToFront(canvas.getItemByName('EQhelmet'));
-        canvas.bringToFront(canvas.getItemByName('EQarmmor'));
+        canvas.bringToFront(canvas.getItemByName('EQarmor'));
         canvas.bringToFront(canvas.getItemByName('EQweapon'));
 
         helmetDrop.style.left = ((canvas.width / 2)) + 'px';//200
@@ -2456,7 +2476,7 @@ window.onload = function () {
 
     function removeEq() {
         if (canvas.getItemByName('EQhelmet')) { canvas.remove(canvas.getItemByName('EQhelmet')); }
-        if (canvas.getItemByName('EQarmmor')) { canvas.remove(canvas.getItemByName('EQarmmor')); }
+        if (canvas.getItemByName('EQarmor')) { canvas.remove(canvas.getItemByName('EQarmor')); }
         if (canvas.getItemByName('EQweapon')) { canvas.remove(canvas.getItemByName('EQweapon')); }
 
     }
