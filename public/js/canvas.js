@@ -2611,6 +2611,8 @@ function inArenaButtonText_cancel() {
         width: 200,
         height: 40,
         fill: '#f00',
+        rx: 10,
+        ry: 10,
         name: 'inArenaButtonBG',
         selectable: false
     }),
@@ -2640,6 +2642,8 @@ function inArenaButtonText_canceled() {
         width: 200,
         height: 40,
         fill: '#f00',
+        rx: 10,
+        ry: 10,
         name: 'inArenaButtonBG',
         selectable: false
     }),
