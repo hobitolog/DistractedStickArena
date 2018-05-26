@@ -56,8 +56,10 @@ module.exports = function (app) {
         const response = []
         let count = req.user.character.backpack.length
 
-        if (count == 0)
-            res.send({ "backpack": [] })
+        if (count == 0) {
+            res.json({ "backpack": [] })
+            return
+        }
 
         const ids = []
         req.user.character.backpack.forEach(element => {
