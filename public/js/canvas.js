@@ -557,6 +557,8 @@ window.onload = function () {
                 width: 200,
                 height: 40,
                 fill: '#f00',
+                rx: 10,
+                ry: 10,
                 name: 'inArenaButtonBG',
                 selectable: false
             }),
@@ -1330,7 +1332,7 @@ window.onload = function () {
                         var option = document.createElement("option");
                         option.text = element.name;
                         option.value = element.itemId
-                        option.addEventListener("click", function () {
+                        option.addEventListener("mouseup", function () {
                             getAndLoadShopItem(element.itemId, "SELL")
                         })
                         sellDrop.add(option);
@@ -1361,7 +1363,7 @@ window.onload = function () {
                         var option = document.createElement("option");
                         option.text = element.name;
                         option.value = element.itemId
-                        option.addEventListener("click", function () {
+                        option.addEventListener("mouseup", function () {
                             getAndLoadShopItem(element.itemId, "BUY")
                         })
                         buyDrop.add(option);
@@ -1468,7 +1470,7 @@ window.onload = function () {
                         var option = document.createElement("option");
                         option.text = element.name;
                         option.value = element.itemId
-                        option.addEventListener("click", function () {
+                        option.addEventListener("mouseup", function () {
                             getAndLoadBlacksmithItem(element.itemId, true).then(() => {
                                 getAndLoadBlacksmithItem(element.itemId + 1, false)
                             })
@@ -1689,7 +1691,9 @@ window.onload = function () {
                 width: 120,
                 height: 35,
                 fill: '#f00',
-                selectable: false
+                selectable: false,
+                rx: 10,
+                ry: 10
             }),
             new fabric.Text(String("Przekuj"), {
                 // left: 200,
@@ -1806,6 +1810,8 @@ window.onload = function () {
             width: 120,
             height: 35,
             fill: '#f00',
+            rx: 10,
+            ry: 10,
             name: 'inTavernButtonBG',
             selectable: false
         }),
