@@ -1,4 +1,5 @@
 const itemFetcher = require('./itemFetcher')
+const userFetcher = require('./userFetcher')
 var log = require("./log")
 var io
 
@@ -46,7 +47,8 @@ async function matchMake() {
             characters: null,
         }
 
-        duel.characters = await extractDuelCharacters(player.player, matched.player)
+        
+        duel.characters = await extractDuelCharacters(player.player.login, matched.player.login)
 
         duel.turn = (player.player.character.stats.agi >= matched.player.character.stats.agi
             ? player.player.login : matched.player.login)
@@ -67,8 +69,11 @@ async function matchMake() {
     matchMakingTrigger(5000)
 }
 
-async function extractDuelCharacters(player1, player2) {
+async function extractDuelCharacters(p1Login, p2Login) {
     var result = new Map()
+
+    var player1 = await userFetcher.getFullUser(p1Login)
+    var player2 = await userFetcher.getFullUser(p2Login)
 
     var p1Eq = await itemFetcher.getCurrentVariants(
         player1.character.equipment.helmet.itemId,
