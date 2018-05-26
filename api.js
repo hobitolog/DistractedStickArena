@@ -71,7 +71,8 @@ module.exports = function (app) {
                 items.forEach(item => {
                     backpack.push({
                         "name": item.name,
-                        "itemId": item.itemId
+                        "itemId": item.itemId,
+                        "type": item.type
                     })
                 })
                 res.json({
@@ -282,16 +283,3 @@ module.exports = function (app) {
         }
     })
 }
-/*
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.open("POST", "setEquipment", true);
-xmlhttp.setRequestHeader("Content-Type", "application/json");
-xmlhttp.responseType = "json";
-xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        console.log(xmlhttp.response);
-    }
-};
-var json = JSON.stringify({"itemId": 200})
-xmlhttp.send(json)
-*/

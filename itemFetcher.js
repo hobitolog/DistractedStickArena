@@ -68,7 +68,7 @@ module.exports = {
 
     getCurrentVariant: function (itemId) {
         return new Promise(function (resolve, reject) {
-            if(itemId == "")
+            if (itemId == "")
                 reject("Niepoprawne itemId: " + itemId)
             const variantId = itemId % 100
             const baseId = parseInt(itemId) - variantId
@@ -86,11 +86,11 @@ module.exports = {
                     return element.variantId == variantId
                 })
 
-                if(!variant) {
+                if (!variant) {
                     resolve()
                     return
                 }
-                    
+
                 const toReturn = {
                     "itemId": itemId,
                     "level": full.level,
@@ -120,9 +120,9 @@ module.exports = {
             const lowerBound = Math.floor((characterLvl - 1) / 5) * 5
             const items = []
 
-            const ids = [lowerBound, lowerBound + 1, lowerBound + 2, lowerBound + 3, lowerBound + 4] 
+            const ids = [lowerBound, lowerBound + 1, lowerBound + 2, lowerBound + 3, lowerBound + 4]
             Weapon.find({ 'level': { $in: ids } }, (err, weapons) => {
-                if(err) {
+                if (err) {
                     reject(err)
                     return
                 }
@@ -141,7 +141,7 @@ module.exports = {
     getItems: function (ids) {
         return new Promise(function (resolve, reject) {
             const toReturn = []
- 
+
             var baseIds = []
             var toFind = []
             ids.forEach((id, index) => {
@@ -156,7 +156,7 @@ module.exports = {
             })
 
             Weapon.find({ 'baseId': { $in: baseIds } }, (err, items) => {
-                if(err) {
+                if (err) {
                     reject(err)
                     return
                 }
@@ -172,7 +172,8 @@ module.exports = {
 
                     toReturn.push({
                         "itemId": item.baseId + item.variantId,
-                        "name": variant.name ? variant.name : full.name
+                        "name": variant.name ? variant.name : full.name,
+                        "type": full.type
                     })
                 })
                 resolve(toReturn)

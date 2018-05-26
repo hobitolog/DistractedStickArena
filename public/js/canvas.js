@@ -156,6 +156,7 @@ window.onload = function () {
             xmlhttp.responseType = "json";
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
                     Geq.equipment = xmlhttp.response;
                     Gchar.armor = Geq.equipment.armor.armor + Geq.equipment.helmet.armor;
                     resolve();
@@ -164,30 +165,24 @@ window.onload = function () {
             xmlhttp.send();
         });
     }
-    // function updateEq(param, amount) {
-    //     return new Promise(function (resolve, reject) {
-    //         var equipent = {
-    //          ??   "equipent": param,??
-    //         ??    "amount": amount??
-    //         }
-    //         var json = JSON.stringify(stats)
-    //         var xmlhttp = new XMLHttpRequest()
-    //         xmlhttp.open("POST", ??"spendEquipment"??, true)
-    //         xmlhttp.setRequestHeader("Content-Type", "application/json")
-    //         xmlhttp.responseType = "json"
-    //         xmlhttp.onreadystatechange = function () {
-    //             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    //                 if (xmlhttp.response.error) {
-    //                     alert(xmlhttp.response.error);
-    //                 }
-    //                 else {
-    //                     resolve();
-    //                 }
-    //             }
-    //         }
-    //         xmlhttp.send(json)
-    //     });
-    // }
+    function updateEq(itemId) {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "setEquipment", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    console.log(xmlhttp.response);
+                }
+                else {
+                    resolve();
+                }
+            };
+            var json = JSON.stringify({ "itemId": itemId })
+            xmlhttp.send(json)
+        });
+    }
     // function refreshEq() {
     //     ??removeStats();??
     //     reqEq().then(??loadStats??);
@@ -350,7 +345,8 @@ window.onload = function () {
                     reqCharacter().then(loadCharStickman);
                     refreshChar();
                     //TODO
-                    reqEq()//.then
+                    reqEq().then(loadEqList).then(loadBacpackList)
+
                     //reqBp().then
                     //open stickman
                     break;
@@ -1236,6 +1232,82 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('exit'));
 
     }
+    function loadEqList() {
+        return new Promise(function (resolve, reject) {
+            clearHelmetList()
+            clearArmorList()
+            clearWeaponList()
+
+            var helmetOption = document.createElement("option");
+            helmetOption.text = Geq.equipment.helmet.name;
+            helmetOption.value = Geq.equipment.helmet.itemId
+            helmetOption.style.color = "red"
+            helmetOption.selected = "true"
+
+            helmetDrop.add(helmetOption);
+
+            var armorOption = document.createElement("option");
+            armorOption.text = Geq.equipment.armor.name;
+            armorOption.value = Geq.equipment.armor.itemId
+            armorOption.style.color = "red"
+            armorOption.selected = "true"
+
+            armorDrop.add(armorOption);
+
+            var weaponOption = document.createElement("option");
+            weaponOption.text = Geq.equipment.weapon.name;
+            weaponOption.value = Geq.equipment.weapon.itemId
+            weaponOption.style.color = "red"
+            weaponOption.selected = "true"
+            weaponDrop.add(weaponOption);
+
+            resolve();
+
+
+        })
+    }
+    function loadBacpackList() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getBackpack", true);
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    xmlhttp.response.backpack.forEach((element, index) => {
+                        if (element.type == 'helmet') {
+                            var option = document.createElement("option");
+                            option.text = element.name;
+                            option.value = element.itemId
+                            option.style.color = "#fff"
+                            helmetDrop.add(option);
+                            helmetDrop.addEventListener('change', function () {
+                                updateEq(helmetDrop.value)
+                                console.log("elo")
+                            })
+                        }
+                        else if (element.type == 'armor') {
+                            var option = document.createElement("option");
+                            option.text = element.name;
+                            option.value = element.itemId
+                            option.style.color = "#fff"
+
+                            armorDrop.add(option);
+                        }
+                        else if (element.type == 'weapon') {
+                            var option = document.createElement("option");
+                            option.text = element.name;
+                            option.value = element.itemId
+                            option.style.color = "#fff"
+
+                            weaponDrop.add(option);
+                        }
+                    })
+                    resolve();
+                }
+            }
+            xmlhttp.send();
+        })
+    }
 
     function loadSellItemList() {
         return new Promise(function (resolve, reject) {
@@ -1416,6 +1488,15 @@ window.onload = function () {
 
     function clearBuyList() {
         buyDrop.innerHTML = ""
+    }
+    function clearHelmetList() {
+        helmetDrop.innerHTML = ""
+    }
+    function clearArmorList() {
+        armorDrop.innerHTML = ""
+    }
+    function clearWeaponList() {
+        weaponDrop.innerHTML = ""
     }
 
     function getAndLoadShopItem(itemId, operation) {
