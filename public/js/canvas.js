@@ -1397,7 +1397,9 @@ window.onload = function () {
                         loadBlacksmithBag().then(() => {
                             var bsList = document.getElementById('blacksmith')
                             bsList.selectedIndex = 0
-                            getAndLoadBlacksmithItem(bsList.options[0].value)
+                            getAndLoadBlacksmithItem(bsList.options[0].value, true).then(() => {
+                                getAndLoadBlacksmithItem(parseInt(bsList.options[0].value) + 1, false)
+                            })
                         })
                     }
                 }
