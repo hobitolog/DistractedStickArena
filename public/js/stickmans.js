@@ -58,6 +58,7 @@ var sticks = {
         })
 
         this.enemy.elements.set("head", new fabric.Circle({
+            selectable: false, scalable: false,
             radius: 20, fill: this.enemy.color, left: 470, top: 175
         }))
         this.enemy.elements.set("line", makeLine([470, 175, 470, 275], this.enemy.color))

@@ -144,8 +144,8 @@ function handleNewDuels(newDuels) {
         // console.log('leci do ' + element.player1.socket.id)
         // console.log('leci do ' + element.player2.socket.id)
 
-        element.player1.socket.emit('gameFound', ch1, ch2)
-        element.player2.socket.emit('gameFound', ch2, ch1)
+        element.player1.socket.emit('gameFound', ch1, ch2, element.turn)
+        element.player2.socket.emit('gameFound', ch2, ch1, element.turn)
 
         setTimeout(function () {
             io.to(element.id).emit('turn', element.turn)

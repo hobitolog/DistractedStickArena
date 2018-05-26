@@ -33,12 +33,12 @@ socket.on('endDuel', function (prize) {
     showPrize(prize.exp, prize.gold)
 })
 
-socket.on('gameFound', function (us, opp) {
+socket.on('gameFound', function (us, opp, nickStart) {
     characters[0] = us
     characters[1] = opp
     sticks.setColors('black', 'black')
     sticks.setWeapons(us.weaponImage, opp.weaponImage)
-    showArena()
+    showArena(nickStart)
     inArenaButtonText_fight()
 })
 
@@ -56,19 +56,7 @@ socket.on('notYourTurn', function () {
 })
 
 socket.on('turn', function (nick) {
-    if (nick == characters[0].login) {
-        canvas.getItemByName('weapon1').scale(0.5, 0.5)
-        canvas.getItemByName('weapon2').scale(0.5, 0.5)
-        canvas.getItemByName('weapon3').scale(0.5, 0.5)
-        canvas.getItemByName('zzz').scale(0.3, 0.3)        
-    }
-    else {
-        canvas.getItemByName('weapon1').scale(0, 0)
-        canvas.getItemByName('weapon2').scale(0, 0)
-        canvas.getItemByName('weapon3').scale(0, 0)
-        canvas.getItemByName('zzz').scale(0, 0)        
-    }
-    canvas.renderAll()
+    setTurn(nick)
 })
 
 socket.on('attack', function (attackType, attacker, attacked) {
@@ -114,7 +102,23 @@ socket.on('rest', function (character) {
     refreshBars(index)
 })
 
-function showArena() {
+function setTurn(nick) {
+    if (nick == characters[0].login) {
+        canvas.getItemByName('weapon1').scale(0.5, 0.5)
+        canvas.getItemByName('weapon2').scale(0.5, 0.5)
+        canvas.getItemByName('weapon3').scale(0.5, 0.5)
+        canvas.getItemByName('zzz').scale(0.3, 0.3)
+    }
+    else {
+        canvas.getItemByName('weapon1').scale(0, 0)
+        canvas.getItemByName('weapon2').scale(0, 0)
+        canvas.getItemByName('weapon3').scale(0, 0)
+        canvas.getItemByName('zzz').scale(0, 0)
+    }
+    canvas.renderAll()
+}
+
+function showArena(nickStart) {
     canvas.clear();
     canvas.localization = 'arena';
     load();
@@ -306,6 +310,8 @@ function showArena() {
                 canvas.bringToFront(canvas.getItemByName('timer'))
                 sticks.bringToFront()
                 formatBars()
+                arenaAlert("Zaczyna gracz " + nickStart)
+                setTurn(nickStart)
             });
             canvas.add(obj);
         });
@@ -333,7 +339,7 @@ function showArena() {
     function mouseOverWeapon1() {
         fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(12);
+            obj.scale(13);
             obj.set({ left: 52, top: 370 });
             obj.selectable = false;
             obj.scalable = false;
@@ -364,7 +370,7 @@ function showArena() {
     function mouseOverWeapon2() {
         fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(12);
+            obj.scale(13);
             obj.set({ left: 130, top: 370 });
             obj.selectable = false;
             obj.scalable = false;
@@ -394,7 +400,7 @@ function showArena() {
     function mouseOverWeapon3() {
         fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(12);
+            obj.scale(13);
             obj.set({ left: 215, top: 370 });
             obj.selectable = false;
             obj.scalable = false;
@@ -407,8 +413,8 @@ function showArena() {
             canvas.add(obj);
 
         });
-        var skillText = new fabric.Text(String('POTĘŻNY atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 1.3) + ' - ' + Math.round(characters[0].stats.damageMax * 1.3) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 0.7) + '%' + '\nkoszt:\t' + 10), {
-            left: 172,
+        var skillText = new fabric.Text(String('P O T Ę Ż N Y atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 1.3) + ' - ' + Math.round(characters[0].stats.damageMax * 1.3) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 0.7) + '%' + '\nkoszt:\t' + 10), {
+            left: 168,
             top: 355,
             selectable: false,
             scalable: false,
@@ -425,7 +431,7 @@ function showArena() {
     function mouseOverZzz() {
         fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
-            obj.scale(12);
+            obj.scale(13);
             obj.set({ left: 300, top: 370 });
             obj.selectable = false;
             obj.scalable = false;
@@ -436,7 +442,7 @@ function showArena() {
             });
             canvas.add(obj);
         });
-        var skillText = new fabric.Text(String('Odpocznij \n\nRegen:\t' + 20 + '%'), {
+        var skillText = new fabric.Text(String('Odpocznij \n\nRegen:\t' + Math.round(characters[0].stats.energyMax * 0.2) + ' (20%)'), {
             left: 260,
             top: 355,
             selectable: false,
