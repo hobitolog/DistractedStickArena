@@ -1644,7 +1644,7 @@ window.onload = function () {
 
 
             var bsText = new fabric.Text(String("Ekwipunek"), {
-                left: canvas.width / 2 - 142,
+                left: canvas.width / 2 - 144,
                 top: canvas.height / 2 - 120,
                 selectable: false,
                 scalable: false,
@@ -1657,7 +1657,7 @@ window.onload = function () {
             canvas.add(bsText);
 
             var before = new fabric.Text(String("Przed"), {
-                left: canvas.width / 2,
+                left: canvas.width / 2+15,
                 top: canvas.height / 2 - 120,
                 selectable: false,
                 scalable: false,
@@ -1670,7 +1670,7 @@ window.onload = function () {
             canvas.add(before);
 
             var after = new fabric.Text(String("Po"), {
-                left: canvas.width / 2,
+                left: canvas.width / 2+15,
                 top: canvas.height / 2 + 25,
                 selectable: false,
                 scalable: false,
@@ -1891,61 +1891,61 @@ window.onload = function () {
         })
 
         var itemNameBefore = new fabric.Text(String(selectedName), {
-            left: canvas.width / 2,
+            left: canvas.width / 2 +15,
             top: canvas.height / 2 - 90,
             selectable: false,
             scalable: false,
             name: 'itemNameBefore',
             fill: 'red',
-            fontSize: 18,
+            fontSize: 16,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(itemNameBefore);
         var stat1Before = new fabric.Text(String(selectedStat1), {
-            left: canvas.width / 2,
+            left: canvas.width / 2 +15,
             top: canvas.height / 2 - 70,
             selectable: false,
             scalable: false,
             name: 'stat1Before',
             fill: '#fff',
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat1Before);
         var stat2Before = new fabric.Text(String(selectedStat2), {
-            left: canvas.width / 2,
+            left: canvas.width / 2+15,
             top: canvas.height / 2 - 50,
             selectable: false,
             scalable: false,
             name: 'stat2Before',
             fill: '#fff',
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat2Before);
         var stat3Before = new fabric.Text(String(selectedStat3), {
-            left: canvas.width / 2,
+            left: canvas.width / 2+15,
             top: canvas.height / 2 - 30,
             selectable: false,
             scalable: false,
             name: 'stat3Before',
             fill: '#fff',
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat3Before);
         var stat4Before = new fabric.Text(String(selectedStat4), {
-            left: canvas.width / 2,
+            left: canvas.width / 2+15,
             top: canvas.height / 2 - 10,
             selectable: false,
             scalable: false,
             name: 'stat4Before',
             fill: '#fff',
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
@@ -2002,61 +2002,61 @@ window.onload = function () {
 
 
         var itemNameAfter = new fabric.Text(String(selectedName), {
-            left: canvas.width / 2,
+            left: canvas.width / 2+15,
             top: canvas.height / 2 + 50,
             selectable: false,
             scalable: false,
             name: 'itemNameAfter',
             fill: 'red',
-            fontSize: 18,
+            fontSize: 16,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(itemNameAfter);
         var stat1After = new fabric.Text(String(selectedStat1), {
-            left: canvas.width / 2,
+            left: canvas.width / 2+15,
             top: canvas.height / 2 + 70,
             selectable: false,
             scalable: false,
             name: 'stat1After',
             fill: '#fff',
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat1After);
         var stat2After = new fabric.Text(String(selectedStat2), {
-            left: canvas.width / 2,
+            left: canvas.width / 2+15,
             top: canvas.height / 2 + 90,
             selectable: false,
             scalable: false,
             name: 'stat2After',
             fill: '#fff',
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat2After);
         var stat3After = new fabric.Text(String(selectedStat3), {
-            left: canvas.width / 2,
+            left: canvas.width / 2+15,
             top: canvas.height / 2 + 110,
             selectable: false,
             scalable: false,
             name: 'stat3After',
             fill: '#fff',
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });
         canvas.add(stat3After);
         var stat4After = new fabric.Text(String(selectedStat4), {
-            left: canvas.width / 2,
+            left: canvas.width / 2+15,
             top: canvas.height / 2 + 130,
             selectable: false,
             scalable: false,
             name: 'stat4After',
             fill: '#fff',
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
             textAlign: 'center',
         });

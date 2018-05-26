@@ -1,5 +1,5 @@
 {
-    "version": 0,
+    "version": 3,
     "baseId": 200,
     "name": "Buzdygan",
     "type": "weapon",
@@ -23,7 +23,7 @@
         },
         {
             "variantId": 2,
-            "name": "Podwójny Buzdygan Rozkoszy",
+            "name": "Buzdygan Rozkoszy++",
             "damageMin": 12,
             "damageMax": 16,
             "value": 200
