@@ -2,6 +2,7 @@ const login = require('./login')
 const log = require('./log')
 const fight = require('./fight')
 const itemFetcher = require('./itemFetcher')
+var User = require('./models/user')
 
 module.exports = function (app) {
 
@@ -122,7 +123,7 @@ module.exports = function (app) {
                 "itemId": itemId
             }
             backpack.splice(itemIndex, 1)
-            req.user.markModified("character.backpack")            
+            req.user.markModified("character.backpack")
             req.user.markModified("character.equipment")
 
             req.user.save(function (err) {
@@ -280,5 +281,24 @@ module.exports = function (app) {
                 }
             })
         }
+    })
+
+    app.get('/getRanking', (req, res) => {
+
+        User.find().sort("-character.rankingPoints").limit(10).exec((err, users) => {
+            if (err) {
+                log.error(err)
+                return res.json("error")
+            }
+
+            const list = []
+            users.forEach(element => {
+                list.push({
+                    "login": element.login,
+                    "points": element.character.rankingPoints
+                })
+            })
+            res.json(list)
+        })
     })
 }
