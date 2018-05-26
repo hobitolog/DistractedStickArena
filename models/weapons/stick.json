@@ -1,0 +1,23 @@
+{
+    "version": 3,
+    "baseId": 100,
+    "name": "Kij",
+    "type": "weapon",
+    "level": -1,
+    "image": "items/kij.png",
+    "variants": [
+        {
+            "variantId": 0,
+            "damageMin": 1,
+            "damageMax": 2,
+            "upgradePrice": 20,
+            "value": 0
+        },
+        {
+            "variantId": 1,
+            "damageMin": 2,
+            "damageMax": 3,
+            "value": 10
+        }
+    ]
+}
