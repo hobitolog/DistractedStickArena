@@ -57,7 +57,7 @@ module.exports = function (app) {
         let count = req.user.character.backpack.length
 
         if (count == 0) {
-            res.send({ "backpack": [] })
+            res.json({ "backpack": [] })
             return
         }
 
