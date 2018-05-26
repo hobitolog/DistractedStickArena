@@ -266,11 +266,8 @@ module.exports = function (app) {
                                 break
                         }
                         req.user.save(function (err) {
-                            console.log('bez bledu')
                             if (err)
                                 log.error(err)
-                            console.log('mowie ze bez')
-                            console.log(req.user.character.backpack)
                             var json = { "error": err ? "Błąd bazy danych" : null }
                             res.send(json)
                         })

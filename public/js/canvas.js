@@ -143,8 +143,8 @@ window.onload = function () {
         });
     }
     function refreshStat() {
-        removeStats().then(reqStat).then(loadStats);
-        //reqStat().then(loadStats);
+            removeStats().then(reqStat).then(reqEq).then(loadEqList).then(loadBackpackList).then(loadStats);
+
     }
 
 
@@ -232,6 +232,15 @@ window.onload = function () {
     var sellDrop = document.getElementById('sell');
     var arenaDrop = document.getElementById('arenaGold');
     var blacksmithDrop = document.getElementById('blacksmith');
+    helmetDrop.addEventListener('change', function () {
+        updateEq(helmetDrop.value).then(refreshStat)
+    })
+    armorDrop.addEventListener('change', function () {
+        updateEq(armorDrop.value).then(refreshStat)
+    })
+    weaponDrop.addEventListener('change', function () {
+        updateEq(weaponDrop.value).then(refreshStat)
+    })
 
 
     loadBG('inArena');
@@ -249,7 +258,6 @@ window.onload = function () {
                 e.target.scale(2);
                 canvas.renderAll();
             }
-            console.log(e.target.name)
         }
     });
     canvas.on('mouse:out', function (e) {
@@ -341,8 +349,7 @@ window.onload = function () {
                     removeArena()
                     canvas.getItemByName('inStickman').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStickman'));
-                    reqEq().then(loadEqList).then(loadBackpackList)
-                    reqStat().then(loadStats);
+                    refreshStat()
                     refreshChar()
 
                     break;
@@ -886,6 +893,7 @@ window.onload = function () {
     };
     function loadCharStickman() {
         loadNick();
+        loadRankingPoints();
         loadLvl();
         loadExp();
         loadHp();
@@ -914,13 +922,13 @@ window.onload = function () {
     function loadExp() {
         if (!canvas.getItemByName('expText')) {
             var expText = new fabric.Text('PD: ' + String(Gchar.exp) + '/' + String(100 + (Gchar.level - 1) * 50), {
-                left: canvas.width / 2 - 80,
+                left: canvas.width / 2 - 100,
                 top: canvas.height / 2 - 80,
                 selectable: false,
                 scalable: false,
                 name: 'expText',
                 fill: '#fff',
-                fontSize: 15,
+                fontSize: 14,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
@@ -933,13 +941,13 @@ window.onload = function () {
     function loadNick() {
         if (!canvas.getItemByName('nickText')) {
             var nickText = new fabric.Text(String(Gchar.login), {
-                left: canvas.width / 2 - 150,
-                top: canvas.height / 2 - 120,
+                left: canvas.width / 2 - 130,
+                top: canvas.height / 2 - 135,
                 selectable: false,
                 scalable: false,
                 name: 'nickText',
                 fill: 'red',
-                fontSize: 15,
+                fontSize: 16,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'center',
                 originX: 'center',
@@ -958,7 +966,7 @@ window.onload = function () {
                 scalable: false,
                 name: 'lvlText',
                 fill: '#fff',
-                fontSize: 16,
+                fontSize: 15,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
@@ -977,7 +985,7 @@ window.onload = function () {
                 scalable: false,
                 name: 'heartText',
                 fill: '#fff',
-                fontSize: 15,
+                fontSize: 14,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
@@ -996,7 +1004,7 @@ window.onload = function () {
                 scalable: false,
                 name: 'shieldText',
                 fill: '#fff',
-                fontSize: 15,
+                fontSize: 14,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
@@ -1009,13 +1017,13 @@ window.onload = function () {
     function loadEnergy() {
         if (!canvas.getItemByName('energyText')) {
             var energyText = new fabric.Text("Energia: " + String(Gchar.energy), {
-                left: canvas.width / 2 - 80,
+                left: canvas.width / 2 - 100,
                 top: canvas.height / 2 - 45,
                 selectable: false,
                 scalable: false,
                 name: 'energyText',
                 fill: '#fff',
-                fontSize: 15,
+                fontSize: 14,
                 fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                 textAlign: 'left',
                 originX: 'left',
@@ -1025,9 +1033,23 @@ window.onload = function () {
         canvas.bringToFront(energyText);
 
     };
-    function loadRanking() {
-        //TODO
-    };
+    function loadRankingPoints() {
+        if (!canvas.getItemByName('RPText')) {
+            var RPText = new fabric.Text("RP: " + String(Gchar.ranking), {
+                left: canvas.width / 2 - 130,
+                top: canvas.height / 2 - 105,
+                selectable: false,
+                scalable: false,
+                name: 'RPText',
+                fill: '#fff',
+                fontSize: 14,
+                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                textAlign: 'center',
+                originX: 'center',
+            });
+            canvas.add(RPText);
+        }
+        canvas.bringToFront(RPText);    };
     function loadStats() {
         if (!canvas.getItemByName('statsText')) {
             var statsText = new fabric.Group([
@@ -1218,6 +1240,7 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('nickText'));
         canvas.bringToFront(canvas.getItemByName('expText'));
         canvas.bringToFront(canvas.getItemByName('lvlText'));
+        canvas.bringToFront(canvas.getItemByName('RPText'));
         canvas.bringToFront(canvas.getItemByName('heartText'));
         canvas.bringToFront(canvas.getItemByName('shieldText'));
         canvas.bringToFront(canvas.getItemByName('energyText'));
@@ -1286,15 +1309,6 @@ window.onload = function () {
                                 weaponDrop.add(option);
                                 break;
                         }
-                    })
-                    helmetDrop.addEventListener('change', function () {
-                        updateEq(helmetDrop.value).then(loadCharStickman)
-                    })
-                    armorDrop.addEventListener('change', function () {
-                        updateEq(armorDrop.value).then(loadCharStickman)
-                    })
-                    weaponDrop.addEventListener('change', function () {
-                        updateEq(weaponDrop.value).then(loadCharStickman)
                     })
                     resolve();
                 }
@@ -1400,7 +1414,7 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     if (!xmlhttp.response) {
-                        loadBsItemStatsAfter('Max lvl', '', '', '', '', 0)
+                        loadBsItemStatsAfter('Max lvl', '', '', '', '')
                         resolve()
                         return
                     }
@@ -1409,25 +1423,25 @@ window.onload = function () {
                     switch (variant.type) {
                         case 'weapon':
                             if (before) {
-                                loadBsItemStatsBefore(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.image ? variant.image : "svg/weapon.svg"))
+                                loadBsItemStatsBefore(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.image ? variant.image : "svg/weapon.svg"), (variant.upgradePrice ? variant.upgradePrice : "-"))
                             } else {
-                                loadBsItemStatsAfter(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level, (variant.upgradePrice ? variant.upgradePrice : "-"))
+                                loadBsItemStatsAfter(variant.name, "atk min " + variant.damageMin, "atk max " + variant.damageMax, variant.type, "level " + variant.level)
                             }
                             break
 
                         case 'armor':
                             if (before) {
-                                loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/armor.svg"))
+                                loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/armor.svg"), (variant.upgradePrice ? variant.upgradePrice : "-"))
                             } else {
-                                loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.upgradePrice ? variant.upgradePrice : "-"))
+                                loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "")
                             }
                             break
 
                         case 'helmet':
                             if (before) {
-                                loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/helmet.svg"))
+                                loadBsItemStatsBefore(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.image ? variant.image : "svg/helmet.svg"), (variant.upgradePrice ? variant.upgradePrice : "-"))
                             } else {
-                                loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "", (variant.upgradePrice ? variant.upgradePrice : "-"))
+                                loadBsItemStatsAfter(variant.name, "def " + variant.armor, variant.type, "level " + variant.level, "")
                             }
                             break
                     }
@@ -1854,13 +1868,14 @@ window.onload = function () {
 
     }
 
-    function loadBsItemStatsBefore(selectedName, selectedStat1, selectedStat2, selectedStat3, selectedStat4, itemPath) {
+    function loadBsItemStatsBefore(selectedName, selectedStat1, selectedStat2, selectedStat3, selectedStat4, itemPath, selectedValue) {
         if (canvas.getItemByName('itemNameBefore')) { canvas.remove(canvas.getItemByName('itemNameBefore')); }
         if (canvas.getItemByName('stat1Before')) { canvas.remove(canvas.getItemByName('stat1Before')); }
         if (canvas.getItemByName('stat2Before')) { canvas.remove(canvas.getItemByName('stat2Before')); }
         if (canvas.getItemByName('stat3Before')) { canvas.remove(canvas.getItemByName('stat3Before')); }
         if (canvas.getItemByName('stat4Before')) { canvas.remove(canvas.getItemByName('stat4Before')); }
         if (canvas.getItemByName('bsImgBefore')) { canvas.remove(canvas.getItemByName('bsImgBefore')); }
+        if (canvas.getItemByName('itemValueBefore')) { canvas.remove(canvas.getItemByName('itemValueBefore')); }
 
         var isDefault = itemPath.endsWith("svg")
         fabric.Image.fromURL(itemPath, function (obj) {
@@ -1936,7 +1951,31 @@ window.onload = function () {
         });
         canvas.add(stat4Before);
 
+        fabric.loadSVGFromURL('svg/coin.svg', function (objects, options) {
+            var coinBS = fabric.util.groupSVGElements(objects, options);
+            coinBS.scale(0.04);
+            coinBS.selectable = false;
+            coinBS.scalable = false;
 
+
+            var itemValueBefore = new fabric.Group([
+
+                new fabric.Text(String(selectedValue), {
+                    left: 40,
+                    // top: 100,
+                    fill: '#fff',
+                    textAlign: 'left',
+                    fontSize: 25
+                }), coinBS], {
+                    name: 'itemValueBefore',
+                    left: canvas.width / 2 + 150,
+                    top: 290,
+                    opacity: 1,
+                    selectable: false
+
+                });
+            canvas.add(itemValueBefore);
+        })
 
 
         canvas.bringToFront(canvas.getItemByName('bsImgBefore'))
@@ -1945,18 +1984,18 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('stat2Before'))
         canvas.bringToFront(canvas.getItemByName('stat3Before'))
         canvas.bringToFront(canvas.getItemByName('stat4Before'))
+        canvas.bringToFront(canvas.getItemByName('itemValueBefore'))
 
 
 
     }
 
-    function loadBsItemStatsAfter(selectedName, selectedStat1, selectedStat2, selectedStat3, selectedStat4, selectedValue) {
+    function loadBsItemStatsAfter(selectedName, selectedStat1, selectedStat2, selectedStat3, selectedStat4) {
         if (canvas.getItemByName('itemNameAfter')) { canvas.remove(canvas.getItemByName('itemNameAfter')); }
         if (canvas.getItemByName('stat1After')) { canvas.remove(canvas.getItemByName('stat1After')); }
         if (canvas.getItemByName('stat2After')) { canvas.remove(canvas.getItemByName('stat2After')); }
         if (canvas.getItemByName('stat3After')) { canvas.remove(canvas.getItemByName('stat3After')); }
         if (canvas.getItemByName('stat4After')) { canvas.remove(canvas.getItemByName('stat4After')); }
-        if (canvas.getItemByName('itemValueAfter')) { canvas.remove(canvas.getItemByName('itemValueAfter')); }
 
 
 
@@ -2025,37 +2064,12 @@ window.onload = function () {
 
 
 
-        fabric.loadSVGFromURL('svg/coin.svg', function (objects, options) {
-            var coinBS = fabric.util.groupSVGElements(objects, options);
-            coinBS.scale(0.04);
-            coinBS.selectable = false;
-            coinBS.scalable = false;
-
-
-            var itemValueAfter = new fabric.Group([
-
-                new fabric.Text(String(selectedValue), {
-                    left: 40,
-                    // top: 100,
-                    fill: '#fff',
-                    textAlign: 'left',
-                    fontSize: 25
-                }), coinBS], {
-                    name: 'itemValueAfter',
-                    left: canvas.width / 2 + 150,
-                    top: 290,
-                    opacity: 1,
-                    selectable: false
-
-                });
-            canvas.add(itemValueAfter);
-        })
+        
         canvas.bringToFront(canvas.getItemByName('itemName'))
         canvas.bringToFront(canvas.getItemByName('stat1'))
         canvas.bringToFront(canvas.getItemByName('stat2'))
         canvas.bringToFront(canvas.getItemByName('stat3'))
         canvas.bringToFront(canvas.getItemByName('stat4'))
-        canvas.bringToFront(canvas.getItemByName('itemValueAfter'))
 
 
 
@@ -2455,6 +2469,7 @@ window.onload = function () {
 
     function removeStats() {
         return new Promise(function (resolve, reject) {
+            removeEq()
             if (canvas.getItemByName('nickText')) { canvas.remove(canvas.getItemByName('nickText')); }
             if (canvas.getItemByName('statsPoints')) { canvas.remove(canvas.getItemByName('statsPoints')); }
             if (canvas.getItemByName('statsText')) { canvas.remove(canvas.getItemByName('statsText')); }
@@ -2465,6 +2480,7 @@ window.onload = function () {
             if (canvas.getItemByName('addVit')) { canvas.remove(canvas.getItemByName('addVit')); }
             if (canvas.getItemByName('expText')) { canvas.remove(canvas.getItemByName('expText')); }
             if (canvas.getItemByName('lvlText')) { canvas.remove(canvas.getItemByName('lvlText')); }
+            if (canvas.getItemByName('RPText')) { canvas.remove(canvas.getItemByName('RPText')); }
             if (canvas.getItemByName('heartText')) { canvas.remove(canvas.getItemByName('heartText')); }
             if (canvas.getItemByName('shieldText')) { canvas.remove(canvas.getItemByName('shieldText')); }
             if (canvas.getItemByName('energyText')) { canvas.remove(canvas.getItemByName('energyText')); }
@@ -2522,12 +2538,12 @@ window.onload = function () {
         if (canvas.getItemByName('stat3Before')) { canvas.remove(canvas.getItemByName('stat3Before')); }
         if (canvas.getItemByName('stat4Before')) { canvas.remove(canvas.getItemByName('stat4Before')); }
         if (canvas.getItemByName('bsImgBefore')) { canvas.remove(canvas.getItemByName('bsImgBefore')); }
+        if (canvas.getItemByName('itemValueBefore')) { canvas.remove(canvas.getItemByName('itemValueBefore')); }
         if (canvas.getItemByName('itemNameAfter')) { canvas.remove(canvas.getItemByName('itemNameAfter')); }
         if (canvas.getItemByName('stat1After')) { canvas.remove(canvas.getItemByName('stat1After')); }
         if (canvas.getItemByName('stat2After')) { canvas.remove(canvas.getItemByName('stat2After')); }
         if (canvas.getItemByName('stat3After')) { canvas.remove(canvas.getItemByName('stat3After')); }
         if (canvas.getItemByName('stat4After')) { canvas.remove(canvas.getItemByName('stat4After')); }
-        if (canvas.getItemByName('itemValueAfter')) { canvas.remove(canvas.getItemByName('itemValueAfter')); }
         canvas.sendToBack(canvas.getItemByName('inBlacksmith'));
 
     }
