@@ -345,7 +345,7 @@ window.onload = function () {
                     reqCharacter().then(loadCharStickman);
                     refreshChar();
                     //TODO
-                    reqEq().then(loadEqList).then(loadBacpackList)
+                    reqEq().then(loadEqList).then(loadBackpackList)
 
                     //reqBp().then
                     //open stickman
@@ -1266,7 +1266,7 @@ window.onload = function () {
 
         })
     }
-    function loadBacpackList() {
+    function loadBackpackList() {
         return new Promise(function (resolve, reject) {
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.open("GET", "getBackpack", true);
@@ -1274,33 +1274,35 @@ window.onload = function () {
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     xmlhttp.response.backpack.forEach((element, index) => {
-                        if (element.type == 'helmet') {
-                            var option = document.createElement("option");
-                            option.text = element.name;
-                            option.value = element.itemId
-                            option.style.color = "#fff"
-                            helmetDrop.add(option);
+                        var option = document.createElement("option");
+                        option.text = element.name;
+                        option.value = element.itemId
+                        option.style.color = "#fff"
+                        switch(element.type)
+                        {
+                            case 'helmet':
                             helmetDrop.addEventListener('change', function () {
                                 updateEq(helmetDrop.value)
-                                console.log("elo")
+                                console.log("Click")
                             })
-                        }
-                        else if (element.type == 'armor') {
-                            var option = document.createElement("option");
-                            option.text = element.name;
-                            option.value = element.itemId
-                            option.style.color = "#fff"
+                            helmetDrop.add(option);
+                            break;
+                            case 'armor':
+                            armorDrop.addEventListener('change', function () {
+                                updateEq(armorDrop.value)
+                            })
 
                             armorDrop.add(option);
-                        }
-                        else if (element.type == 'weapon') {
-                            var option = document.createElement("option");
-                            option.text = element.name;
-                            option.value = element.itemId
-                            option.style.color = "#fff"
+                            break;
+                            case 'weapon':
+                            weaponDrop.addEventListener('change', function () {
+                                updateEq(weaponDrop.value)
+                            })
 
                             weaponDrop.add(option);
+                            break;
                         }
+                        
                     })
                     resolve();
                 }
