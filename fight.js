@@ -426,13 +426,16 @@ module.exports = {
             })
 
             socket.on('action', function (actionType) {
-                handleUserAction(player.login, socket, actionType)
+                if(duels.get(player.login))
+                    handleUserAction(player.login, socket, actionType)
             })
 
             socket.on('surrender', function () {
                 var d = duels.get(player.login)
-                var opp = d.characters.get(player.login).opponent
-                handlePrizes(opp, player.login)
+                if(d) {
+                    var opp = d.characters.get(player.login).opponent
+                    handlePrizes(opp, player.login)
+                }
             })
 
             socket.on('disconnect', function () {
