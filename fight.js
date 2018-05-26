@@ -48,7 +48,7 @@ async function matchMake() {
 
         duel.characters = await extractDuelCharacters(player.player, matched.player)
 
-        duel.turn = (player.player.character.stats.agi >= matched.player.character.stats.agi 
+        duel.turn = (player.player.character.stats.agi >= matched.player.character.stats.agi
             ? player.player.login : matched.player.login)
 
         newDuels.push(duel)
@@ -67,7 +67,7 @@ async function matchMake() {
     matchMakingTrigger(5000)
 }
 
-async function extractDuelCharacters (player1, player2) {
+async function extractDuelCharacters(player1, player2) {
     var result = new Map()
 
     var p1Eq = await itemFetcher.getCurrentVariants(
@@ -144,15 +144,15 @@ function handleNewDuels(newDuels) {
         // console.log('leci do ' + element.player1.socket.id)
         // console.log('leci do ' + element.player2.socket.id)
 
-        element.player1.socket.emit('gameFound', ch1, ch2)
-        element.player2.socket.emit('gameFound', ch2, ch1)
+        element.player1.socket.emit('gameFound', ch1, ch2, element.turn)
+        element.player2.socket.emit('gameFound', ch2, ch1, element.turn)
 
         setTimeout(function () {
             io.to(element.id).emit('turn', element.turn)
         }, 1000)
 
         modifyUserGold(element.player1.player, -1 * bids.get(element.player1.player.login))
-        modifyUserGold(element.player2.player, -1 * bids.get(element.player2.player.login))        
+        modifyUserGold(element.player2.player, -1 * bids.get(element.player2.player.login))
     })
 }
 
@@ -162,24 +162,24 @@ function modifyUserGold(player, gold) {
     player.save((function (err) {
         if (err)
             log.error(err)
-    }))    
+    }))
 }
 
 function isUserTurn(login) {
-    if(duels.get(login) == undefined || duels.get(login).turn != login)
+    if (duels.get(login) == undefined || duels.get(login).turn != login)
         return false;
     return true
 }
 
 function getCharacterIndex(login) {
-    if(!duels.get(login))
+    if (!duels.get(login))
         return -1;
-    else if(duels.get(login).character1.login == login)
+    else if (duels.get(login).character1.login == login)
         return 0
 }
 
 function handleUserAction(login, socket, action) {
-    if(!isUserTurn(login)) {
+    if (!isUserTurn(login)) {
         socket.emit('notYourTurn')
         return
     }
@@ -188,104 +188,104 @@ function handleUserAction(login, socket, action) {
     var room = duel.id
     var character = duel.characters.get(login)
 
-    switch(action) {
+    switch (action) {
         case 'attack':
-        //TODO opakowac w funkcje, zeby ladnie wygladalo!!!
-        var opponent = duel.characters.get(character.opponent)
-        if(isEnoughEnergy(action, character.stats.energy)) {
-            character.stats.energy -= attackCost
-            if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('miss', 'normal', character)
-            } else {
-                var hparm = opponent.stats.hp + opponent.stats.armor
-                var damage = character.stats.damageMin
-                + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin))
-                
-                var hparmAfterHit = hparm - damage
-                if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
-                    opponent.stats.armor = 0
+            //TODO opakowac w funkcje, zeby ladnie wygladalo!!!
+            var opponent = duel.characters.get(character.opponent)
+            if (isEnoughEnergy(action, character.stats.energy)) {
+                character.stats.energy -= attackCost
+                if (!hitLanded(character.stats.hitChance)) {
+                    io.to(room).emit('miss', 'normal', character)
                 } else {
-                    opponent.stats.armor -= damage
-                }
+                    var hparm = opponent.stats.hp + opponent.stats.armor
+                    var damage = character.stats.damageMin
+                        + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin))
 
-                io.to(room).emit('attack', 'normal', character, opponent)
+                    var hparmAfterHit = hparm - damage
+                    if (hparmAfterHit < opponent.stats.hpMax) {
+                        opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
+                        opponent.stats.armor = 0
+                    } else {
+                        opponent.stats.armor -= damage
+                    }
+
+                    io.to(room).emit('attack', 'normal', character, opponent)
+                }
+            } else {
+                socket.emit('noEnoughEnergy')
+                return
             }
-        } else {
-            socket.emit('noEnoughEnergy')
-            return
-        }
-        break
+            break
 
         case 'swiftAttack':
-        var opponent = duel.characters.get(character.opponent)
-        if(isEnoughEnergy(action, character.stats.energy)) {
-            character.stats.energy -= swiftAttackCost
+            var opponent = duel.characters.get(character.opponent)
+            if (isEnoughEnergy(action, character.stats.energy)) {
+                character.stats.energy -= swiftAttackCost
 
-            if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('miss', 'swift', character)
-            } else {
-                var hparm = opponent.stats.hp + opponent.stats.armor
-                var damage = Math.round((character.stats.damageMin
-                + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin))) * 0.7)
-                
-                var hparmAfterHit = hparm - damage
-                if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
-                    opponent.stats.armor = 0
+                if (!hitLanded(character.stats.hitChance)) {
+                    io.to(room).emit('miss', 'swift', character)
                 } else {
-                    opponent.stats.armor -= damage
+                    var hparm = opponent.stats.hp + opponent.stats.armor
+                    var damage = Math.round((character.stats.damageMin
+                        + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin))) * 0.7)
+
+                    var hparmAfterHit = hparm - damage
+                    if (hparmAfterHit < opponent.stats.hpMax) {
+                        opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
+                        opponent.stats.armor = 0
+                    } else {
+                        opponent.stats.armor -= damage
+                    }
+                    io.to(room).emit('attack', 'swift', character, opponent)
                 }
-                io.to(room).emit('attack', 'swift', character, opponent)
+            } else {
+                socket.emit('noEnoughEnergy')
+                return
             }
-        } else {
-            socket.emit('noEnoughEnergy')
-            return
-        }
-        break
+            break
 
         case 'powerfulAttack':
-        var opponent = duel.characters.get(character.opponent)
-        if(isEnoughEnergy(action, character.stats.energy)) {
-            character.stats.energy -= powerfulAttackCost
-            if(!hitLanded(character.stats.hitChance)) {
-                io.to(room).emit('miss', 'powerful', character)
-            } else {
-                var hparm = opponent.stats.hp + opponent.stats.armor
-                var damage = Math.round((character.stats.damageMin
-                + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin))) * 1.3)
-                
-                var hparmAfterHit = hparm - damage
-                if(hparmAfterHit < opponent.stats.hpMax) {
-                    opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
-                    opponent.stats.armor = 0
+            var opponent = duel.characters.get(character.opponent)
+            if (isEnoughEnergy(action, character.stats.energy)) {
+                character.stats.energy -= powerfulAttackCost
+                if (!hitLanded(character.stats.hitChance)) {
+                    io.to(room).emit('miss', 'powerful', character)
                 } else {
-                    opponent.stats.armor -= damage
-                }
+                    var hparm = opponent.stats.hp + opponent.stats.armor
+                    var damage = Math.round((character.stats.damageMin
+                        + Math.round(Math.random() * (character.stats.damageMax - character.stats.damageMin))) * 1.3)
 
-                io.to(room).emit('attack', 'powerful', character, opponent)
+                    var hparmAfterHit = hparm - damage
+                    if (hparmAfterHit < opponent.stats.hpMax) {
+                        opponent.stats.hp = (opponent.stats.hp - damage) < 1 ? 0 : opponent.stats.hp - (damage - opponent.stats.armor)
+                        opponent.stats.armor = 0
+                    } else {
+                        opponent.stats.armor -= damage
+                    }
+
+                    io.to(room).emit('attack', 'powerful', character, opponent)
+                }
+            } else {
+                socket.emit('noEnoughEnergy')
+                return
             }
-        } else {
-            socket.emit('noEnoughEnergy')
-            return
-        }
-        break
+            break
 
         case 'rest':
-        var energyAfterRest = character.stats.energy + Math.round(character.stats.energyMax * 0.2)
-        if(energyAfterRest > character.stats.energyMax)
-            energyAfterRest = character.stats.energyMax
-        character.stats.energy = energyAfterRest;
+            var energyAfterRest = character.stats.energy + Math.round(character.stats.energyMax * 0.2)
+            if (energyAfterRest > character.stats.energyMax)
+                energyAfterRest = character.stats.energyMax
+            character.stats.energy = energyAfterRest;
 
-        io.to(room).emit('rest', character)
-        break
+            io.to(room).emit('rest', character)
+            break
 
         default:
-        socket.emit('incorrectAction')
-        return
-        break
+            socket.emit('incorrectAction')
+            return
+            break
     }
-    if(duel.characters.get(character.opponent).stats.hp < 1) {
+    if (duel.characters.get(character.opponent).stats.hp < 1) {
         handlePrizes(character.login, character.opponent)
     } else {
         duel.turn = duel.characters.get(login).opponent
@@ -294,27 +294,27 @@ function handleUserAction(login, socket, action) {
 }
 
 function hitLanded(hitChance) {
-    if(Math.floor(Math.random() * 101) < hitChance)
+    if (Math.floor(Math.random() * 101) < hitChance)
         return true
     return false
 }
 
 function isEnoughEnergy(attack, energy) {
-    switch(attack) {
+    switch (attack) {
         case 'attack':
-            if(energy >= attackCost)
+            if (energy >= attackCost)
                 return true
-        break
+            break
 
         case 'swiftAttack':
-            if(energy >= swiftAttackCost)
+            if (energy >= swiftAttackCost)
                 return true
-        break
+            break
 
         case 'powerfulAttack':
-            if(energy >= powerfulAttackCost)
+            if (energy >= powerfulAttackCost)
                 return true
-        break
+            break
     }
     return false
 }
@@ -353,7 +353,7 @@ function handlePrizes(winner, loser) {
 
 function addExpToUser(player, exp) {
     player.character.exp += exp
-    if(player.character.exp >= (100 + (player.character.level - 1) * 50)) {
+    if (player.character.exp >= (100 + (player.character.level - 1) * 50)) {
         player.character.exp -= (100 + (player.character.level - 1) * 50)
         player.character.level += 1
         player.character.stats.free += 5
@@ -366,7 +366,7 @@ function addExpToUser(player, exp) {
 }
 
 function getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min) ) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 module.exports = {
@@ -407,7 +407,7 @@ module.exports = {
             })
 
             socket.on('findGame', function (userBid) {
-                if(player.character.gold < userBid) {
+                if (player.character.gold < userBid) {
                     socket.emit('notEnoughGold')
                 } else {
                     var index = getPlayerIndex(player.login)
@@ -436,7 +436,7 @@ module.exports = {
             })
 
             socket.on('disconnect', function () {
-                if(duels.get(player.login) != undefined) {
+                if (duels.get(player.login) != undefined) {
                     var d = duels.get(player.login)
                     var opp = d.characters.get(player.login).opponent
                     handlePrizes(opp, player.login)
