@@ -357,16 +357,24 @@ function handlePrizes(winner, loser) {
 
     modifyUserGold(winnerProfile.player, 2 * bids.get(winner))
 
+
+    var rPoints = 8 + (winnerProfile.rankingPoints > loserProfile.player.character.rankingPoints ?
+        0 : Math.round(((loserProfile.player.character.rankingPoints - winnerProfile.player.character.rankingPoints)/ 40) * 8))
+    modifyRankingPoints(winnerProfile.player, rPoints)
+    modifyRankingPoints(loserProfile.player, -rPoints)
+
     var winnerReward = {
         exp: Math.round(exp * 1.3),
-        gold: bids.get(winner)
+        gold: bids.get(winner),
+        rankingPoints: rPoints,
     }
 
     match.addMatch([winnerProfile, loserProfile], winner, winnerReward, { "exp": Math.round(exp * 0.7), "gold": -bids.get(loser) })
 
     winnerProfile.socket.emit("endDuel", winnerReward)
     loserProfile.socket.emit('endDuel', {
-        exp: Math.round(exp * 0.7)
+        exp: Math.round(exp * 0.7),
+        rankingPoints: -rPoints,
     })
 
     bids.delete(winner)
@@ -384,6 +392,17 @@ function addExpToUser(player, exp) {
         player.character.level += 1
         player.character.stats.free += 5
     }
+
+    player.save((function (err) {
+        if (err)
+            log.error(err)
+    }))
+}
+
+function modifyRankingPoints(player, points) {
+    player.character.rankingPoints += points
+    if (player.character.rankingPoints < 0)
+        player.character.rankingPoints = 0
 
     player.save((function (err) {
         if (err)
