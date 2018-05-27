@@ -336,54 +336,7 @@ window.onload = function () {
                     canvas.getItemByName('inStatue').opacity = 1;
                     canvas.bringToFront(canvas.getItemByName('inStatue'));
                     canvas.bringToFront(canvas.getItemByName('exit'));
-
-                    var players = [
-                        {
-                            login: "hobitolog",
-                            rankingPoints: 21
-                        },
-                        {
-                            login: "mintaj",
-                            rankingPoints: 10
-                        },
-                        {
-                            login: "hobitolog",
-                            rankingPoints: 21
-                        },
-                        {
-                            login: "mintaj",
-                            rankingPoints: 10
-                        },
-                        {
-                            login: "hobitolog",
-                            rankingPoints: 21
-                        },
-                        {
-                            login: "mintaj",
-                            rankingPoints: 10
-                        },
-                        {
-                            login: "hobitolog",
-                            rankingPoints: 21
-                        },
-                        {
-                            login: "mintaj",
-                            rankingPoints: 10
-                        },
-                        {
-                            login: "hobitolog",
-                            rankingPoints: 21
-                        },
-                        {
-                            login: "mintaj",
-                            rankingPoints: 10
-                        }
-
-                    ]
-
-
-
-                    loadInStatue(players)
+                    loadInStatue()
                     //open statue
                     break;
                 case 'stickman':
@@ -1538,6 +1491,21 @@ window.onload = function () {
         })
     }
 
+    function reqRanking() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", "getRanking", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.responseType = "json";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    resolve(xmlhttp.response)
+                }
+            }
+            xmlhttp.send()
+        })
+    }
+
     function clearBlacksmithBag() {
         blacksmithDrop.innerHTML = ""
     }
@@ -2132,81 +2100,80 @@ window.onload = function () {
     }
 
 
-    function loadInStatue(ranking) {
-        /*
-         var ranking = []
-         var player = {
-             login: 'asdasd',
-             rankinPoints: 21
- 
-         }
- 
-        */
-        if (!canvas.getItemByName('rankingTitle')) {
-            var rankingTitle = new fabric.Text(String("Najlepsi gracze"), {
-                left: canvas.width / 2,
-                top: 130,
-                selectable: false,
-                scalable: false,
-                name: 'rankingTitle',
-                fill: '#fff',
-                fontSize: 30,
-                fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-                textAlign: 'center',
-                originX: 'center',
-            });
-            canvas.add(rankingTitle);
+    function loadInStatue() {
 
-            ranking.forEach((player, index) => {
-                var number = new fabric.Text(String(Gpos) + '.', {
-                    left: 0,
+        reqRanking().then(ranking => {
+
+            if (!canvas.getItemByName('rankingTitle')) {
+                var rankingTitle = new fabric.Text(String("Najlepsi gracze"), {
+                    left: canvas.width / 2,
+                    top: 130,
                     selectable: false,
                     scalable: false,
+                    name: 'rankingTitle',
                     fill: '#fff',
-                    fontSize: 14,
+                    fontSize: 30,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-                    textAlign: 'right',
-                    originX: 'left'
+                    textAlign: 'center',
+                    originX: 'center',
                 });
-                var login = new fabric.Text(String(player.login), {
-                    left: 30,
-                    selectable: false,
-                    scalable: false,
-                    fill: '#fff',
-                    fontSize: 14,
-                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-                    textAlign: 'left',
-                    originX: 'left'
-                });
-                var RP = new fabric.Text(String(player.rankingPoints), {
-                    left: 230,
-                    selectable: false,
-                    scalable: false,
-                    fill: '#fff',
-                    fontSize: 14,
-                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-                    textAlign: 'left',
-                    originX: 'left'
-                });
+                canvas.add(rankingTitle);
+
+                while (ranking.bestPlayers.length < 10) {
+                    ranking.bestPlayers.push({
+                        "login": "---",
+                        "points": 0
+                    })
+                }
+
+                ranking.bestPlayers.forEach((player, index) => {
+                    var number = new fabric.Text(String(Gpos) + '.', {
+                        left: 0,
+                        selectable: false,
+                        scalable: false,
+                        fill: '#fff',
+                        fontSize: 14,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'right',
+                        originX: 'left'
+                    });
+                    var login = new fabric.Text(String(player.login), {
+                        left: 30,
+                        selectable: false,
+                        scalable: false,
+                        fill: '#fff',
+                        fontSize: 14,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'left',
+                        originX: 'left'
+                    });
+                    var RP = new fabric.Text(String(player.points), {
+                        left: 230,
+                        selectable: false,
+                        scalable: false,
+                        fill: '#fff',
+                        fontSize: 14,
+                        fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                        textAlign: 'left',
+                        originX: 'left'
+                    });
 
 
-                var position = new fabric.Group([number, login, RP], {
-                    name: "rank" + String(Gpos),
-                    left: canvas.width / 4 + 45,
-                    top: 160 + Gpos * 20,
-                    selectable: false,
-                    originX: 'left'
+                    var position = new fabric.Group([number, login, RP], {
+                        name: "rank" + String(Gpos),
+                        left: canvas.width / 4 + 45,
+                        top: 160 + Gpos * 20,
+                        selectable: false,
+                        originX: 'left'
 
 
+                    })
+                    canvas.add(position)
+                    canvas.bringToFront(position)
+                    Gpos++;
                 })
-                canvas.add(position)
-                canvas.bringToFront(position)
-                Gpos++;
-            })
-
-
-        }
-
+            }
+        })
     }
 
 

@@ -294,12 +294,6 @@ module.exports = function (app) {
                 })
             })
 
-            while (list.length < 10) {
-                list.push({
-                    "login": "---",
-                    "points": 0
-                })
-            }
             res.json({ "bestPlayers": list })
 
         }).catch(err => {
