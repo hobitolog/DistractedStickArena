@@ -32,33 +32,49 @@ async function matchMake() {
 
         var player = copied[0]
         var matched = null
+        var minLvlDiff = null
+        var minRankDiff = null
         for (var i = 1; i < copied.length; i++) {
-            //TODO jakiś algorytm
-            matched = copied[i]
+            //TODO lepszy algorytm xd
+            var lvlDiff = Math.abs(player.player.level - copied[i].player.level)
+            var rankDiff = Math.abs(player.player.rankingPoints - copied[i].player.level)
+
+            if (!minLvlDiff || lvlDiff < minLvlDiff) {
+                matched = copied[i]
+                minLvlDiff = lvlDiff
+                minRankDiff = rankDiff
+            }
+            else if (lvlDiff === minLvlDiff && rankDiff < minRankDiff) {
+                matched = copied[i]
+                minLvlDiff = lvlDiff
+                minRankDiff = rankDiff
+            }
         }
 
-        var duelId = player.player.login + "VS" + matched.player.login
+        if (matched) {
+            var duelId = player.player.login + "VS" + matched.player.login
 
-        // console.log('matchuje ' + player.socket.id + ' z ' + matched.socket.id)
-        var duel = {
-            id: duelId,
-            player1: player,
-            player2: matched,
-            characters: null,
+            // console.log('matchuje ' + player.socket.id + ' VS ' + matched.socket.id)
+            var duel = {
+                id: duelId,
+                player1: player,
+                player2: matched,
+                characters: null,
+            }
+
+
+            duel.characters = await extractDuelCharacters(player.player.login, matched.player.login)
+
+            duel.turn = (player.player.character.stats.agi >= matched.player.character.stats.agi
+                ? player.player.login : matched.player.login)
+
+            newDuels.push(duel)
+            duels.set(player.player.login, duel)
+            duels.set(matched.player.login, duel)
+
+            players[getPlayerIndex(player.player.login)].started = 0;
+            players[getPlayerIndex(matched.player.login)].started = 0;
         }
-
-        
-        duel.characters = await extractDuelCharacters(player.player.login, matched.player.login)
-
-        duel.turn = (player.player.character.stats.agi >= matched.player.character.stats.agi
-            ? player.player.login : matched.player.login)
-
-        newDuels.push(duel)
-        duels.set(player.player.login, duel)
-        duels.set(matched.player.login, duel)
-
-        players[getPlayerIndex(player.player.login)].started = 0;
-        players[getPlayerIndex(matched.player.login)].started = 0;
 
         copied.splice(0, 1)
         copied.splice(i, 1)
@@ -431,13 +447,13 @@ module.exports = {
             })
 
             socket.on('action', function (actionType) {
-                if(duels.get(player.login))
+                if (duels.get(player.login))
                     handleUserAction(player.login, socket, actionType)
             })
 
             socket.on('surrender', function () {
                 var d = duels.get(player.login)
-                if(d) {
+                if (d) {
                     var opp = d.characters.get(player.login).opponent
                     handlePrizes(opp, player.login)
                 }
