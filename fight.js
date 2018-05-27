@@ -152,9 +152,9 @@ function handleNewDuels(newDuels) {
         element.player1.socket.emit('gameFound', ch1, ch2, element.turn)
         element.player2.socket.emit('gameFound', ch2, ch1, element.turn)
 
-        setTimeout(function () {
-            io.to(element.id).emit('turn', element.turn)
-        }, 1000)
+        //setTimeout(function () {
+        //    io.to(element.id).emit('turn', element.turn)
+        //}, 1000)
 
         modifyUserGold(element.player1.player, -1 * bids.get(element.player1.player.login))
         modifyUserGold(element.player2.player, -1 * bids.get(element.player2.player.login))

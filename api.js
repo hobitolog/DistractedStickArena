@@ -2,7 +2,7 @@ const login = require('./login')
 const log = require('./log')
 const fight = require('./fight')
 const itemFetcher = require('./itemFetcher')
-var User = require('./models/user')
+const userFetcher = require('./userFetcher')
 
 module.exports = function (app) {
 
@@ -285,12 +285,7 @@ module.exports = function (app) {
 
     app.get('/getRanking', (req, res) => {
 
-        User.find().sort("-character.rankingPoints").limit(10).exec((err, users) => {
-            if (err) {
-                log.error(err)
-                return res.json("error")
-            }
-
+        userFetcher.getBestUsers().then(users => {
             const list = []
             users.forEach(element => {
                 list.push({
@@ -298,7 +293,18 @@ module.exports = function (app) {
                     "points": element.character.rankingPoints
                 })
             })
-            res.json(list)
+
+            while (list.length < 10) {
+                list.push({
+                    "login": "---",
+                    "points": 0
+                })
+            }
+            res.json({ "bestPlayers": list })
+
+        }).catch(err => {
+            log.error(err)
+            res.json({ "error": "Błąd bazy danych" })
         })
     })
 }
