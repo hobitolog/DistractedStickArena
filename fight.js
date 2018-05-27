@@ -1,5 +1,6 @@
 const itemFetcher = require('./itemFetcher')
 const userFetcher = require('./userFetcher')
+const match = require("./models/match")
 var log = require("./log")
 var io
 
@@ -356,10 +357,14 @@ function handlePrizes(winner, loser) {
 
     modifyUserGold(winnerProfile.player, 2 * bids.get(winner))
 
-    winnerProfile.socket.emit("endDuel", {
+    var winnerReward = {
         exp: Math.round(exp * 1.3),
-        gold: bids.get(winner) * 2
-    })
+        gold: bids.get(winner)
+    }
+
+    match.addMatch([winnerProfile, loserProfile], winner, winnerReward, { "exp": Math.round(exp * 0.7), "gold": -bids.get(loser) })
+
+    winnerProfile.socket.emit("endDuel", winnerReward)
     loserProfile.socket.emit('endDuel', {
         exp: Math.round(exp * 0.7)
     })
