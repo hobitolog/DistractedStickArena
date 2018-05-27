@@ -766,8 +766,7 @@ function arenaAlert(input) {
 
 function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4) {
     if (!canvas.getItemByName('prizePage')) {
-        fabric.loadSVGFromURL('svg/inArena.svg', function (objects, options) {
-            var obj = fabric.util.groupSVGElements(objects, options);
+        fabric.Image.fromURL('png/inTavern.png', function (obj) {
             obj.scale(1);
             obj.set({ left: canvas.width / 2, top: canvas.height / 2 });
             obj.selectable = false;
@@ -779,6 +778,8 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                 var exitButton = new fabric.Group([new fabric.Rect({
                     width: 200,
                     height: 40,
+                    rx: 10,
+                    ry: 10,
                     fill: '#ccc',
                     selectable: false
                 }),
@@ -807,7 +808,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'arenaTitlePrize',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 28,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -821,7 +822,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'arenaExpPrize',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 20,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -835,7 +836,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'arenaCoinPrize',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 20,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -866,7 +867,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'itemPrizeName',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 20,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -878,7 +879,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'stat1',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 16,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -890,7 +891,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'stat2',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 16,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -902,7 +903,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'stat3',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 16,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -914,7 +915,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'stat4',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 16,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -937,7 +938,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'arenaTitlePrize',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 28,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
@@ -952,7 +953,7 @@ function showPrize(exp, gold, itemImgPath, itemName, Stat1, Stat2, Stat3, Stat4)
                         selectable: false,
                         scalable: false,
                         name: 'arenaExpPrize',
-                        fill: '#000',
+                        fill: '#fff',
                         fontSize: 20,
                         fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                         textAlign: 'center',
