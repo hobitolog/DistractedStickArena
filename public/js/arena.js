@@ -57,6 +57,7 @@ socket.on('notYourTurn', function () {
 
 socket.on('turn', function (nick) {
     setTurn(nick)
+    resetTimer()
 })
 
 socket.on('attack', function (attackType, attacker, attacked) {

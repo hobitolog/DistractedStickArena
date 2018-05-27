@@ -86,6 +86,15 @@ async function matchMake() {
     matchMakingTrigger(5000)
 }
 
+function changeTurn(duel) {
+    clearInterval(duel.timer)
+    duel.turn = duel.characters.get(duel.turn).opponent
+    io.to(duel.id).emit('turn', duel.turn)
+
+    duel.timer = setTimeout(() => {
+        changeTurn(duel)}, 60000)
+  }
+
 async function extractDuelCharacters(p1Login, p2Login) {
     var result = new Map()
 
@@ -172,6 +181,9 @@ function handleNewDuels(newDuels) {
         setTimeout(function () {
             io.to(element.id).emit('turn', element.turn)
         }, 1000)
+
+        element.timer = setTimeout(() => {
+            changeTurn(element)}, 61000)
 
         modifyUserGold(element.player1.player, -1 * bids.get(element.player1.player.login))
         modifyUserGold(element.player2.player, -1 * bids.get(element.player2.player.login))
@@ -308,10 +320,14 @@ function handleUserAction(login, socket, action) {
             break
     }
     if (duel.characters.get(character.opponent).stats.hp < 1) {
+        clearTimeout(duel.timer)
         handlePrizes(character.login, character.opponent)
     } else {
         duel.turn = duel.characters.get(login).opponent
         io.to(duel.id).emit('turn', duel.turn)
+        clearTimeout(duel.timer)
+        duel.timer = setTimeout(() => {
+            changeTurn(duel)}, 60000)
     }
 }
 
