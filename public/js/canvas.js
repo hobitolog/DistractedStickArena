@@ -550,7 +550,7 @@ window.onload = function () {
     function loadInArena() {
 
         arenaDrop.style.left = ((canvas.width / 2) - 300) + 'px';
-        arenaDrop.style.top = ((canvas.height / 2) - 680) + 'px';
+        arenaDrop.style.top = ((canvas.height / 2) - 667) + 'px';
         arenaDrop.style.visibility = 'visible';
         if (!canvas.getItemByName('findOpButton')) {
             var findOpButton = new fabric.Group([new fabric.Rect({
