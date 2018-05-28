@@ -6,7 +6,8 @@ var defaults = {
     disableMail: true,
     mailConfig: null,
     skipWeaponChanges: false,
-    enableActivityLog: false
+    enableActivityLog: false,
+    adminToken: "admin"
 }
 
 /*

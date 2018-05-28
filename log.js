@@ -1,7 +1,7 @@
 // utility log functions
 const fs = require('fs')
 const config = require('./config')
-var stream = fs.createWriteStream("access.log", { flags: "a" })
+const stream = fs.createWriteStream("access.log", { flags: "a" })
 
 module.exports = {
 
@@ -21,6 +21,21 @@ module.exports = {
         messages.unshift('\x1b[1;31m[ERROR]')
         messages.push('\x1b[0m')
         console.log(...messages)
+
+        if (!config.enableActivityLog)
+            return
+
+        let entry = new Date().toISOString().replace("T", " ")
+        messages.forEach(msg => {
+            if (msg instanceof Error)
+                entry += " " + msg.name + ": " + msg.message + "\n" + msg.stack ? msg.stack : ""
+            else if (typeof msg == "object")
+                entry += JSON.stringify(msg)
+            else
+                entry += msg
+        })
+        entry += "\n"
+        stream.write(entry)
     },
 
     logActivity: (req, res, next) => {

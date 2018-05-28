@@ -175,6 +175,14 @@ app.get('/logout', (req, res) => {
     res.redirect('login')
 })
 
+app.get('/admin/:token', (req, res) => {
+
+    if(req.params.token === config.adminToken)
+        res.sendFile(path.join(__dirname, "access.log"))
+    else
+        res.status(403).send("Access Denied")
+})
+
 // UWAGA - NIE DODAWAĆ NIC PO TYM
 app.use(function (req, res) {
     res.status(404).sendFile(path.join(__dirname, '/html', '404.html'))
