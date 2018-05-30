@@ -20,7 +20,7 @@ module.exports = {
 
     getBestUsers: function () {
         return new Promise(function (resolve, reject) {
-            User.find().sort("-character.rankingPoints").limit(10).exec((err, users) => {
+            User.find({ "activation.activated": true }).sort("-character.rankingPoints").limit(10).exec((err, users) => {
                 if (err) {
                     log.error(err)
                     reject(err)
