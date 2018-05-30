@@ -417,8 +417,6 @@ function addExpToUser(player, exp) {
 
 function modifyRankingPoints(player, points) {
     player.character.rankingPoints += points
-    if (player.character.rankingPoints < 0)
-        player.character.rankingPoints = 0
 
     player.save((function (err) {
         if (err)
