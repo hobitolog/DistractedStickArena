@@ -77,7 +77,7 @@ module.exports = function (app) {
                         "itemId": item.itemId,
                         "type": item.type,
                         "armor": item.armor,
-                        "damageMin":item.damageMin,
+                        "damageMin": item.damageMin,
                         "damageMax": item.damageMax
                     })
                 })
@@ -202,24 +202,37 @@ module.exports = function (app) {
         var itemId = req.body.itemId
         var backpack = req.user.character.backpack
 
-        itemFetcher.getCurrentVariant(itemId).then(item => {
-            if (item) {
-                if (req.user.character.gold >= item.value) {
-                    req.user.character.gold -= item.value
-                    req.user.character.backpack.push({ "itemId": parseInt(item.itemId) })
-                    req.user.save(function (err) {
-                        if (err)
-                            log.error(err)
-                        var json = { "error": err ? "Błąd bazy danych" : null }
-                        res.send(json)
-                    })
-                }
-            } else {
-                var json = { "error": "Brak przedmiotu o podanym id!" }
-                res.json(json)
-            }
-        })
+        itemFetcher.getShopItems(req.user.character.level).then(items => {
 
+            var index = items.findIndex(element => {
+                element.itemId == itemId
+            })
+            if (index == -1) {
+                return res.json({ "error": "Niedozwolony zakup" })
+            }
+
+            itemFetcher.getCurrentVariant(itemId).then(item => {
+                if (item) {
+                    if (req.user.character.gold >= item.value) {
+                        req.user.character.gold -= item.value
+                        req.user.character.backpack.push({ "itemId": parseInt(item.itemId) })
+                        req.user.save(function (err) {
+                            if (err)
+                                log.error(err)
+                            var json = { "error": err ? "Błąd bazy danych" : null }
+                            res.send(json)
+                        })
+                    }
+                } else {
+                    var json = { "error": "Brak przedmiotu o podanym id!" }
+                    res.json(json)
+                }
+            })
+
+        }).catch(err => {
+            log.error(err)
+            res.json({ "error": "Błąd bazy danych" })
+        })
     })
 
     app.post('/upgradeItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
