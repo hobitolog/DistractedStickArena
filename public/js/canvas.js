@@ -38,6 +38,13 @@ fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
 
 window.onload = function () {
 
+
+    socket.on('activeUpdate', function (message) {
+        document.getElementById('playersLabel').innerText = "W kolejce do walki: " + String(message.players);
+        document.getElementById('fightLabel').innerText = "Aktywne walki: " + String(message.duels);
+    });
+
+
     var Gpos = 1;
     var Gstats = {
         stats: {
@@ -517,6 +524,7 @@ window.onload = function () {
                                     canvas.add(obj);
                                     canvas.sendToBack(obj);
                                 });
+                                
 
                             });
                             canvas.add(obj);
@@ -1278,7 +1286,7 @@ window.onload = function () {
             armorDrop.add(armorOption);
 
             var weaponOption = document.createElement("option");
-            weaponOption.text = Geq.equipment.weapon.name+" ("+Geq.equipment.weapon.damageMin+"-"+Geq.equipment.weapon.damageMax+")";
+            weaponOption.text = Geq.equipment.weapon.name + " (" + Geq.equipment.weapon.damageMin + "-" + Geq.equipment.weapon.damageMax + ")";
             weaponOption.value = Geq.equipment.weapon.itemId
             weaponOption.style.color = "red"
             weaponOption.selected = "true"
@@ -1310,7 +1318,7 @@ window.onload = function () {
                                 armorDrop.add(option);
                                 break;
                             case 'weapon':
-                                option.text = element.name+" ("+element.damageMin+"-"+element.damageMax+")";
+                                option.text = element.name + " (" + element.damageMin + "-" + element.damageMax + ")";
                                 weaponDrop.add(option);
                                 break;
                         }

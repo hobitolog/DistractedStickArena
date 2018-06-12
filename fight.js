@@ -21,7 +21,7 @@ function getSearchers() {
 function updateActive() {
     io.emit('activeUpdate', {
         "players": getSearchers.length,
-        "duels": duels.length
+        "duels": duels.size
     })
 }
 
@@ -155,6 +155,7 @@ async function extractDuelCharacters(p1Login, p2Login) {
 }
 
 function matchMakingTrigger(delay) {
+    updateActive() 
     if (scheduledMatchMaking != null || getSearchers().length < 2)
         return
 
