@@ -549,8 +549,8 @@ window.onload = function () {
     };
     function loadInArena() {
 
-        arenaDrop.style.left = ((canvas.width / 2) - 300) + 'px';
-        arenaDrop.style.top = ((canvas.height / 2) - 667) + 'px';
+        arenaDrop.style.left = ((canvas.width / 2) - 450) + 'px';
+        arenaDrop.style.top = ((canvas.height / 2) - 612) + 'px';
         arenaDrop.style.visibility = 'visible';
         if (!canvas.getItemByName('findOpButton')) {
             var findOpButton = new fabric.Group([new fabric.Rect({
@@ -1611,12 +1611,12 @@ window.onload = function () {
     function loadInTavern() {
         if (!canvas.getItemByName('tradeBuy')) {
 
-            sellDrop.style.left = 130 + 'px';
-            sellDrop.style.top = -420 + 'px';
+            sellDrop.style.left = -35 + 'px';
+            sellDrop.style.top = -360 + 'px';
             sellDrop.style.visibility = 'visible';
 
-            buyDrop.style.left = -333 + 'px';
-            buyDrop.style.top = -350 + 'px';
+            buyDrop.style.left = 120 + 'px';
+            buyDrop.style.top = -490 + 'px';
             buyDrop.style.visibility = 'visible';
 
 
@@ -1654,8 +1654,8 @@ window.onload = function () {
     function loadInBlacksmith() {
         if (!canvas.getItemByName('bsText')) {
 
-            blacksmithDrop.style.left = -20 + 'px';
-            blacksmithDrop.style.top = -430 + 'px';//-430
+            blacksmithDrop.style.left = -165 + 'px';
+            blacksmithDrop.style.top = -375 + 'px';//-430
             blacksmithDrop.style.visibility = 'visible';
             //     blacksmithDrop.style.backgroundColor = 'transparent'
             //     blacksmithDrop.style.color = '#fff'
