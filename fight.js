@@ -25,7 +25,6 @@ function updateActive() {
     })
 }
 
-//TODO przetestować po zrobieniu socketów
 async function matchMake() {
     var newDuels = []
     var copied = getSearchers().slice()
@@ -357,12 +356,21 @@ function isEnoughEnergy(attack, energy) {
     return false
 }
 
+async function refreshPlayer(login, socket) {
+    var index = getPlayerIndex(login)
+    var user = await userFetcher.getFullUser(login)
+    if(index != -1) {
+        players[index].player = user
+    }
+
+    socket.request.user = user
+}
+
 function getPlayerIndex(login) {
     return players.findIndex((element => { return element.player.login == login }))
 }
 
 function handlePrizes(winner, loser) {
-    //TODO send prizes to front
     var winnerProfile = players[getPlayerIndex(winner)]
     var loserProfile = players[getPlayerIndex(loser)]
 
@@ -476,6 +484,7 @@ module.exports = {
                     players[index].started = Date.now()
                     updateActive()
                     matchMakingTrigger(0)
+                    refreshPlayer(player.login, socket)
                 }
             })
 
