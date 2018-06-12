@@ -75,7 +75,10 @@ module.exports = function (app) {
                     backpack.push({
                         "name": item.name,
                         "itemId": item.itemId,
-                        "type": item.type
+                        "type": item.type,
+                        "armor": item.armor,
+                        "damageMin":item.damageMin,
+                        "damageMax": item.damageMax
                     })
                 })
                 res.json({

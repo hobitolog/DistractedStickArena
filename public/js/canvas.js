@@ -1262,7 +1262,7 @@ window.onload = function () {
             clearWeaponList()
 
             var helmetOption = document.createElement("option");
-            helmetOption.text = Geq.equipment.helmet.name;
+            helmetOption.text = Geq.equipment.helmet.name + " (" + Geq.equipment.helmet.armor + ")";
             helmetOption.value = Geq.equipment.helmet.itemId
             helmetOption.style.color = "red"
             helmetOption.selected = "true"
@@ -1270,7 +1270,7 @@ window.onload = function () {
             helmetDrop.add(helmetOption);
 
             var armorOption = document.createElement("option");
-            armorOption.text = Geq.equipment.armor.name;
+            armorOption.text = Geq.equipment.armor.name + " (" + Geq.equipment.armor.armor + ")";
             armorOption.value = Geq.equipment.armor.itemId
             armorOption.style.color = "red"
             armorOption.selected = "true"
@@ -1278,7 +1278,7 @@ window.onload = function () {
             armorDrop.add(armorOption);
 
             var weaponOption = document.createElement("option");
-            weaponOption.text = Geq.equipment.weapon.name;
+            weaponOption.text = Geq.equipment.weapon.name+" ("+Geq.equipment.weapon.damageMin+"-"+Geq.equipment.weapon.damageMax+")";
             weaponOption.value = Geq.equipment.weapon.itemId
             weaponOption.style.color = "red"
             weaponOption.selected = "true"
@@ -1298,17 +1298,19 @@ window.onload = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     xmlhttp.response.backpack.forEach((element, index) => {
                         var option = document.createElement("option");
-                        option.text = element.name;
                         option.value = element.itemId
                         option.style.color = "#fff"
                         switch (element.type) {
                             case 'helmet':
+                                option.text = element.name + " (" + element.armor + ")";
                                 helmetDrop.add(option);
                                 break;
                             case 'armor':
+                                option.text = element.name + " (" + element.armor + ")";
                                 armorDrop.add(option);
                                 break;
                             case 'weapon':
+                                option.text = element.name+" ("+element.damageMin+"-"+element.damageMax+")";
                                 weaponDrop.add(option);
                                 break;
                         }
@@ -2180,27 +2182,27 @@ window.onload = function () {
     function loadEq() {
         if (!canvas.getItemByName('EQhelmet') && !canvas.getItemByName('EQarmor') && !canvas.getItemByName('EQweapon')) {
             fabric.Image.fromURL(Geq.equipment.helmet.image, function (obj) {
-                obj.scaleToWidth(70)
-                obj.scaleToHeight(70)
-                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 90 })
+                obj.scaleToWidth(60)
+                obj.scaleToHeight(60)
+                obj.set({ left: canvas.width / 2 + 100, top: canvas.height / 2 - 90 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQhelmet';
                 canvas.add(obj);
             });
             fabric.Image.fromURL(Geq.equipment.armor.image, function (obj) {
-                obj.scaleToWidth(70)
-                obj.scaleToHeight(70)
-                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 5 })
+                obj.scaleToWidth(60)
+                obj.scaleToHeight(60)
+                obj.set({ left: canvas.width / 2 + 100, top: canvas.height / 2 - 5 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQarmor';
                 canvas.add(obj);
             });
             fabric.Image.fromURL(Geq.equipment.weapon.image, function (obj) {
-                obj.scaleToWidth(70)
-                obj.scaleToHeight(70)
-                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 + 80 })
+                obj.scaleToWidth(60)
+                obj.scaleToHeight(60)
+                obj.set({ left: canvas.width / 2 + 100, top: canvas.height / 2 + 80 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQweapon';
@@ -2211,27 +2213,27 @@ window.onload = function () {
             removeEq()
 
             fabric.Image.fromURL(Geq.equipment.helmet.image, function (obj) {
-                obj.scaleToWidth(70)
-                obj.scaleToHeight(70)
-                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 90 })
+                obj.scaleToWidth(60)
+                obj.scaleToHeight(60)
+                obj.set({ left: canvas.width / 2 + 100, top: canvas.height / 2 - 90 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQhelmet';
                 canvas.add(obj);
             });
             fabric.Image.fromURL(Geq.equipment.armor.image, function (obj) {
-                obj.scaleToWidth(70)
-                obj.scaleToHeight(70)
-                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 - 5 })
+                obj.scaleToWidth(60)
+                obj.scaleToHeight(60)
+                obj.set({ left: canvas.width / 2 + 100, top: canvas.height / 2 - 5 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQarmor';
                 canvas.add(obj);
             });
             fabric.Image.fromURL(Geq.equipment.weapon.image, function (obj) {
-                obj.scaleToWidth(70)
-                obj.scaleToHeight(70)
-                obj.set({ left: canvas.width / 2 + 180, top: canvas.height / 2 + 80 })
+                obj.scaleToWidth(60)
+                obj.scaleToHeight(60)
+                obj.set({ left: canvas.width / 2 + 100, top: canvas.height / 2 + 80 })
                 obj.selectable = false;
                 obj.scalable = false;
                 obj.name = 'EQweapon';
@@ -2243,15 +2245,15 @@ window.onload = function () {
         canvas.bringToFront(canvas.getItemByName('EQweapon'));
 
         helmetDrop.style.left = ((canvas.width / 2)) + 'px';//200
-        helmetDrop.style.top = ((canvas.height / 2) - 660) + 'px';//580
+        helmetDrop.style.top = ((canvas.height / 2) - 550) + 'px';//660
         helmetDrop.style.visibility = 'visible';
 
-        armorDrop.style.left = ((canvas.width / 2) - 155) + 'px';//50
-        armorDrop.style.top = ((canvas.height / 2) - 575) + 'px';
+        armorDrop.style.left = ((canvas.width / 2) - 235) + 'px';//50
+        armorDrop.style.top = ((canvas.height / 2) - 465) + 'px';
         armorDrop.style.visibility = 'visible';
 
-        weaponDrop.style.left = ((canvas.width / 2) - 310) + 'px';
-        weaponDrop.style.top = ((canvas.height / 2) - 490) + 'px';
+        weaponDrop.style.left = ((canvas.width / 2) - 470) + 'px';
+        weaponDrop.style.top = ((canvas.height / 2) - 380) + 'px';
         weaponDrop.style.visibility = 'visible';
     }
 
