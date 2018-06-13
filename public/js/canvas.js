@@ -38,6 +38,13 @@ fabric.Canvas.prototype.getAbsoluteCoords = function (object) {
 
 window.onload = function () {
 
+
+    socket.on('activeUpdate', function (message) {
+        document.getElementById('playersLabel').innerText = "W kolejce do walki: " + String(message.players);
+        document.getElementById('fightLabel').innerText = "Aktywne walki: " + String(message.duels);
+    });
+
+
     var Gpos = 1;
     var Gstats = {
         stats: {
@@ -521,6 +528,7 @@ window.onload = function () {
                                     canvas.sendToBack(obj);
                                 });
 
+
                             });
                             canvas.add(obj);
                         })
@@ -552,8 +560,8 @@ window.onload = function () {
     };
     function loadInArena() {
 
-        arenaDrop.style.left = ((canvas.width / 2) - 300) + 'px';
-        arenaDrop.style.top = ((canvas.height / 2) - 667) + 'px';
+        arenaDrop.style.left = ((canvas.width / 2) - 450) + 'px';
+        arenaDrop.style.top = ((canvas.height / 2) - 612) + 'px';
         arenaDrop.style.visibility = 'visible';
         if (!canvas.getItemByName('findOpButton')) {
             var findOpButton = new fabric.Group([new fabric.Rect({
@@ -1061,47 +1069,97 @@ window.onload = function () {
             var statsText = new fabric.Group([
                 new fabric.Text('Siła:', {
                     // left: 200,
-                    top: 0,
+                    top: -6,
                     fill: '#fff',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zwiększa obrażenia', {
+                    // left: 200,
+                    top: 5,
+                    fill: '#f45',
+                    fontSize: 9,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    opacity: 0.7,
                     originX: 'right'
                 }),
                 new fabric.Text('Celność:', {
                     // left: 200,
-                    top: 25,
+                    top: 21,
                     fill: '#fff',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zwiększa szansę na trafienie', {
+                    // left: 200,
+                    top: 33,
+                    fill: '#f45',
+                    fontSize: 9,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    opacity: 0.7,
                     originX: 'right'
                 }),
                 new fabric.Text('Zręczność:', {
                     // left: 200,
-                    top: 50,
+                    top: 46,
                     fill: '#fff',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zwiększa szansę na unik', {
+                    // left: 200,
+                    top: 58,
+                    fill: '#f45',
+                    fontSize: 9,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    opacity: 0.7,
                     originX: 'right'
                 }),
                 new fabric.Text('Wytrzymałość:', {
                     // left: 200,
-                    top: 75,
+                    top: 71,
                     fill: '#fff',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
-                new fabric.Text('Witalność:', {
+                new fabric.Text('Zwiększa ilość energii', {
                     // left: 200,
-                    top: 100,
-                    fill: '#fff',
-                    fontSize: 16,
+                    top: 84,
+                    fill: '#f45',
+                    fontSize: 9,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
+                    opacity: 0.7,
+                    originX: 'right'
+                }),
+                new fabric.Text('Witalność:', {
+                    // left: 200,
+                    top: 98,
+                    fill: '#fff',
+                    fontSize: 13,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zwiększa ilość PŻ', {
+                    // left: 200,
+                    top: 111,
+                    fill: '#f45',
+                    fontSize: 9,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    opacity: 0.7,
                     originX: 'right'
                 }),
                 new fabric.Text('Punkty rozwoju:', {
@@ -1281,7 +1339,7 @@ window.onload = function () {
             armorDrop.add(armorOption);
 
             var weaponOption = document.createElement("option");
-            weaponOption.text = Geq.equipment.weapon.name+" ("+Geq.equipment.weapon.damageMin+"-"+Geq.equipment.weapon.damageMax+")";
+            weaponOption.text = Geq.equipment.weapon.name + " (" + Geq.equipment.weapon.damageMin + "-" + Geq.equipment.weapon.damageMax + ")";
             weaponOption.value = Geq.equipment.weapon.itemId
             weaponOption.style.color = "red"
             weaponOption.selected = "true"
@@ -1313,7 +1371,7 @@ window.onload = function () {
                                 armorDrop.add(option);
                                 break;
                             case 'weapon':
-                                option.text = element.name+" ("+element.damageMin+"-"+element.damageMax+")";
+                                option.text = element.name + " (" + element.damageMin + "-" + element.damageMax + ")";
                                 weaponDrop.add(option);
                                 break;
                         }
@@ -1641,12 +1699,12 @@ window.onload = function () {
     function loadInTavern() {
         if (!canvas.getItemByName('tradeBuy')) {
 
-            sellDrop.style.left = 130 + 'px';
-            sellDrop.style.top = -420 + 'px';
+            sellDrop.style.left = -35 + 'px';
+            sellDrop.style.top = -360 + 'px';
             sellDrop.style.visibility = 'visible';
 
-            buyDrop.style.left = -333 + 'px';
-            buyDrop.style.top = -350 + 'px';
+            buyDrop.style.left = 120 + 'px';
+            buyDrop.style.top = -490 + 'px';
             buyDrop.style.visibility = 'visible';
 
 
@@ -1684,8 +1742,8 @@ window.onload = function () {
     function loadInBlacksmith() {
         if (!canvas.getItemByName('bsText')) {
 
-            blacksmithDrop.style.left = -20 + 'px';
-            blacksmithDrop.style.top = -430 + 'px';//-430
+            blacksmithDrop.style.left = -165 + 'px';
+            blacksmithDrop.style.top = -375 + 'px';//-430
             blacksmithDrop.style.visibility = 'visible';
             //     blacksmithDrop.style.backgroundColor = 'transparent'
             //     blacksmithDrop.style.color = '#fff'
