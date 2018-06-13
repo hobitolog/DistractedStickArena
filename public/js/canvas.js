@@ -390,7 +390,10 @@ window.onload = function () {
                         sellItem(itemToSell).then(refreshChar)
                     } else {
                         var itemToBuy = document.getElementById('buy').value
-                        buyItem(itemToBuy).then(refreshChar)
+                        if(itemToBuy == "beer")
+                            drinkBeer().then(refreshChar)
+                        else
+                            buyItem(itemToBuy).then(refreshChar)
                     }
                     break;
                 case 'bsButton':
@@ -1518,6 +1521,13 @@ window.onload = function () {
 
     function clearBuyList() {
         buyDrop.innerHTML = ""
+        var option = document.createElement("option");
+        option.text = "Piwo"
+        option.value = "beer"
+        option.addEventListener("mouseup", function () {
+            loadShopItemStats("Piwo", "To moje paliwo", "", "", "", 10, "KUP", "png/beer.png")
+        })
+        buyDrop.add(option); 
     }
     function clearHelmetList() {
         helmetDrop.innerHTML = ""
@@ -1559,6 +1569,26 @@ window.onload = function () {
                 }
             }
             xmlhttp.send();
+        })
+    }
+
+    function drinkBeer() {
+        return new Promise(function (resolve, reject) {
+            var xmlhttp = new XMLHttpRequest()
+            xmlhttp.open("POST", "buyBeer", true)
+            xmlhttp.setRequestHeader("Content-Type", "application/json")
+            xmlhttp.responseType = "json"
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    if (xmlhttp.response.error) {
+                        alert(xmlhttp.response.error)
+                    }
+                    else {
+                        resolve()
+                    }
+                }
+            }
+            xmlhttp.send()
         })
     }
 

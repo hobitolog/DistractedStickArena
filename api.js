@@ -198,6 +198,22 @@ module.exports = function (app) {
         }
     })
 
+    app.post('/buyBeer', (req, res) => {
+
+        if (req.user.character.gold < 10) {
+            var json = { "error": "Za mało pieniędzy" }
+            return res.send(json)
+        }
+
+        req.user.character.gold -= 10
+        req.user.save(function (err) {
+            if (err)
+                log.error(err)
+            var json = { "error": err ? "Błąd bazy danych" : null }
+            res.send(json)
+        })
+    })
+
     app.post('/buyItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
         var itemId = req.body.itemId
         var backpack = req.user.character.backpack
