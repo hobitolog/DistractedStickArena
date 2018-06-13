@@ -524,7 +524,7 @@ window.onload = function () {
                                     canvas.add(obj);
                                     canvas.sendToBack(obj);
                                 });
-                                
+
 
                             });
                             canvas.add(obj);
@@ -1066,47 +1066,97 @@ window.onload = function () {
             var statsText = new fabric.Group([
                 new fabric.Text('Siła:', {
                     // left: 200,
-                    top: 0,
+                    top: -6,
                     fill: '#fff',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zwiększa obrażenia', {
+                    // left: 200,
+                    top: 5,
+                    fill: '#f45',
+                    fontSize: 9,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    opacity: 0.7,
                     originX: 'right'
                 }),
                 new fabric.Text('Celność:', {
                     // left: 200,
-                    top: 25,
+                    top: 21,
                     fill: '#fff',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zwiększa szansę na trafienie', {
+                    // left: 200,
+                    top: 33,
+                    fill: '#f45',
+                    fontSize: 9,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    opacity: 0.7,
                     originX: 'right'
                 }),
                 new fabric.Text('Zręczność:', {
                     // left: 200,
-                    top: 50,
+                    top: 46,
                     fill: '#fff',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zwiększa szansę na unik', {
+                    // left: 200,
+                    top: 58,
+                    fill: '#f45',
+                    fontSize: 9,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    opacity: 0.7,
                     originX: 'right'
                 }),
                 new fabric.Text('Wytrzymałość:', {
                     // left: 200,
-                    top: 75,
+                    top: 71,
                     fill: '#fff',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
                     originX: 'right'
                 }),
-                new fabric.Text('Witalność:', {
+                new fabric.Text('Zwiększa ilość energii', {
                     // left: 200,
-                    top: 100,
-                    fill: '#fff',
-                    fontSize: 16,
+                    top: 84,
+                    fill: '#f45',
+                    fontSize: 9,
                     fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
                     textAlign: 'right',
+                    opacity: 0.7,
+                    originX: 'right'
+                }),
+                new fabric.Text('Witalność:', {
+                    // left: 200,
+                    top: 98,
+                    fill: '#fff',
+                    fontSize: 13,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    originX: 'right'
+                }),
+                new fabric.Text('Zwiększa ilość PŻ', {
+                    // left: 200,
+                    top: 111,
+                    fill: '#f45',
+                    fontSize: 9,
+                    fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
+                    textAlign: 'right',
+                    opacity: 0.7,
                     originX: 'right'
                 }),
                 new fabric.Text('Punkty rozwoju:', {
