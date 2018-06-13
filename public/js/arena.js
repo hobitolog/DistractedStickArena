@@ -190,7 +190,7 @@ function showArena(nickStart) {
         fabric.loadSVGFromURL('svg/weaponWhite.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0);
-            obj.set({ left: 120, top: 440 });
+            obj.set({ left: 140, top: 440 });
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'weapon2';
@@ -202,7 +202,7 @@ function showArena(nickStart) {
         fabric.loadSVGFromURL('svg/weaponRed.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0);
-            obj.set({ left: 200, top: 440 });
+            obj.set({ left: 240, top: 440 });
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'weapon3';
@@ -214,7 +214,7 @@ function showArena(nickStart) {
         fabric.loadSVGFromURL('svg/arena/zzz.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(0);
-            obj.set({ left: 290, top: 460 });
+            obj.set({ left: 360, top: 460 });
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'zzz';
@@ -341,7 +341,7 @@ function showArena(nickStart) {
         fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(13);
-            obj.set({ left: 52, top: 370 });
+            obj.set({ left: 70, top: 370 });
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'overWeapon1';
@@ -353,7 +353,7 @@ function showArena(nickStart) {
         });
 
         var skillText = new fabric.Text(String('Zwykły atak \nobrażenia:\t' + characters[0].stats.damageMin + ' - ' + characters[0].stats.damageMax + '\nszansa:\t' + characters[0].stats.hitChance + '%' + '\nkoszt:\t' + 8), {
-            left: 10,
+            left: 28,
             top: 355,
             selectable: false,
             scalable: false,
@@ -372,7 +372,7 @@ function showArena(nickStart) {
         fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(13);
-            obj.set({ left: 130, top: 370 });
+            obj.set({ left: 170, top: 370 });
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'overWeapon2';
@@ -384,7 +384,7 @@ function showArena(nickStart) {
             canvas.add(obj);
         });
         var skillText = new fabric.Text(String('Szybki atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 0.7) + ' - ' + Math.round(characters[0].stats.damageMax * 0.7) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 1.3) + '%' + '\nkoszt:\t' + 6), {
-            left: 85,
+            left: 125,
             top: 355,
             selectable: false,
             scalable: false,
@@ -402,7 +402,7 @@ function showArena(nickStart) {
         fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(13);
-            obj.set({ left: 215, top: 370 });
+            obj.set({ left: 267, top: 370 });
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'overWeapon3';
@@ -415,7 +415,7 @@ function showArena(nickStart) {
 
         });
         var skillText = new fabric.Text(String('P O T Ę Ż N Y atak \nobrażenia:\t' + Math.round(characters[0].stats.damageMin * 1.3) + ' - ' + Math.round(characters[0].stats.damageMax * 1.3) + '\nszansa:\t' + Math.round(characters[0].stats.hitChance * 0.7) + '%' + '\nkoszt:\t' + 10), {
-            left: 168,
+            left: 220,
             top: 355,
             selectable: false,
             scalable: false,
@@ -433,7 +433,7 @@ function showArena(nickStart) {
         fabric.loadSVGFromURL('svg/arena/Cloud.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.scale(13);
-            obj.set({ left: 300, top: 370 });
+            obj.set({ left: 380, top: 370 });
             obj.selectable = false;
             obj.scalable = false;
             obj.name = 'overZzz';
@@ -444,7 +444,7 @@ function showArena(nickStart) {
             canvas.add(obj);
         });
         var skillText = new fabric.Text(String('Odpocznij \n\nRegen:\t' + Math.round(characters[0].stats.energyMax * 0.2) + ' (20%)'), {
-            left: 260,
+            left: 340,
             top: 355,
             selectable: false,
             scalable: false,

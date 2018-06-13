@@ -20,7 +20,7 @@ function getSearchers() {
 
 function updateActive() {
     io.emit('activeUpdate', {
-        "players": getSearchers.length,
+        "players": getSearchers().length,
         "duels": duels.size
     })
 }
