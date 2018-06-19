@@ -21,7 +21,7 @@ function getSearchers() {
 function updateActive() {
     io.emit('activeUpdate', {
         "players": getSearchers().length,
-        "duels": duels.size
+        "duels": duels.size / 2
     })
 }
 
@@ -471,10 +471,7 @@ module.exports = {
                 "started": 0,
                 "socket": socket
             })
-            socket.emit('activeUpdate', {
-                "players": getSearchers.length,
-                "duels": duels.length
-            })
+            updateActive()
 
             socket.on('findGame', function (userBid) {
                 if (player.character.gold < userBid) {
