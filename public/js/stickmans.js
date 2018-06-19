@@ -28,7 +28,7 @@ var sticks = {
 
         this.user.elements.set("head", new fabric.Circle({
             selectable: false, scalable: false,
-            radius: 20, fill: this.user.color, left: 200, top: 175
+            radius: 20, fill: this.user.color, left: 200, top: 175, name: 'stickman'
         }))
         this.user.elements.set("line", makeLine([200, 175, 200, 275], this.user.color))
         this.user.elements.set("leg1", makeLine([200, 275, 195, 320], this.user.color))
@@ -60,7 +60,7 @@ var sticks = {
 
         this.enemy.elements.set("head", new fabric.Circle({
             selectable: false, scalable: false,
-            radius: 20, fill: this.enemy.color, left: 470, top: 175
+            radius: 20, fill: this.enemy.color, left: 470, top: 175, name: 'opponent'
         }))
         this.enemy.elements.set("line", makeLine([470, 175, 470, 275], this.enemy.color))
         this.enemy.elements.set("leg1", makeLine([470, 275, 455, 320], this.enemy.color))

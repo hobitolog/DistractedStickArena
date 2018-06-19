@@ -115,6 +115,11 @@ function setTurn(nick) {
         canvas.getItemByName('weapon2').scale(0, 0)
         canvas.getItemByName('weapon3').scale(0, 0)
         canvas.getItemByName('zzz').scale(0, 0)
+        canvas.remove(canvas.getItemByName('overWeapon1'));
+        canvas.remove(canvas.getItemByName('overWeapon2'));
+        canvas.remove(canvas.getItemByName('overWeapon3'));
+        canvas.remove(canvas.getItemByName('overZzz'));
+        canvas.remove(canvas.getItemByName('skillText'));
     }
     canvas.renderAll()
 }
@@ -144,6 +149,13 @@ function showArena(nickStart) {
                 case 'zzz':
                     mouseOverZzz();
                     break;
+                case 'stickman':
+                    mouseOverStickman();
+                    break;
+                case 'opponent':
+                    mouseOverOpponent();
+                    break;
+
             }
             canvas.renderAll();
         }
@@ -291,7 +303,6 @@ function showArena(nickStart) {
             canvas.add(obj);
         });
 
-        //TODO background
         fabric.loadSVGFromURL('https://upload.wikimedia.org/wikipedia/commons/c/cf/Ubuntu_alternative_background.svg', function (objects, options) {
             var obj = fabric.util.groupSVGElements(objects, options);
             obj.opacity = 0.5
@@ -335,6 +346,160 @@ function showArena(nickStart) {
         })
         canvas.add(timer)
         resetTimer()
+    }
+    var oppTimeout
+    function mouseOverOpponent() {
+        if (!canvas.getItemByName('oppStat')) {
+            var oppStat = new fabric.Group([new fabric.Rect({
+                width: 150,
+                height: 150,
+                fill: 'grey',
+                rx: 10,
+                ry: 10,
+                selectable: false
+            }),
+            new fabric.Text("Siła: "+String(characters[1].stats.str), {
+                 left: 50,
+                top: -40,
+                originX: 'right',
+                textAlign: 'right',
+                fill: '#fff',
+                fontSize: 14
+            }),
+            new fabric.Text("Celność: "+String(characters[1].stats.att), {
+                 left: 50,
+                top: -20,
+                originX: 'right',
+                textAlign: 'right',
+                fill: '#fff',
+                fontSize: 14
+            }),
+            new fabric.Text("Zręczność: "+String(characters[1].stats.agi), {
+                 left: 50,
+                top: 0,
+                originX: 'right',
+                textAlign: 'right',
+                fill: '#fff',
+                fontSize: 14
+            }),
+            new fabric.Text("Wytrzymałość: "+String(characters[1].stats.sta), {
+                 left: 50,
+                originX: 'right',
+                textAlign: 'right',
+                top: 20,
+                fill: '#fff',
+                fontSize: 14
+            }),
+            new fabric.Text("Witalność: "+String(characters[1].stats.vit), {
+                 left: 50,
+                originX: 'right',
+                textAlign: 'right',
+                top: 40,
+                fill: '#fff',
+                fontSize: 14
+            })], {
+                    name: 'oppStat',
+                    left: canvas.width / 2 + 250,
+                    top: 200,
+                    opacity: 1,
+                    selectable: false
+
+                });
+
+
+            canvas.add(oppStat);
+            canvas.bringToFront(oppStat)
+            oppTimeout = setTimeout(function () {
+                if (canvas.getItemByName('oppStat')) {
+                    canvas.remove(canvas.getItemByName('oppStat'))
+                    canvas.renderAll()
+                }
+            }, 3000)
+        }
+        else {
+
+            clearTimeout(oppTimeout)
+
+            canvas.remove(canvas.getItemByName('oppStat'));
+        }
+
+
+    }
+    var usrTimeout
+    function mouseOverStickman() {
+        if (!canvas.getItemByName('usrStat')) {
+            var usrStat = new fabric.Group([new fabric.Rect({
+                width: 150,
+                height: 150,
+                fill: 'grey',
+                rx: 10,
+                ry: 10,
+                selectable: false
+            }),
+                       new fabric.Text("Siła: "+String(characters[0].stats.str), {
+                left: 50,
+                originX: 'right',
+                textAlign: 'right',
+                top: -40,
+                fill: '#fff',
+                fontSize: 14
+            }),
+            new fabric.Text("Celność: "+String(characters[0].stats.att), {
+                 left: 50,
+                textAlign: 'right',
+                originX: 'right',
+                top: -20,
+                fill: '#fff',
+                fontSize: 14
+            }),
+            new fabric.Text("Zręczność: "+String(characters[0].stats.agi), {
+                left: 50,
+                top: 0,
+                textAlign: 'right',
+                originX: 'right',
+                fill: '#fff',
+                fontSize: 14
+            }),
+            new fabric.Text("Wytrzymałość: "+String(characters[0].stats.sta), {
+                 left: 50,
+                textAlign: 'right',
+                originX: 'right',
+                top: 20,
+                fill: '#fff',
+                fontSize: 14
+            }),
+            new fabric.Text("Witalność: "+String(characters[0].stats.vit), {
+                left: 50,
+                top: 40,
+                textAlign: 'right',
+                originX: 'right',
+                fill: '#fff',
+                fontSize: 14
+            })], {
+                    name: 'usrStat',
+                    left: canvas.width / 2 - 270,
+                    top: 200,
+                    opacity: 1,
+                    selectable: false
+
+                });
+
+
+            canvas.add(usrStat);
+            canvas.bringToFront(usrStat)
+            usrTimeout = setTimeout(function () {
+                if (canvas.getItemByName('usrStat')) {
+                    canvas.remove(canvas.getItemByName('usrStat'))
+                    canvas.renderAll()
+                }
+            }, 3000)
+        }
+        else {
+
+            clearTimeout(usrTimeout)
+
+            canvas.remove(canvas.getItemByName('usrStat'));
+        }
     }
 
     function mouseOverWeapon1() {

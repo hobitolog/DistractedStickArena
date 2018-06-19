@@ -40,7 +40,7 @@ window.onload = function () {
 
 
     socket.on('activeUpdate', function (message) {
-        document.getElementById('playersLabel').innerText = "W kolejce do walki: " + String(message.players);
+        document.getElementById('playersLabel').innerText = "Graczy w kolejce: " + String(message.players);
         document.getElementById('fightLabel').innerText = "Aktywne walki: " + String(message.duels);
     });
 

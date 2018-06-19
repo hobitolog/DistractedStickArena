@@ -126,7 +126,13 @@ async function extractDuelCharacters(p1Login, p2Login) {
             energyMax: 20 + Math.round(player1.character.stats.sta * 1.5),
             armor: (p1Eq[1].armor + p1Eq[0].armor),
             armorMax: (p1Eq[1].armor + p1Eq[0].armor),
-            hitChance: Math.round(50 * player1.character.stats.att / player2.character.stats.agi)
+            hitChance: Math.round(50 * player1.character.stats.att / player2.character.stats.agi),
+            str: player1.character.stats.str,
+            att: player1.character.stats.att,
+            agi: player1.character.stats.agi,
+            sta: player1.character.stats.sta,
+            vit: player1.character.stats.vit
+
         }
     }
 
@@ -144,7 +150,12 @@ async function extractDuelCharacters(p1Login, p2Login) {
             energyMax: 20 + Math.round(player2.character.stats.sta * 1.5),
             armor: (p2Eq[1].armor + p2Eq[0].armor),
             armorMax: (p2Eq[1].armor + p2Eq[0].armor),
-            hitChance: Math.round(50 * player2.character.stats.att / player1.character.stats.agi)
+            hitChance: Math.round(50 * player2.character.stats.att / player1.character.stats.agi),
+            str: player2.character.stats.str,
+            att: player2.character.stats.att,
+            agi: player2.character.stats.agi,
+            sta: player2.character.stats.sta,
+            vit: player2.character.stats.vit
         }
     }
 
