@@ -215,13 +215,13 @@ module.exports = function (app) {
     })
 
     app.post('/buyItem', login.isLoggedIn, login.isActivated, fight.activeGameBlock, (req, res) => {
-        var itemId = req.body.itemId
+        var itemId = parseInt(req.body.itemId)
         var backpack = req.user.character.backpack
 
         itemFetcher.getShopItems(req.user.character.level).then(items => {
 
             var index = items.findIndex(element => {
-                element.itemId == itemId
+                return element.itemId == itemId
             })
             if (index == -1) {
                 return res.json({ "error": "Niedozwolony zakup" })
