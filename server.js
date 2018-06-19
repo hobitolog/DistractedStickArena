@@ -100,7 +100,7 @@ app.get('/activate', log.logActivity, (req, res) => {
 
 app.get('/', login.isLoggedIn, login.isActivated, (req, res) => {
     if (!req.headers['user-agent'])
-        res.status(403).send("Access denied")
+        return res.status(403).send("Access denied")
     res.sendFile(path.join(__dirname, '/html', 'main.html'))
 })
 
