@@ -1,4 +1,4 @@
-# StickArena
+# Rozproszona StickArena
 
 ## Instrukcja 
 1. Zainstalować `nodejs` i `npm` jak jeszcze się nie ma
