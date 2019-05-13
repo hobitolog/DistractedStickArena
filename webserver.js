@@ -1,9 +1,6 @@
 var log = require("./log")
 var config = require("./config")
 var login = require("./login")
-var api = require("./api")
-var weapons = require('./models/weapon')
-var fight = require("./fight")
 var passportSocketIo = require("passport.socketio")
 
 var path = require('path')
@@ -62,8 +59,6 @@ function onAuthorizeFail(data, message, error, accept) {
     if (error)
         accept(new Error(message));
 }
-api(app)
-fight.init(app, io)
 
 app.get('/activation', login.isLoggedIn, (req, res) => {
     if (req.user.activation.activated)
@@ -97,32 +92,13 @@ app.get('/activate', log.logActivity, (req, res) => {
         })
     })
 })
-
 app.get('/', login.isLoggedIn, login.isActivated, (req, res) => {
     if (!req.headers['user-agent'])
         return res.status(403).send("Access denied")
-    res.sendFile(path.join(__dirname, '/html', 'main.html'))
+    res.sendFile(path.join(__dirname, '/html', 'webserver.html'))
 })
 
-app.get('/addWeapon', (req, res) => {
-    res.sendFile(path.join(__dirname, '/html', 'addWeapon.html'))
-})
 
-app.post('/addWeapon', log.logActivity, (req, res) => {
-
-    var newWeapon = {
-        "name": req.body.name,
-        "type": req.body.type,
-        "armor": req.body.armor,
-        "damageMin": req.body.damageMin,
-        "damageMax": req.body.damageMax,
-        "level": req.body.level,
-        "value": req.body.value
-    }
-
-    mongoose.connection.collection('prototypes').insert(newWeapon)
-    res.redirect('addWeapon')
-})
 
 app.get('/login', (req, res) => {
     if (!req.headers['user-agent'])
@@ -193,6 +169,6 @@ app.use(function (err, req, res, next) {
     res.status(500).sendFile(path.join(__dirname, '/html', '500.html'))
 })
 
-server.listen(8080, () => {
+server.listen(80, () => {
     log.info("Server started")
 })

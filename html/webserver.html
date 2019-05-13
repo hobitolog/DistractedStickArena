@@ -1,0 +1,138 @@
+<!-- TODO LISTA SERWERoW -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>StickArena</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="main.css" />-->
+    <!--<script src="main.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.2.3/fabric.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid pb-0">
+        <div class="container">
+            <h1 class="display-4">StickArena</h1>
+            <p class="lead">rozproszona giereczka</p>
+        </div>
+        <nav class="navbar navbar-expand navbar-light">
+            <div class="container">
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav mx-0 mx-sm-3">
+                        <a class="btn btn-secondary mr-1 mr-sm-2" href="logout">Wyloguj</a>
+                        <a class="btn  mr-1 mr-sm-2" id="playersLabel" style="cursor: inherit"></a>
+                        <a class="btn  mr-1 mr-sm-2" id="fightLabel" style="cursor: inherit"></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="container">
+        <div class="mx-auto">
+            <div class="row" id="serverRow">
+                <div class="card col-md-3 mx-3 my-3">
+                    <div class="card-body">
+                        <h2>Server 1</h2>
+                        <p>Legendarny serwer dla najodważniejszych mężów.</p>
+                        <p><a class="btn btn-secondary" href="#" role="button">Dołącz</a></p>
+                    </div>
+                </div>
+                <div class="card col-md-3 mx-3 my-3">
+                    <div class="card-body">
+                        <h2>Server 1</h2>
+                        <p>Legendarny serwer dla najodważniejszych mężów.</p>
+                        <p><a class="btn btn-secondary" href="#" role="button">Dołącz</a></p>
+                    </div>
+                </div>
+                <div class="card col-md-3 mx-3 my-3">
+                    <div class="card-body">
+                        <h2>Server 1</h2>
+                        <p>Legendarny serwer dla najodważniejszych mężów.</p>
+                        <p><a class="btn btn-secondary" href="#" role="button">Dołącz</a></p>
+                    </div>
+                </div>
+                <div class="card col-md-3 mx-3 my-3">
+                    <div class="card-body">
+                        <h2>Server 1</h2>
+                        <p>Legendarny serwer dla najodważniejszych mężów.</p>
+                        <p><a class="btn btn-secondary" href="#" role="button">Dołącz</a></p>
+                    </div>
+                </div>
+                <div class="card col-md-3 mx-3 my-3">
+                    <div class="card-body">
+                        <h2>Server 1</h2>
+                        <p>Legendarny serwer dla najodważniejszych mężów.</p>
+                        <p><a class="btn btn-secondary" href="#" role="button">Dołącz</a></p>
+                    </div>
+                </div>
+                <div class="card col-md-3 mx-3 my-3">
+                    <div class="card-body">
+                        <h2>Server 1</h2>
+                        <p>Legendarny serwer dla najodważniejszych mężów.</p>
+                        <p><a class="btn btn-secondary" href="#" role="button">Dołącz</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+function addServer(heading,description,ip,port,id)
+{
+var outer = document.createElement("div");
+outer.id=id;
+outer.className="card col-md-3 mx-3 my-3";
+var inner = document.createElement("div");
+inner.className="card-body";
+outer.appendChild(inner);
+var h2 = document.createElement("h2");
+h2.innerText=heading;
+var servDescription = document.createElement("p");
+servDescription.innerText=description;
+var buttonJoin = document.createElement("button");
+buttonJoin.innerText="Dołącz";
+buttonJoin.className="btn btn-secondary";
+buttonJoin.onclick=alert(ip+" "+port+" "+id);//TODO Ogarnieta funkcja
+inner.appendChild(h2);
+inner.appendChild(servDescription);
+inner.appendChild(buttonJoin);
+
+
+
+var element = document.getElementById("serverRow");
+element.appendChild(outer);
+
+elementTimeout(outer);
+
+};
+
+function elementTimeout(element){
+    setTimeout(function(){
+    if(1)//TODO Function ping
+    {
+        //server alive
+        elementTimeout(element);
+    }
+    else
+    {
+        element.parentNode.removeChild(element);
+    }
+}, 15000);
+
+};
+
+
+
+</script>
+
+</html>
