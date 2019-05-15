@@ -5,6 +5,7 @@ var api = require("./api")
 var weapons = require('./models/weapon')
 var fight = require("./fight")
 var passportSocketIo = require("passport.socketio")
+var request = require('request');
 
 var path = require('path')
 
@@ -193,6 +194,23 @@ app.use(function (err, req, res, next) {
     res.status(500).sendFile(path.join(__dirname, '/html', '500.html'))
 })
 
-server.listen(8080, () => {
+server.listen(config.serverPort, () => {
     log.info("Server started")
+    
+    request.post(
+        config.mainServer + '/newServer',
+        { json: {
+            "serverAddress": config.serverAddress,
+            "serverPort": config.serverPort,
+            "serverIdentifier": config.serverIdentifier,
+            "serverDescription": config.serverDescription
+         } },
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body);
+            }
+            if(error)
+                console.log(error)
+        }
+    );
 })

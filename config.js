@@ -7,7 +7,12 @@ var defaults = {
     mailConfig: null,
     skipWeaponChanges: false,
     enableActivityLog: false,
-    adminToken: "admin"
+    adminToken: "admin",
+    mainServer: "http://127.0.0.1:81",
+    serverAddress: "127.0.0.1",
+    serverPort: 8080,
+    serverIdentifier: "Duckling",
+    serverDescription: "Server for ducklings"
 }
 
 /*

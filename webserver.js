@@ -159,6 +159,15 @@ app.get('/admin/:token', (req, res) => {
         res.status(403).send("Access Denied")
 })
 
+app.post('/newServer', (req, res) => {
+    console.log('POST:')
+    console.log(req.body.serverAddress),
+    console.log(req.body.serverPort),
+    console.log(req.body.serverIdentifier),
+    console.log(req.body.serverDescription)
+    res.status(200).send("OK")
+})
+
 // UWAGA - NIE DODAWAĆ NIC PO TYM
 app.use(function (req, res) {
     res.status(404).sendFile(path.join(__dirname, '/html', '404.html'))
@@ -169,6 +178,6 @@ app.use(function (err, req, res, next) {
     res.status(500).sendFile(path.join(__dirname, '/html', '500.html'))
 })
 
-server.listen(80, () => {
+server.listen(81, () => {
     log.info("Server started")
 })
