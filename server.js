@@ -194,8 +194,8 @@ app.use(function (err, req, res, next) {
     res.status(500).sendFile(path.join(__dirname, '/html', '500.html'))
 })
 
-server.listen(config.serverPort, () => {
-    log.info("Server started")
+server.listen(9090, () => {
+    log.info("Server started on " + config.serverPort)
     
     request.post(
         config.mainServer + '/newServer',
@@ -212,5 +212,5 @@ server.listen(config.serverPort, () => {
             if(error)
                 console.log(error)
         }
-    );
+    )
 })

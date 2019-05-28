@@ -8,9 +8,11 @@ var defaults = {
     skipWeaponChanges: false,
     enableActivityLog: false,
     adminToken: "admin",
-    mainServer: "http://127.0.0.1:81",
-    serverAddress: "127.0.0.1",
-    serverPort: 8080,
+    mainServer: "http://192.168.0.14:8080",
+    serverAddress: "192.168.0.12",
+    // mainServer: "http://192.168.0.12:8080",
+    // serverAddress: "192.168.0.12",
+    serverPort: 9090,
     serverIdentifier: "Duckling",
     serverDescription: "Server for ducklings"
 }

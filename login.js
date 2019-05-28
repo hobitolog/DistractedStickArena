@@ -1,5 +1,7 @@
 var LocalStrategy = require('passport-local').Strategy
 var bcrypt = require('bcrypt')
+var request = require('request')
+var config = require("./config")
 
 var User = require('./models/user')
 var log = require('./log')
@@ -25,14 +27,14 @@ module.exports = {
             passwordField: "registerPassword",
             passReqToCallback: true
         }, (req, username, password, done) => {
-
+            return done(null, false)
             var createUser = () => {
 
                 var email = req.body.registerEmail
 
                 if (!username || !password || !email) {
                     req.registerMessage = "Dane są niekompletne"
-                    return done(null, false)
+
                 }
 
                 if (!email.includes("@")) {
@@ -103,14 +105,45 @@ module.exports = {
             passwordField: "password",
             passReqToCallback: true
         }, function (req, username, password, done) {
-            User.findOne({ login: username }, function (err, user) {
-                if (err) { return done(err) }
-                if (!user || !user.isValidPassword(password)) {
-                    req.loginMessage = 'Nieprawidłowy login lub hasło.'
-                    return done(null, false)
+            request.post(
+                config.mainServer + '/authUser',
+                { json: {
+                    "login": username,
+                    "password": password
+                 } },
+                function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        User.findOne({ login: username }, function (err, user) {
+                            if (err) { return done(err) }
+                            if (!user) {
+                                var newUser = new User()
+                                newUser.login = username
+                                newUser.activation.activated=true
+                                newUser.setPassword(password)
+                                newUser.save(function (err) {
+                                    if (err) {
+                                        log.error("Error creating user: " + err)
+                                        return done(err)
+                                    }
+
+                                    log.info('Registered user character created: ' + newUser.login)
+                                    return done(null, newUser)
+                                })  
+                            } else {
+                                return done(null, user)
+                            }
+                        })
+                    } else {
+                        if(error) {
+                            req.loginMessage = 'Wystąpił błąd!';
+                            return done(null, false)
+                        } else {
+                            req.loginMessage = 'Nieprawidłowy login lub hasło!'
+                            return done(null, false)
+                        }
+                    }
                 }
-                return done(null, user)
-            })
+            )
         }))
     },
 
