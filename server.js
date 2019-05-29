@@ -135,6 +135,10 @@ app.get('/login', (req, res) => {
         res.sendFile(path.join(__dirname, '/html', 'login.html'))
 })
 
+app.get('/stillAlive', (req, res) => {
+    res.status(200).send("OK")
+})
+
 app.post('/login', log.logActivity, (req, res, next) => {
     passport.authenticate('local-login', function (err, user, info) {
         if (err) return next(err)
@@ -198,7 +202,8 @@ server.listen(9090, () => {
     log.info("Server started on " + config.serverPort)
     
     request.post(
-        config.mainServer + '/newServer',
+        //"http://127.0.0.1:8080/newServer",
+       'http://' + config.mainServer +':'+config.mainServerPort+ '/newServer',
         { json: {
             "serverAddress": config.serverAddress,
             "serverPort": config.serverPort,
@@ -206,11 +211,16 @@ server.listen(9090, () => {
             "serverDescription": config.serverDescription
          } },
         function (error, response, body) {
-            if (!error && response.statusCode == 200) {
+            if (!error || response.statusCode == 200) {
                 console.log(body);
             }
             if(error)
-                console.log(error)
+            {
+                console.log(error)                
+            }
         }
     )
+
+
+
 })
