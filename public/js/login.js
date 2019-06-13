@@ -5,38 +5,8 @@ window.onload = function () {
     var passwordsOk = false
     var termsOk = false
 
-    var registerButton = document.getElementById('registerButton')
-    registerButton.addEventListener('click', register)
-
     var loginButton = document.getElementById('loginButton')
     loginButton.addEventListener('click', login)
-
-    var registerEmail = document.getElementById('registerEmail')
-    registerEmail.addEventListener('keyup', callCheckEmail)
-    registerEmail.addEventListener('paste', callCheckEmail)
-
-    var registerLogin = document.getElementById('registerLogin')
-    registerLogin.addEventListener('keyup', callCheckLogin)
-    registerLogin.addEventListener('paste', callCheckLogin)
-
-    var registerPassword = document.getElementById('registerPassword')
-    var repeatPassword = document.getElementById('repeatPassword')
-
-    registerPassword.addEventListener('keyup', callCheckPasswords)
-    registerPassword.addEventListener('paste', callCheckPasswords)
-
-    repeatPassword.addEventListener('keyup', callCheckPasswords)
-    repeatPassword.addEventListener('paste', callCheckPasswords)
-
-    var registerTerms = document.getElementById('registerTerms')
-    registerTerms.addEventListener('change', function () {
-        checkTerms()
-    })
-
-    checkEmail()
-    checkLogin()
-    checkPasswords()
-    checkTerms()
 
     document.getElementById('login').addEventListener('keypress', function (e) {
         if (e.keyCode === 13) {
@@ -56,15 +26,6 @@ window.onload = function () {
 
     function callCheckEmail() {
         setTimeout(checkEmail, 0)
-    }
-
-    function checkEmail() {
-        var registerEmail = document.getElementById('registerEmail')
-        if (registerEmail.value)
-            emailOk = true
-        else
-            emailOk = false
-        refreshRegisterButton()
     }
 
     function callCheckLogin() {

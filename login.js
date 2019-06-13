@@ -106,7 +106,7 @@ module.exports = {
             passReqToCallback: true
         }, function (req, username, password, done) {
             request.post(
-                config.mainServer + '/authUser',
+                'http://' + config.mainServer + ":" + config.mainServerPort + '/authUser',
                 { json: {
                     "login": username,
                     "password": password
