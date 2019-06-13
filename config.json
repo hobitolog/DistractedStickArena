@@ -1,0 +1,1 @@
+{"dbUrl":"mongodb://localhost/StickArena","sessionSecret":"tududu","disableMail":true,"mailConfig":null,"skipWeaponChanges":false,"enableActivityLog":false,"adminToken":"admin","mainServer":"127.0.0.1","mainServerPort":"8080","serverAddress":"127.0.0.1","serverPort":"9090","serverIdentifier":"9090","serverDescription":"Fajny serwererk"}
